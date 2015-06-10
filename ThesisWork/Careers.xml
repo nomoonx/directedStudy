@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Traits:
+
+Extroverted
+Feeling
+Introverted
+Judging
+Intuition
+Perceiving
+Sensing
+Thinking
+
+Athletic
+Intelligent
+
+Single
+Married
+
+Race = ...
+Religion = ...
+
+Age = {Child, Teen, Young Adult, Adult, Elderly} (*)
+
+Help understanding the MBTI traits at this website:
+http://www.myersbriggs.org/my-mbti-personality-type/mbti-basics/
+
+-->
+
+<careers>
+
+	<career>
+		<id>00000</id>
+		<title>Unemployed</title>
+		<salary_mean>10000</salary_mean>
+		<num_percent>10.00</num_percent>
+		<education>N</education>
+		<num_year_post_secondary>0</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>05843</id>
+		<title>Child Care</title>
+		<salary_mean>50000</salary_mean>
+		<num_percent>4.20</num_percent>
+		<education>HS</education>
+		<num_year_post_secondary>0</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>06731</id>
+		<title>Veterinarian</title>
+		<salary_mean>60000</salary_mean>
+		<num_percent>1.70</num_percent>
+		<education>U</education>
+		<num_year_post_secondary>4</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>10852</id>
+		<title>Doctor</title>
+		<salary_mean>120000</salary_mean>
+		<num_percent>5.20</num_percent>
+		<education>U</education>
+		<num_year_post_secondary>30</num_year_post_secondary>
+    <traits>
+      <trait type="extra">Intelligent</trait>
+    </traits>
+	</career>
+
+	<career>
+		<id>15304</id>
+		<title>Accountant</title>
+		<salary_mean>70000</salary_mean>
+		<num_percent>1.50</num_percent>
+    <education>U</education>
+		<num_year_post_secondary>4</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>19043</id>
+		<title>Interior Decorator</title>
+		<salary_mean>50000</salary_mean>
+		<num_percent>1.50</num_percent>
+    <education>C</education>
+		<num_year_post_secondary>1</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>19052</id>
+		<title>Athlete</title>
+		<salary_mean>60000</salary_mean>
+		<num_percent>0.70</num_percent>
+		<education>N</education>
+		<num_year_post_secondary>0</num_year_post_secondary>
+    <traits>
+      <trait type="extra">Athletic</trait>
+      <trait type="age">Young Adult</trait>
+    </traits>
+	</career>
+
+	<career>
+		<id>20194</id>
+		<title>Computer Technical Support</title>
+		<salary_mean>60000</salary_mean>
+		<num_percent>2.00</num_percent>
+    <education>C</education>
+		<num_year_post_secondary>2</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>22731</id>
+		<title>Judge</title>
+		<salary_mean>70000</salary_mean>
+		<num_percent>1.40</num_percent>
+		<education>U</education>
+		<num_year_post_secondary>6</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>22842</id>
+		<title>Psychologist</title>
+		<salary_mean>80000</salary_mean>
+		<num_percent>1.30</num_percent>
+		<education>U</education>
+		<num_year_post_secondary>9</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>25901</id>
+		<title>Mechanic</title>
+		<salary_mean>60000</salary_mean>
+		<num_percent>1.40</num_percent>
+		<education>C</education>
+		<num_year_post_secondary>2</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>29753</id>
+		<title>Military Leader</title>
+		<salary_mean>70000</salary_mean>
+		<num_percent>0.50</num_percent>
+		<education>HS</education>
+		<num_year_post_secondary>0</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>34905</id>
+		<title>Paralegal</title>
+		<salary_mean>80000</salary_mean>
+		<num_percent>0.90</num_percent>
+		<education>U</education>
+		<num_year_post_secondary>4</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>36158</id>
+		<title>Teacher</title>
+		<salary_mean>60000</salary_mean>
+		<num_percent>7.60</num_percent>
+		<education>U</education>
+		<num_year_post_secondary>4</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>36641</id>
+		<title>Fashion Designer</title>
+		<salary_mean>50000</salary_mean>
+		<num_percent>0.60</num_percent>
+		<education>HS</education>
+		<num_year_post_secondary>0</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>38671</id>
+		<title>Professor</title>
+		<salary_mean>100000</salary_mean>
+		<num_percent>1.70</num_percent>
+		<education>U</education>
+		<num_year_post_secondary>9</num_year_post_secondary>
+    <traits>
+      <trait type="extra">Intelligent</trait>
+    </traits>
+	</career>
+
+	<career>
+		<id>39901</id>
+		<title>Artist</title>
+		<salary_mean>40000</salary_mean>
+		<num_percent>1.60</num_percent>
+		<education>C</education>
+		<num_year_post_secondary>2</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>42758</id>
+		<title>Computer Programmer</title>
+		<salary_mean>80000</salary_mean>
+		<num_percent>3.00</num_percent>
+		<education>U</education>
+		<num_year_post_secondary>3</num_year_post_secondary>
+    <traits>
+      <trait type="extra">Intelligent</trait>
+    </traits>
+	</career>
+
+	<career>
+		<id>47265</id>
+		<title>Pilot</title>
+		<salary_mean>80000</salary_mean>
+		<num_percent>1.40</num_percent>
+		<education>U</education>
+		<num_year_post_secondary>4</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>47371</id>
+		<title>Counselor</title>
+		<salary_mean>90000</salary_mean>
+		<num_percent>2.30</num_percent>
+		<education>U</education>
+		<num_year_post_secondary>6</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>47571</id>
+		<title>Business CEO</title>
+		<salary_mean>110000</salary_mean>
+		<num_percent>1.90</num_percent>
+		<education>U</education>
+		<num_year_post_secondary>4</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>47621</id>
+		<title>Social Worker</title>
+		<salary_mean>60000</salary_mean>
+		<num_percent>2.20</num_percent>
+		<education>U</education>
+		<num_year_post_secondary>4</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>49712</id>
+		<title>Politician</title>
+		<salary_mean>90000</salary_mean>
+		<num_percent>1.50</num_percent>
+		<education>U</education>
+		<num_year_post_secondary>4</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>51743</id>
+		<title>Consultant</title>
+		<salary_mean>70000</salary_mean>
+		<num_percent>2.10</num_percent>
+		<education>U</education>
+		<num_year_post_secondary>4</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>56723</id>
+		<title>Nurse</title>
+		<salary_mean>70000</salary_mean>
+		<num_percent>6.40</num_percent>
+		<education>U</education>
+		<num_year_post_secondary>4</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>56842</id>
+		<title>Paramedic</title>
+		<salary_mean>80000</salary_mean>
+		<num_percent>1.80</num_percent>
+		<education>U</education>
+		<num_year_post_secondary>4</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>57891</id>
+		<title>Musician</title>
+		<salary_mean>50000</salary_mean>
+		<num_percent>0.90</num_percent>
+		<education>N</education>
+		<num_year_post_secondary>0</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>58371</id>
+		<title>Police</title>
+		<salary_mean>70000</salary_mean>
+		<num_percent>3.60</num_percent>
+		<education>C</education>
+		<num_year_post_secondary>2</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>58842</id>
+		<title>Salesman</title>
+		<salary_mean>100000</salary_mean>
+		<num_percent>2.60</num_percent>
+		<education>HS</education>
+		<num_year_post_secondary>0</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>61837</id>
+		<title>Entrepeneur</title>
+		<salary_mean>90000</salary_mean>
+		<num_percent>1.60</num_percent>
+		<education>HS</education>
+		<num_year_post_secondary>0</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>67598</id>
+		<title>Writer</title>
+		<salary_mean>60000</salary_mean>
+		<num_percent>1.80</num_percent>
+		<education>C</education>
+		<num_year_post_secondary>2</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>74793</id>
+		<title>Priest</title>
+		<salary_mean>40000</salary_mean>
+		<num_percent>1.40</num_percent>
+		<education>C</education>
+		<num_year_post_secondary>4</num_year_post_secondary>
+    <traits>
+      <trait type="religion">Catholic</trait>
+    </traits>
+	</career>
+
+	<career>
+		<id>74931</id>
+		<title>Engineer</title>
+		<salary_mean>80000</salary_mean>
+		<num_percent>1.10</num_percent>
+		<education>U</education>
+		<num_year_post_secondary>4</num_year_post_secondary>
+    <traits>
+      <trait type="extra">Intelligent</trait>
+    </traits>
+	</career>
+
+	<career>
+		<id>75185</id>
+		<title>Graphic Designer</title>
+		<salary_mean>50000</salary_mean>
+		<num_percent>1.20</num_percent>
+		<education>HS</education>
+		<num_year_post_secondary>0</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>76398</id>
+		<title>Actor</title>
+		<salary_mean>50000</salary_mean>
+		<num_percent>1.20</num_percent>
+		<education>C</education>
+		<num_year_post_secondary>2</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>76435</id>
+		<title>Business Administration</title>
+		<salary_mean>60000</salary_mean>
+		<num_percent>1.50</num_percent>
+		<education>U</education>
+		<num_year_post_secondary>4</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>76806</id>
+		<title>Dentist</title>
+		<salary_mean>80000</salary_mean>
+		<num_percent>1.70</num_percent>
+		<education>U</education>
+		<num_year_post_secondary>4</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>78412</id>
+		<title>Scientist</title>
+		<salary_mean>70000</salary_mean>
+		<num_percent>2.80</num_percent>
+		<education>U</education>
+		<num_year_post_secondary>4</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>84581</id>
+		<title>Photographer</title>
+		<salary_mean>50000</salary_mean>
+		<num_percent>1.00</num_percent>
+		<education>HS</education>
+		<num_year_post_secondary>0</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>84712</id>
+		<title>Bookkeeper</title>
+		<salary_mean>50000</salary_mean>
+		<num_percent>1.80</num_percent>
+		<education>C</education>
+		<num_year_post_secondary>1</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>85623</id>
+		<title>Lawyer</title>
+		<salary_mean>120000</salary_mean>
+		<num_percent>3.50</num_percent>
+		<education>U</education>
+		<num_year_post_secondary>8</num_year_post_secondary>
+    <traits>
+      <trait type="extra">Intelligent</trait>
+    </traits>
+	</career>
+
+	<career>
+		<id>93174</id>
+		<title>Physician</title>
+		<salary_mean>70000</salary_mean>
+		<num_percent>1.80</num_percent>
+		<education>U</education>
+		<num_year_post_secondary>9</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>94572</id>
+		<title>Financial Officer</title>
+		<salary_mean>50000</salary_mean>
+		<num_percent>1.20</num_percent>
+		<education>U</education>
+		<num_year_post_secondary>4</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>95883</id>
+		<title>Mathematician</title>
+		<salary_mean>60000</salary_mean>
+		<num_percent>0.80</num_percent>
+		<education>U</education>
+		<num_year_post_secondary>4</num_year_post_secondary>
+	</career>
+
+	<career>
+		<id>99524</id>
+		<title>Carpenter</title>
+		<salary_mean>60000</salary_mean>
+		<num_percent>2.10</num_percent>
+		<education>C</education>
+		<num_year_post_secondary>2</num_year_post_secondary>
+	</career>
+
+
+
+
+
+	<career>
+		<id>74794</id>
+		<title>Pastor</title>
+		<salary_mean>40000</salary_mean>
+		<num_percent>1.40</num_percent>
+		<education>C</education>
+		<num_year_post_secondary>4</num_year_post_secondary>
+    <traits>
+      <trait type="religion">Protestant</trait>
+    </traits>
+	</career>
+
+
+
+</careers>

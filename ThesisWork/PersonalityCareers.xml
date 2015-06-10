@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<pers_careers>
+
+	<personality id='ISTJ'>
+		<career id="15304" />
+		<career id="22731" />
+		<career id="85623" />
+		<career id="10852" />
+		<career id="76806" />
+		<career id="42758" />
+	</personality>
+
+	<personality id='ESTJ'>
+		<career id="29753" />
+		<career id="76435" />
+		<career id="58371" />
+		<career id="94572" />
+		<career id="36158" />
+		<career id="58842" />
+	</personality>
+
+	<personality id='ISFJ'>
+		<career id="47621" />
+		<career id="74793" />
+		<career id="19043" />
+		<career id="84712" />
+		<career id="34905" />
+		<career id="05843" />
+	</personality>
+
+	<personality id='ESFJ'>
+		<career id="56723" />
+		<career id="36158" />
+		<career id="74793" />
+		<career id="47371" />
+		<career id="93174" />
+		<career id="15304" />
+	</personality>
+
+	<personality id='ISTP'>
+		<career id="58371" />
+		<career id="74931" />
+		<career id="99524" />
+		<career id="25901" />
+		<career id="47265" />
+		<career id="19052" />
+	</personality>
+
+	<personality id='ESTP'>
+		<career id="58842" />
+		<career id="19052" />
+		<career id="20194" />
+		<career id="56842" />
+		<career id="58371" />
+		<career id="61837" />
+	</personality>
+
+	<personality id='ESFP'>
+		<career id="76398" />
+		<career id="39901" />
+		<career id="84581" />
+		<career id="19043" />
+		<career id="36641" />
+		<career id="58842" />
+	</personality>
+
+	<personality id='ISFP'>
+		<career id="57891" />
+		<career id="22842" />
+		<career id="39901" />
+		<career id="06731" />
+		<career id="75185" />
+		<career id="47621" />
+	</personality>
+
+	<personality id='ENTJ'>
+		<career id="61837" />
+		<career id="85623" />
+		<career id="22731" />
+		<career id="38671" />
+		<career id="47571" />
+		<career id="76435" />
+	</personality>
+
+	<personality id='INTJ'>
+		<career id="78412" />
+		<career id="74931" />
+		<career id="38671" />
+		<career id="76435" />
+		<career id="42758" />
+		<career id="10852" />
+	</personality>
+
+	<personality id='ENTP'>
+		<career id="22842" />
+		<career id="61837" />
+		<career id="51743" />
+		<career id="78412" />
+		<career id="76398" />
+		<career id="42758" />
+	</personality>
+
+	<personality id='INTP'>
+		<career id="95883" />
+		<career id="38671" />
+		<career id="74931" />
+		<career id="85623" />
+		<career id="22731" />
+		<career id="78412" />
+	</personality>
+
+	<personality id='ENFJ'>
+		<career id="74793" />
+		<career id="36158" />
+		<career id="51743" />
+		<career id="49712" />
+		<career id="67598" />
+		<career id="22842" />
+	</personality>
+
+	<personality id='INFJ'>
+		<career id="57891" />
+		<career id="05843" />
+		<career id="47371" />
+		<career id="22842" />
+		<career id="39901" />
+		<career id="10852" />
+	</personality>
+
+	<personality id='ENFP'>
+		<career id="61837" />
+		<career id="39901" />
+		<career id="74931" />
+		<career id="49712" />
+		<career id="67598" />
+		<career id="36158" />
+	</personality>
+
+	<personality id='INFP'>
+		<career id="38671" />
+		<career id="67598" />
+		<career id="74793" />
+		<career id="57891" />
+		<career id="36158" />
+		<career id="47371" />
+	</personality>
+
+</pers_careers>

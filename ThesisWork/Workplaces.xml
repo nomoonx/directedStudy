@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<workplaces>
+
+	<place>
+		<id>0</id>
+		<title>Daycare Centre</title>
+    <city>London</city>
+		<careers>05843,47621</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>1</id>
+		<title>Vet Clinic</title>
+    <city>London</city>
+		<careers>06731</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+	
+	<place>
+		<id>2</id>
+		<title>Hospital</title>
+    <city>London</city>
+		<careers>10852,56723,56842,93174</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+	
+	<place>
+		<id>3</id>
+		<title>Clinic</title>
+    <city>London</city>
+		<careers>10852,56723,93174</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+	
+  <place>
+		<id>4</id>
+		<title>Bank</title>
+    <city>London</city>
+		<careers>15304,51743,76435,94572</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>5</id>
+		<title>Decor and Design Depot</title>
+    <city>London</city>
+		<careers>19043</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>6</id>
+		<title>London Knights</title>
+    <city>London</city>
+		<careers>19052</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>7</id>
+		<title>Geek Squad</title>
+    <city>London</city>
+		<careers>20194</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>8</id>
+		<title>Courthouse</title>
+    <city>London</city>
+		<careers>22731</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>9</id>
+		<title>Brain Lab</title>
+    <city>London</city>
+		<careers>22842,78412,95883</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>10</id>
+		<title>Autobody Shop</title>
+    <city>London</city>
+		<careers>25901</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>11</id>
+		<title>Canadian Military</title>
+    <city>London</city>
+		<careers>29753</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>12</id>
+		<title>Law Firm</title>
+    <city>London</city>
+		<careers>34905,85623,51743</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>13</id>
+		<title inst="school">School A</title>
+    <city>London</city>
+		<careers>36158</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>14</id>
+		<title inst="school">School B</title>
+    <city>London</city>
+		<careers>36158</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>15</id>
+		<title inst="school">School C</title>
+    <city>London</city>
+		<careers>36158</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>16</id>
+		<title inst="school">School D</title>
+    <city>London</city>
+		<careers>36158</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>17</id>
+		<title>Fasion Fever</title>
+    <city>London</city>
+		<careers>36641</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>18</id>
+		<title inst="PSschool">University Of Western Ontario</title>
+    <city>London</city>
+		<careers>38671,95883</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>19</id>
+		<title inst="PSschool">Fanshawe College</title>
+    <city>London</city>
+		<careers>38671</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>20</id>
+		<title>Gary's Graphics</title>
+    <city>London</city>
+		<careers>39901,75185,84581</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>21</id>
+		<title>Londonsoft Software Inc.</title>
+    <city>London</city>
+		<careers>42758,20194,75185</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>22</id>
+		<title>Vast Violet Vapor Video Games</title>
+    <city>London</city>
+		<careers>42758</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>23</id>
+		<title>London International Airport</title>
+    <city>London</city>
+		<careers>47265</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>24</id>
+		<title>Rehab and Counselling Centre</title>
+    <city>London</city>
+		<careers>47371,47621</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>25</id>
+		<title>The Big Company</title>
+    <city>London</city>
+		<careers>47571,51743,76435</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>26</id>
+		<title>Social Services Centre</title>
+    <city>London</city>
+		<careers>47621,84712</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>27</id>
+		<title>City of London</title>
+    <city>London</city>
+		<careers>49712,51743</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>28</id>
+		<title>Mussein's Music Store</title>
+    <city>London</city>
+		<careers>57891,58842,61837</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>29</id>
+		<title>OPP</title>
+    <city>London</city>
+		<careers>58371,84712</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>30</id>
+		<title>London Police</title>
+    <city>London</city>
+		<careers>58371,84712</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>31</id>
+		<title>Fernie's Furniture</title>
+    <city>London</city>
+		<careers>58842,61837</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>32</id>
+		<title>Susan's Superstore</title>
+    <city>London</city>
+		<careers>61837,58842,47571</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>33</id>
+		<title>Paul's Paper Company (Corporate)</title>
+    <city>London</city>
+		<careers>47571,61837,76435,84712</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>34</id>
+		<title>Wanda's Writing</title>
+    <city>London</city>
+		<careers>67598</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>35</id>
+		<title>London Free Press</title>
+    <city>London</city>
+		<careers>67598,75185,84581</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>36</id>
+		<title inst="temple">Catholic Church</title>
+    <city>London</city>
+		<careers>74793</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>37</id>
+		<title inst="temple">Pentecostal Church</title>
+    <city>London</city>
+		<careers>74794</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>38</id>
+		<title inst="temple">Baptist Church</title>
+    <city>London</city>
+		<careers>74794</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>39</id>
+		<title>Edgar Engineering Inc.</title>
+    <city>London</city>
+		<careers>74931</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>40</id>
+		<title>Simpsons Systems</title>
+    <city>London</city>
+		<careers>74931,84712</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>41</id>
+		<title>London Acting Troupe</title>
+    <city>London</city>
+		<careers>76398</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>42</id>
+		<title>Dentist Office</title>
+    <city>London</city>
+		<careers>76806</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>43</id>
+		<title>Dr. Dennis Dentistry</title>
+    <city>London</city>
+		<careers>76806</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>44</id>
+		<title>Phil's Photography</title>
+    <city>London</city>
+		<careers>84581</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>45</id>
+		<title>Fiona's Finances and Investments</title>
+    <city>London</city>
+		<careers>94572</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>46</id>
+		<title>Connie's Construction</title>
+    <city>London</city>
+		<careers>99524</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+    <id>47</id>
+		<title>Howie's Homes</title>
+    <city>London</city>
+		<careers>99524</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>48</id>
+		<title>London Bank</title>
+    <city>London</city>
+		<careers>15304,51743,76435,94572</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>49</id>
+		<title inst="temple">St. Mary's Catholic Church</title>
+    <city>London</city>
+		<careers>74793</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>50</id>
+		<title inst="temple">St. Thomas Catholic Church</title>
+    <city>London</city>
+		<careers>74793</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>51</id>
+		<title inst="temple">Mother Teresa Catholic Church</title>
+    <city>London</city>
+		<careers>74793</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>52</id>
+		<title inst="temple">St. Anthony Catholic Church</title>
+    <city>London</city>
+		<careers>74793</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>53</id>
+		<title inst="temple">Calvary Pentecostal Church</title>
+    <city>London</city>
+		<careers>74794</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>54</id>
+		<title inst="temple">London Baptist Church</title>
+    <city>London</city>
+		<careers>74794</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+	<place>
+		<id>55</id>
+		<title inst="temple">Covenant Baptist Church</title>
+    <city>London</city>
+		<careers>74794</careers>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</place>
+
+</workplaces>

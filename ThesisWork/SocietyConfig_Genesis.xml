@@ -1,0 +1,234 @@
+<?xml version="1.0"?>
+
+<world>
+
+  <!-- SIMULATION PARAMETERS -->
+  <param struct="element" type="integer" id="N_YearsToRun">50</param>                           <!-- DIFFERENT -->
+  <param struct="element" type="integer" id="YearToDisallowInterbreeding">2050</param>          <!-- DIFFERENT -->
+  
+  <!-- POPULATION SIZE -->
+  <param struct="element" type="integer" id="N_CouplesMarried">1</param>                        <!-- DIFFERENT -->
+  <param struct="element" type="integer" id="N_CouplesDating">0</param>                         <!-- DIFFERENT -->
+  <param struct="element" type="integer" id="N_Singles">0</param>                               <!-- DIFFERENT -->
+  
+  <!-- CONNECTIVITY -->
+  <param struct="element" type="double" id="FriendFactor">0.4</param>
+
+
+  <!-- SETTING -->
+  <param struct="element" type="string" id="SocietyName">London</param>
+  <param struct="element" type="integer" id="SocietyYear">2015</param>
+  <param struct="element" type="integer" id="MinYear">1900</param>
+  <param struct="element" type="integer" id="MaxYear">2200</param>
+
+  <!-- LIFE EXPECTANCY -->
+  <param struct="element" type="string" id="LifeExpectancyDistr">normal(80.0,4.0)</param>
+
+  <!-- AGE PARAMETERS -->
+  <param struct="element" type="integer" id="MinMarriedAge">20</param>
+  <param struct="element" type="integer" id="MaxMarriedAge">90</param>
+  <param struct="element" type="integer" id="MinDatingAge">15</param>
+  <param struct="element" type="integer" id="MaxDatingAge">35</param>
+  <param struct="element" type="string" id="MarriageAgeDistr">normal(28.0,1.0)</param>
+  <param struct="element" type="string" id="DatingAgeDistr">normal(28.0,1.0)</param>
+  <param struct="element" type="integer" id="MaxAgeHaveChildren">70</param>       <!-- DIFFERENT -->
+  <param struct="element" type="integer" id="AdultAgeMin">25</param>
+  <param struct="element" type="integer" id="AdultAgeMax">70</param>
+
+  <!-- GEOGRAPHY -->
+  <param struct="vector" type="string" id="OtherCities">
+    <row>
+      <el>Toronto</el>
+      <el>Ottawa</el>
+      <el>New York</el>
+      <el>North Bay</el>
+      <el>Montreal</el>
+      <el>Vancouver</el>
+      <el>Buffalo</el>
+      <el>Chicago</el>
+      <el>Winnipeg</el>
+      <el>Windsor</el>
+    </row>
+  </param>
+  <param struct="vector" type="string" id="AllCities">
+    <row>
+      <el>London</el>
+      <el>Toronto</el>
+      <el>Ottawa</el>
+      <el>New York</el>
+      <el>North Bay</el>
+      <el>Montreal</el>
+      <el>Vancouver</el>
+      <el>Buffalo</el>
+      <el>Chicago</el>
+      <el>Winnipeg</el>
+      <el>Windsor</el>
+    </row>
+  </param>
+  <param struct="element" type="double" id="p_alwaysLivedInHometown">0.7</param>
+  <param struct="element" type="integer" id="numAvgYearsBetweenMoves">10</param>
+  <param struct="element" type="integer" id="minYearsBetweenMoves">1</param>
+
+  <!-- INTERESTS AND RELATIONSHIP STRENGTH -->
+  <param struct="element" type="double" id="CoupleBreakupThresholdStrength">0.4</param>
+  <param struct="element" type="double" id="CoupleGetMarriedThresholdStrength">0.7</param>
+  <param struct="element" type="integer" id="NumInterests">7</param>
+  <param struct="vector" type="double" id="RelStrengthWeights_PreChildren">
+    <row>
+      <el>0.1</el>
+      <el>0.0</el>
+      <el>0.1</el>
+      <el>0.2</el>
+      <el>0.1</el>
+      <el>0.1</el>
+      <el>0.2</el>
+      <el>0.0</el>
+      <el>0.1</el>
+      <el>0.1</el>
+    </row>
+  </param>
+  <param struct="vector" type="double" id="RelStrengthWeights_PostChildren">
+    <row>
+      <el>0.1</el>
+      <el>0.0</el>
+      <el>0.1</el>
+      <el>0.2</el>
+      <el>0.1</el>
+      <el>0.1</el>
+      <el>0.2</el>
+      <el>0.0</el>
+      <el>0.1</el>
+      <el>0.1</el>
+    </row>
+  </param>
+
+  <!-- EDUCATION PARAMETERS -->
+  <param struct="element" type="integer" id="SchoolStartAge">4</param>
+  <param struct="element" type="integer" id="SchoolFinishAge">18</param>
+  <param struct="element" type="integer" id="DeltaNumYearsPersonSocializeWithInSchool">1</param>
+
+  <!-- CAREER PARAMETERS -->
+  <param struct="element" type="integer" id="WorkingAgeMin">17</param>
+  <param struct="element" type="integer" id="WorkingAgeMax">65</param>
+  <param struct="element" type="integer" id="SalarySTD">10000</param>
+  <param struct="element" type="integer" id="IncomeClassThreshold">30000</param>
+  <param struct="element" type="double" id="p_getJobFromUnemployment">0.6</param>
+
+  <!-- RELATIONSHIP PARAMETERS -->
+  <param struct="element" type="double" id="p_likelihoodMarriedCoupleHasChildren">0.99</param>  <!-- DIFFERENT -->
+  <param struct="element" type="string" id="marriageChildrenDistr">normal(4.0,1.4)</param>      <!-- DIFFERENT -->
+  <param struct="element" type="integer" id="marriageChildrenMin">3</param>                     <!-- DIFFERENT -->
+  <param struct="element" type="integer" id="marriageChildrenMax">6</param>                     <!-- DIFFERENT -->
+
+<!--
+  <param struct="element" type="double" id="p_likelihoodMarriedCoupleHasChildren">0.95</param>  < DIFFERENT >
+  <param struct="element" type="string" id="marriageChildrenDistr">normal(4.0,1.4)</param>      < DIFFERENT >
+  <param struct="element" type="integer" id="marriageChildrenMin">2</param>                     < DIFFERENT >
+  <param struct="element" type="integer" id="marriageChildrenMax">6</param>                     < DIFFERENT >
+-->
+
+  <param struct="element" type="integer" id="MinNumYearsMarriedBeforeChildren">1</param>
+  <param struct="element" type="string" id="ParentHaveChildYearDistr">normal(5.0,1.25)</param>
+  <param struct="element" type="integer" id="ParentHaveChildYearMin">0</param>
+  <param struct="element" type="integer" id="ParentHaveChildYearMax">10</param>
+
+  <!-- RACE DEMOGRAPHICS -->
+  <param struct="vector" type="string" id="RaceLabels">
+    <row>
+      <el>Caucasian</el>
+      <el>African American</el>
+      <el>Aboriginal</el>
+      <el>Indian</el>
+      <el>East Asian</el>
+      <el>Hispanic</el>
+    </row>
+  </param>
+  <param struct="vector" type="double" id="RaceDistr">
+    <row>
+      <el>0.4</el>
+      <el>0.15</el>
+      <el>0.05</el>
+      <el>0.1</el>
+      <el>0.2</el>
+      <el>0.1</el>
+    </row>
+  </param>
+  <param struct="matrix" type="double" id="p_same_race_for_spouse">
+    <row>
+      <el>.70</el><el>.09</el><el>.05</el><el>.01</el><el>.05</el><el>.10</el>
+    </row><row>
+      <el>.09</el><el>.60</el><el>.01</el><el>.15</el><el>.05</el><el>.10</el>
+    </row><row>
+      <el>.05</el><el>.01</el><el>.80</el><el>.00</el><el>.04</el><el>.10</el>
+    </row><row>
+      <el>.01</el><el>.15</el><el>.00</el><el>.70</el><el>.04</el><el>.10</el>
+    </row><row>
+      <el>.05</el><el>.05</el><el>.04</el><el>.04</el><el>.72</el><el>.10</el>
+    </row><row>
+      <el>.10</el><el>.10</el><el>.10</el><el>.10</el><el>.10</el><el>.50</el>
+    </row>
+  </param>
+  <param struct="vector" type="double" id="race_interest_value">
+    <row>
+      <el>0.5</el>
+      <el>0.7</el>
+      <el>0.9</el>
+      <el>0.6</el>
+      <el>0.6</el>
+      <el>0.8</el>
+    </row>
+  </param>
+
+  <!-- RELIGION DEMOGRAPHICS -->
+  <param struct="vector" type="string" id="ReligionLabels">
+    <row>
+      <el>Catholicism</el>
+      <el>Protestantism</el>
+      <el>Judaism</el>
+      <el>Islam</el>
+      <el>Buddhism</el>
+      <el>Hinduism</el>
+      <el>None</el>
+    </row>
+  </param>
+  <param struct="vector" type="double" id="ReligionDistr">
+    <row>
+      <el>0.35</el>
+      <el>0.20</el>
+      <el>0.05</el>
+      <el>0.20</el>
+      <el>0.05</el>
+      <el>0.05</el>
+      <el>0.10</el>
+    </row>
+  </param>
+  <param struct="matrix" type="double" id="p_same_religion_for_spouse">
+    <row>
+      <el>.50</el><el>.20</el><el>.05</el><el>.00</el><el>.05</el><el>.05</el><el>.15</el>
+    </row><row>
+      <el>.20</el><el>.70</el><el>.07</el><el>.00</el><el>.01</el><el>.01</el><el>.01</el>
+    </row><row>
+      <el>.05</el><el>.07</el><el>.85</el><el>.00</el><el>.00</el><el>.01</el><el>.02</el>
+    </row><row>
+      <el>.00</el><el>.00</el><el>.00</el><el>1.0</el><el>.00</el><el>.00</el><el>.00</el>
+    </row><row>
+      <el>.05</el><el>.01</el><el>.00</el><el>.00</el><el>.54</el><el>.20</el><el>.20</el>
+    </row><row>
+      <el>.05</el><el>.01</el><el>.01</el><el>.00</el><el>.20</el><el>.70</el><el>.03</el>
+    </row><row>
+      <el>.15</el><el>.01</el><el>.02</el><el>.00</el><el>.20</el><el>.03</el><el>.59</el>
+    </row>
+  </param>
+  <param struct="vector" type="double" id="religion_interest_value">
+    <row>
+      <el>0.6</el>
+      <el>0.9</el>
+      <el>0.9</el>
+      <el>0.9</el>
+      <el>0.6</el>
+      <el>0.7</el>
+      <el>0.2</el>
+    </row>
+  </param>
+  
+</world>

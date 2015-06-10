@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Traits:
+
+Extroverted
+Feeling
+Introverted
+Judging
+Intuition
+Perceiving
+Sensing
+Thinking
+
+Athletic
+Intelligent
+
+Single
+Married
+
+Race = ...
+Religion = ...
+
+CareerID = ...
+WorkplaceID = ...
+
+Age = {Child, Teen, Young Adult, Adult, Elderly} (*)
+
+Help understanding the MBTI traits at this website:
+http://www.myersbriggs.org/my-mbti-personality-type/mbti-basics/
+
+-->
+
+
+
+<clubs>
+
+	<club>
+		<id>5493</id>
+		<title>Stayfit Gym</title>
+		<type>Athletics</type>
+		<traits>
+      <trait type="extra">Athletic</trait>
+    </traits>
+    <city>London</city>
+		<pop>100</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</club>
+
+	<club>
+		<id>2273</id>
+		<title>Strongarm Gym</title>
+		<type>Athletics</type>
+		<traits>
+      <trait type="extra">Athletic</trait>
+    </traits>
+    <city>London</city>
+		<pop>100</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</club>
+
+	<club>
+		<id>1758</id>
+		<title>Chess Club</title>
+		<type>Club</type>
+		<traits>
+      <trait type="extra">Intelligent</trait>
+      <trait type="mbti">Introverted</trait>
+    </traits>
+    <city>London</city>
+		<pop>100</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</club>
+
+	<club>
+		<id>7626</id>
+		<title>Moe's Tavern</title>
+		<type>Bar</type>
+    <traits>
+      <trait type="rel_status">Single</trait>
+      <trait type="mbti">Extroverted</trait>
+    </traits>
+    <city>London</city>
+		<pop>100</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</club>
+
+	<club>
+		<id>9341</id>
+		<title>Bob's Bar</title>
+		<type>Bar</type>
+    <traits>
+      <trait type="rel_status">Single</trait>
+      <trait type="mbti">Extroverted</trait>
+    </traits>
+    <city>London</city>
+		<pop>100</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</club>
+
+	<club>
+		<id>3527</id>
+		<title>Pablo's Pub</title>
+		<type>Bar</type>
+    <traits>
+      <trait type="rel_status">Single</trait>
+      <trait type="mbti">Extroverted</trait>
+      <trait type="race">Hispanic</trait>
+    </traits>
+    <city>London</city>
+		<pop>100</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</club>
+	
+	<club>
+		<id>1472</id>
+		<title>Tae Kwon Do</title>
+		<type>Athletics</type>
+    <traits>
+      <trait type="mbti">Extroverted</trait>
+      <trait type="race">East Asian</trait>
+    </traits>
+    <city>London</city>
+		<pop>100</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</club>
+	
+	<club>
+		<id>1118</id>
+		<title>House Of Prayer</title>
+		<type>Spiritual</type>
+    <traits>
+      <trait type="religion">Protestant</trait>
+      <trait type="religion">Catholic</trait>
+    </traits>
+    <city>London</city>
+		<pop>100</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</club>
+	
+	<club>
+		<id>8471</id>
+		<title>Yogi's Yoga</title>
+		<type>Athletics</type>
+    <traits>
+      <trait type="extra">Athletic</trait>
+      <trait type="mbti">Introverted</trait>
+    </traits>
+    <city>London</city>
+		<pop>100</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</club>
+	
+	<club>
+		<id>5572</id>
+		<title>Poetry Club</title>
+		<type>Wisdom</type>
+    <traits>
+      <trait type="extra">Intelligent</trait>
+      <trait type="mbti">Intuition</trait>
+    </traits>
+    <city>London</city>
+		<pop>100</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</club>
+
+	<club>
+		<id>3478</id>
+		<title>Billiards Bash</title>
+		<type>Social</type>
+    <traits>
+      <trait type="mbti">Extroverted</trait>
+      <trait type="mbti">Sensing</trait>
+    </traits>
+    <city>London</city>
+		<pop>100</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</club>
+
+	<club>
+		<id>1729</id>
+		<title>Drama Club</title>
+		<type>Creative</type>
+    <traits>
+      <trait type="mbti">Perceiving</trait>
+      <trait type="mbti">Extroverted</trait>
+      <trait type="careerID">76398</trait>
+    </traits>
+    <city>London</city>
+		<pop>100</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</club>
+
+	<club>
+		<id>8642</id>
+		<title>London Musicians Jam Fest</title>
+		<type>Creative</type>
+    <traits>
+      <trait type="mbti">Perceiving</trait>
+      <trait type="careerID">57891</trait>
+      <trait type="workID">28</trait>
+    </traits>
+    <city>London</city>
+		<pop>100</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</club>
+
+	<club>
+		<id>3791</id>
+		<title>Board Gamers Group</title>
+		<type>Social</type>
+    <traits>
+      <trait type="mbti">Introverted</trait>
+      <trait type="extra">Intelligent</trait>
+    </traits>
+    <city>London</city>
+		<pop>100</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</club>
+
+	<club>
+		<id>6793</id>
+		<title>Friday Video Games Nites</title>
+		<type>Social</type>
+    <traits>
+      <trait type="workID">21</trait>
+      <trait type="workID">22</trait>
+      <trait type="mbti">Introverted</trait>
+      <trait type="sex">1</trait>
+      <trait type="age">Teen</trait>
+    </traits>
+    <city>London</city>
+		<pop>100</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</club>
+
+	<club>
+		<id>2530</id>
+		<title>Old Folk's Euchre Wednesdays</title>
+		<type>Social</type>
+    <traits>
+      <trait req="=|1" type="age">Elderly</trait>
+      <trait type="mbti">Extroverted</trait>
+    </traits>
+    <city>London</city>
+		<pop>100</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</club>
+
+	<club>
+		<id>9197</id>
+		<title>Stargazers</title>
+		<type>Wisdom</type>
+    <traits>
+      <trait type="extra">Intelligent</trait>
+      <trait type="mbti">Intuition</trait>
+    </traits>
+    <city>London</city>
+		<pop>100</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</club>
+
+	<club>
+		<id>3268</id>
+		<title>Bowling League</title>
+		<type>Social</type>
+    <traits>
+      <trait type="mbti">Sensing</trait>
+      <trait type="mbti">Extroverted</trait>
+    </traits>
+    <city>London</city>
+		<pop>100</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</club>
+
+	<club>
+		<id>7591</id>
+		<title>Figure Skating</title>
+		<type>Athletics</type>
+    <traits>
+      <trait type="extra">Athletic</trait>
+      <trait type="sex">0</trait>
+      <trait type="mbti">Perceiving</trait>
+    </traits>
+    <city>London</city>
+		<pop>100</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</club>
+
+	<club>
+		<id>1087</id>
+		<title>Soup Kitchen</title>
+		<type>Charity</type>
+    <traits>
+      <trait type="mbti">Feeling</trait>
+    </traits>
+    <city>London</city>
+		<pop>100</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</club>
+
+</clubs>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<world>
+  <population>366,000</population>
+  <demographics>
+    <race>Caucasian</race>
+    <percent>54</percent>
+  </demographics>
+  <demographics>
+    <race>African American</race>
+    <percent>32</percent>
+  </demographics>
+  <demographics>
+    <race>Oriental</race>
+    <percent>8</percent>
+  </demographics>
+  <demographics>
+    <race>Indian</race>
+    <percent>4</percent>
+  </demographics>
+  <demographics>
+    <race>Other</race>
+    <percent>2</percent>
+  </demographics>
+
+</world>

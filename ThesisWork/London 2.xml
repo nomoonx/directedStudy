@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<world>
+  <population>1,366,000</population>
+  <demographics>
+    <race name="Caucasian">54</race>
+    <race name="African American">32</race>
+    <race name="Oriental">8</race>
+    <race name="Indian">4</race>
+    <race name="Other">2</race>
+  </demographics>
+  <demographics>
+	<age name="0">3</age>
+	<age name="10">8</age>
+	<age name="20">9</age>
+	<age name="30">9</age>
+	<age name="40">11</age>
+	<age name="50">13</age>
+	<age name="60">19</age>
+	<age name="70">16</age>
+	<age name="80">9</age>
+	<age name="90">3</age>
+  </demographics>
+
+</world>

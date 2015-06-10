@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+Note that currently pop is not used from this PostSecondarySchools file. They are kept in here to be consistent with the Schools file (although the two don't have to contain the same tags).
+-->
+
+<schools>
+
+	<school>
+		<id>725</id>
+		<title>University Of Western Ontario</title>
+		<type>U</type>
+		<city>London</city>
+		<pop>1000</pop>
+    <yearStarted>1950</yearStarted>
+		<yearEnded>-</yearEnded>
+	</school>
+
+	<school>
+		<id>953</id>
+		<title>Fanshawe College</title>
+		<type>C</type>
+		<city>London</city>
+		<pop>1200</pop>
+    <yearStarted>1960</yearStarted>
+		<yearEnded>-</yearEnded>
+	</school>
+
+</schools>
