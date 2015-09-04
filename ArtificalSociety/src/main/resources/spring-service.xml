@@ -51,6 +51,10 @@ http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd"
         <property name="sequenceService" ref="sequenceService" />
     </bean>
 
+    <bean id="institutionService" class="org.noMoon.ArtificalSociety.institution.services.impl.InstitutionServiceImpl">
+        <property name="institutionMapper" ref="institutionMapper" />
+    </bean>
+
     <bean id="network_configuration" class="org.noMoon.ArtificalSociety.NetworkGenerator.Configuration">
         <property name="societyService" ref="societyService" />
     </bean>

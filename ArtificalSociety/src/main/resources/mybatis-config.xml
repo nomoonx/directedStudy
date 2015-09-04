@@ -5,5 +5,6 @@
 <mappers>
     <mapper resource="org/noMoon/ArtificalSociety/commons/mappers/SequenceMapper.xml"/>
     <mapper resource="org/noMoon/ArtificalSociety/society/mappers/SocietyMapper.xml"/>
+    <mapper resource="org/noMoon/ArtificalSociety/institution/mappers/InstitutionMapper.xml"/>
 </mappers>
 </configuration>

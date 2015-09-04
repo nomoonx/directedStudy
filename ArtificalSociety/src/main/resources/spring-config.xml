@@ -81,5 +81,10 @@ http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd"
         <property name="sqlSessionFactory" ref="sqlSessionFactory" />
     </bean>
 
+    <bean id="institutionMapper" class="org.mybatis.spring.mapper.MapperFactoryBean" >
+        <property name="mapperInterface" value="org.noMoon.ArtificalSociety.institution.DAO.InstitutionMapper" />
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
 
 </beans>

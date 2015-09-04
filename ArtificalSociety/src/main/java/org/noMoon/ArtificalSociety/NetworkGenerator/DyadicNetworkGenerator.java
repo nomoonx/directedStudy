@@ -1,10 +1,14 @@
 package org.noMoon.ArtificalSociety.NetworkGenerator;
 
+import org.noMoon.ArtificalSociety.institution.services.InstitutionService;
+
 /**
  * Created by noMoon on 2015-08-21.
  */
 //@ContextConfiguration(locations = {"classpath:spring-service.xml"})
 public class DyadicNetworkGenerator {
+
+    InstitutionService institutionService;
 
 //    @Autowired
 
