@@ -14,9 +14,11 @@ public class SocietyServiceImpl implements SocietyService {
     SequenceService sequenceService;
     SocietyMapper societyMapper;
 
-    public int insertNewSociety(Society society) {
-        society.setId(sequenceService.generateIdByEnum(SequenceEnum.SOCIETY_ID_SEQUENCE));
-        return societyMapper.insertSelective(society);
+    public String insertNewSociety(Society society) {
+        String societyId=sequenceService.generateIdByEnum(SequenceEnum.SOCIETY_ID_SEQUENCE);
+        society.setId(societyId);
+        societyMapper.insertSelective(society);
+        return societyId;
     }
 
     public void setSocietyMapper(SocietyMapper societyMapper) {

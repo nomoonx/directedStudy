@@ -12,7 +12,7 @@ public class Configuration {
 
     static SocietyService societyService;
 
-
+    public static String Society_Id;
 	/* ---------------------------------------------
 		ACTIVE SIMULATION PARAMETERS
 	--------------------------------------------- */
@@ -367,7 +367,7 @@ public class Configuration {
             Society newSociety=new Society();
             newSociety.setSocietyYear(SocietyYear);
             newSociety.setSocietyName(SocietyName);
-            societyService.insertNewSociety(newSociety);
+            Society_Id=societyService.insertNewSociety(newSociety);
 
 			MinYear = xmlReader.getInteger("MinYear");
 			MaxYear = xmlReader.getInteger("MaxYear");

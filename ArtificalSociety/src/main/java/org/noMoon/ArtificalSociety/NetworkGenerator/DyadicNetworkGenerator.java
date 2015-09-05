@@ -8,7 +8,7 @@ import org.noMoon.ArtificalSociety.institution.services.InstitutionService;
 //@ContextConfiguration(locations = {"classpath:spring-service.xml"})
 public class DyadicNetworkGenerator {
 
-    InstitutionService institutionService;
+    static InstitutionService institutionService;
 
 //    @Autowired
 
@@ -17,7 +17,10 @@ public class DyadicNetworkGenerator {
     }
 
     public static void LoadAllConfigurations() {
+        System.out.println(123);
         Configuration.LoadConfigValuesFromFile("SocietyConfig.xml");
+        System.out.println(321);
+        institutionService.loadAllInstitutions("Schools.xml","PostSecondarySchools.xml","Temples.xml");
         //Configuration.LoadConfigValuesFromFile("SocietyConfig_Genesis.xml");
         //Configuration.LoadConfigValuesFromFile("SocietyConfig_TEST.xml");
         //Configuration.LoadConfigValuesFromFile("SocietyConfigSmall.xml");
@@ -44,4 +47,8 @@ public class DyadicNetworkGenerator {
     } // end LoadAllConfigurations()
 
 
+
+    public void setInstitutionService(InstitutionService institutionService) {
+        this.institutionService = institutionService;
+    }
 }

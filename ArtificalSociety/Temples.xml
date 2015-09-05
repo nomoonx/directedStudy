@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<temples>
+
+	<temple>
+		<id>514</id>
+		<title>Catholic Church</title>
+		<type>Catholicism</type>
+    <city>London</city>
+		<pop>500</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</temple>
+
+	<temple>
+		<id>507</id>
+		<title>Pentecostal Church</title>
+		<type>Protestantism</type>
+    <city>London</city>
+		<pop>150</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</temple>
+	
+  <temple>
+		<id>933</id>
+		<title>Baptist Church</title>
+		<type>Protestantism</type>
+    <city>London</city>
+		<pop>300</pop>
+		<yearStarted>1940</yearStarted>
+		<yearEnded>-</yearEnded>
+	</temple>
+	
+	<temple>
+		<id>066</id>
+		<title>Synagogue</title>
+		<type>Judaism</type>
+    <city>London</city>
+		<pop>100</pop>
+		<yearStarted>1920</yearStarted>
+		<yearEnded>-</yearEnded>
+	</temple>
+	
+	<temple>
+		<id>623</id>
+		<title>Mosque</title>
+		<type>Islam</type>
+    <city>London</city>
+		<pop>100</pop>
+		<yearStarted>1920</yearStarted>
+		<yearEnded>-</yearEnded>
+	</temple>
+	
+	<temple>
+		<id>525</id>
+		<title>Hindu Temple</title>
+		<type>Hinduism</type>
+    <city>London</city>
+		<pop>100</pop>
+		<yearStarted>1920</yearStarted>
+		<yearEnded>-</yearEnded>
+	</temple>
+	
+	<temple>
+		<id>109</id>
+		<title>Buddhist Temple</title>
+		<type>Buddhism</type>
+    <city>London</city>
+		<pop>100</pop>
+		<yearStarted>1920</yearStarted>
+		<yearEnded>-</yearEnded>
+	</temple>
+
+	<temple>
+		<id>348</id>
+		<title>St. Mary's Catholic Church</title>
+		<type>Catholicism</type>
+    <city>London</city>
+		<pop>500</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</temple>
+
+	<temple>
+		<id>277</id>
+		<title>St. Thomas Catholic Church</title>
+		<type>Catholicism</type>
+    <city>London</city>
+		<pop>500</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</temple>
+
+	<temple>
+		<id>103</id>
+		<title>Mother Teresa Catholic Church</title>
+		<type>Catholicism</type>
+    <city>London</city>
+		<pop>500</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</temple>
+
+	<temple>
+		<id>259</id>
+		<title>St. Anthony Catholic Church</title>
+		<type>Catholicism</type>
+    <city>London</city>
+		<pop>500</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</temple>
+
+	<temple>
+		<id>710</id>
+		<title>Calvary Pentecostal Church</title>
+		<type>Protestantism</type>
+    <city>London</city>
+		<pop>150</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</temple>
+
+  <temple>
+		<id>813</id>
+		<title>London Baptist Church</title>
+		<type>Protestantism</type>
+    <city>London</city>
+		<pop>300</pop>
+		<yearStarted>1940</yearStarted>
+		<yearEnded>-</yearEnded>
+	</temple>
+
+  <temple>
+		<id>376</id>
+		<title>Covenant Baptist Church</title>
+		<type>Protestantism</type>
+    <city>London</city>
+		<pop>300</pop>
+		<yearStarted>1940</yearStarted>
+		<yearEnded>-</yearEnded>
+	</temple>
+
+  <temple>
+		<id>956</id>
+		<title>Beth Torah Synagogue</title>
+		<type>Judaism</type>
+    <city>London</city>
+		<pop>100</pop>
+		<yearStarted>1920</yearStarted>
+		<yearEnded>-</yearEnded>
+	</temple>
+	
+	<temple>
+		<id>427</id>
+		<title>London Mosque</title>
+		<type>Islam</type>
+    <city>London</city>
+		<pop>100</pop>
+		<yearStarted>1920</yearStarted>
+		<yearEnded>-</yearEnded>
+	</temple>
+	
+	<temple>
+		<id>875</id>
+		<title>London Hindu Temple</title>
+		<type>Hinduism</type>
+    <city>London</city>
+		<pop>100</pop>
+		<yearStarted>1920</yearStarted>
+		<yearEnded>-</yearEnded>
+	</temple>
+
+</temples>

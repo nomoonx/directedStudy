@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<schools>
+
+	<school>
+		<id>910</id>
+		<title>School A</title>
+		<type>Elementary</type>
+    <city>London</city>
+		<pop>500</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</school>
+
+	<school>
+		<id>602</id>
+		<title>School B</title>
+		<type>Elementary</type>
+    <city>London</city>
+		<pop>300</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</school>
+	
+  <school>
+		<id>275</id>
+		<title>School C</title>
+		<type>Elementary</type>
+    <city>London</city>
+		<pop>400</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</school>
+	
+	<school>
+		<id>088</id>
+		<title>School D</title>
+		<type>Elementary</type>
+    <city>London</city>
+		<pop>350</pop>
+		<yearStarted>1900</yearStarted>
+		<yearEnded>-</yearEnded>
+	</school>
+
+</schools>

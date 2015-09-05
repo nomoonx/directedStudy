@@ -7,5 +7,5 @@ import org.noMoon.ArtificalSociety.society.DO.Society;
  */
 public interface SocietyService {
 
-    int insertNewSociety(Society society);
+    String insertNewSociety(Society society);
 }
