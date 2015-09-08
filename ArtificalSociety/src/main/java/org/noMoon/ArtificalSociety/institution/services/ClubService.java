@@ -7,4 +7,8 @@ import org.noMoon.ArtificalSociety.institution.DTO.ClubDTO;
  */
 public interface ClubService {
     void insertClubDTO(ClubDTO clubDTO);
+
+    ClubDTO selectClubDTOByPk(Long id);
+
+    void loadClubsFromFile(String filePath);
 }

@@ -5,6 +5,7 @@ import org.noMoon.ArtificalSociety.institution.DO.Club;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by noMoon on 2015-09-06.
@@ -96,7 +97,7 @@ public class ClubDTO {
      *
      * @mbggenerated Fri Sep 04 21:56:34 EDT 2015
      */
-    private HashMap<String, String> trait;
+    private HashMap<String, List<String>> trait;
 
     public ClubDTO(){}
 
@@ -186,11 +187,11 @@ public class ClubDTO {
         this.endingYear = endingYear;
     }
 
-    public HashMap<String, String> getTrait() {
+    public HashMap<String, List<String>> getTrait() {
         return trait;
     }
 
-    public void setTrait(HashMap<String, String> trait) {
+    public void setTrait(HashMap<String, List<String>> trait) {
         this.trait = trait;
     }
 
