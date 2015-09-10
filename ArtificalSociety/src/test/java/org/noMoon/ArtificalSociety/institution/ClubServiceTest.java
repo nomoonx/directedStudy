@@ -3,6 +3,7 @@ package org.noMoon.ArtificalSociety.institution;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.noMoon.ArtificalSociety.NetworkGenerator.Configuration;
 import org.noMoon.ArtificalSociety.institution.DTO.ClubDTO;
 import org.noMoon.ArtificalSociety.institution.services.ClubService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +69,13 @@ public class ClubServiceTest {
                 System.out.println(val);
             }
         }
+    }
+
+    @Test
+    public void testLoadFile(){
+        String filepath="Clubs.xml";
+        Configuration.Society_Id="SocietyIdForTest";
+        clubService.loadClubsFromFile(filepath);
     }
 
 }

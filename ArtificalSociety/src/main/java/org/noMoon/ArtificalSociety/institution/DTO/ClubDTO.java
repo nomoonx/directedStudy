@@ -110,6 +110,9 @@ public class ClubDTO {
         this.gmtModified=club.getGmtModified();
         this.population=club.getPopulation();
         this.trait= JSON.parseObject(club.getTrait(), HashMap.class);
+        this.societyId=club.getSocietyId();
+        this.title=club.getTitle();
+        this.type=club.getType();
     }
 
     public Club convertToClub(){
@@ -120,6 +123,9 @@ public class ClubDTO {
         club.setStartingYear(this.getStartingYear());
         club.setPopulation(this.getPopulation());
         club.setTrait(JSON.toJSONString(this.getTrait()));
+        club.setSocietyId(this.getSocietyId());
+        club.setTitle(this.getTitle());
+        club.setType(this.getType());
         return club;
     }
 

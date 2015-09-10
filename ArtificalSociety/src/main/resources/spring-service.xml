@@ -59,11 +59,14 @@ http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd"
         <property name="societyService" ref="societyService" />
     </bean>
 
-    <bean id="dyadicNetworkGenerator" class="org.noMoon.ArtificalSociety.NetworkGenerator.DyadicNetworkGenerator">
-        <property name="institutionService" ref="institutionService" />
-    </bean>
+
 
     <bean id="clubService" class="org.noMoon.ArtificalSociety.institution.services.impl.ClubServiceImpl">
         <property name="clubMapper" ref="clubMapper" />
+    </bean>
+
+    <bean id="dyadicNetworkGenerator" class="org.noMoon.ArtificalSociety.NetworkGenerator.DyadicNetworkGenerator">
+        <property name="institutionService" ref="institutionService" />
+        <property name="clubService" ref="clubService" />
     </bean>
 </beans>

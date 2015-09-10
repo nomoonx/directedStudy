@@ -1,5 +1,6 @@
 package org.noMoon.ArtificalSociety.NetworkGenerator;
 
+import org.noMoon.ArtificalSociety.institution.services.ClubService;
 import org.noMoon.ArtificalSociety.institution.services.InstitutionService;
 
 /**
@@ -9,8 +10,9 @@ import org.noMoon.ArtificalSociety.institution.services.InstitutionService;
 public class DyadicNetworkGenerator {
 
     static InstitutionService institutionService;
+    static ClubService clubService;
 
-//    @Autowired
+    //    @Autowired
 
     public static void generateDyadicNetwork(){
         LoadAllConfigurations();
@@ -21,6 +23,7 @@ public class DyadicNetworkGenerator {
         Configuration.LoadConfigValuesFromFile("SocietyConfig.xml");
         System.out.println(321);
         institutionService.loadAllInstitutions("Schools.xml","PostSecondarySchools.xml","Temples.xml");
+        clubService.loadClubsFromFile("Clubs.xml");
         //Configuration.LoadConfigValuesFromFile("SocietyConfig_Genesis.xml");
         //Configuration.LoadConfigValuesFromFile("SocietyConfig_TEST.xml");
         //Configuration.LoadConfigValuesFromFile("SocietyConfigSmall.xml");
@@ -50,5 +53,9 @@ public class DyadicNetworkGenerator {
 
     public void setInstitutionService(InstitutionService institutionService) {
         this.institutionService = institutionService;
+    }
+
+    public void setClubService(ClubService clubService) {
+        DyadicNetworkGenerator.clubService = clubService;
     }
 }
