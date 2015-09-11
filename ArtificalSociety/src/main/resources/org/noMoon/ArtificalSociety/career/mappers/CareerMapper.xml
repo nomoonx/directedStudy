@@ -17,6 +17,7 @@
     <result column="EDUCATION" property="education" jdbcType="VARCHAR" />
     <result column="NUM_YEAR_POST_SECONDARY" property="numYearPostSecondary" jdbcType="INTEGER" />
     <result column="TRAIT" property="trait" jdbcType="VARCHAR" />
+      <result column="CAREER_ID" property="careerId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     <!--
@@ -25,7 +26,7 @@
       This element was generated on Thu Sep 10 03:30:13 EDT 2015.
     -->
     ID, GMT_CREATE, GMT_MODIFIED, SOCIETY_ID, TITLE, SALARY_MEAN, NUM_PERCNET, EDUCATION, 
-    NUM_YEAR_POST_SECONDARY, TRAIT
+    NUM_YEAR_POST_SECONDARY, TRAIT,CAREER_ID
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     <!--
@@ -56,11 +57,11 @@
     insert into CAREER (GMT_CREATE, GMT_MODIFIED,
       SOCIETY_ID, TITLE, SALARY_MEAN, 
       NUM_PERCNET, EDUCATION, NUM_YEAR_POST_SECONDARY, 
-      TRAIT)
+      TRAIT,CAREER_ID)
     values (now(),now(),
       #{societyId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{salaryMean,jdbcType=DOUBLE}, 
       #{numPercnet,jdbcType=DOUBLE}, #{education,jdbcType=VARCHAR}, #{numYearPostSecondary,jdbcType=INTEGER}, 
-      #{trait,jdbcType=VARCHAR})
+      #{trait,jdbcType=VARCHAR}),#{careerId,jdbcType=VARCHAR}
   </insert>
   <insert id="insertSelective" parameterType="org.noMoon.ArtificalSociety.career.DO.Career" useGeneratedKeys="true" keyProperty="id" keyColumn="ID">
     <!--
@@ -93,6 +94,9 @@
       <if test="trait != null" >
         TRAIT,
       </if>
+        <if test="careerId != null" >
+            CAREER_ID,
+        </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       now(),now(),
@@ -117,6 +121,9 @@
       <if test="trait != null" >
         #{trait,jdbcType=VARCHAR},
       </if>
+        <if test="careerId != null" >
+            #{careerId,jdbcType=VARCHAR},
+        </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="org.noMoon.ArtificalSociety.career.DO.Career" >
@@ -152,6 +159,9 @@
       <if test="trait != null" >
         TRAIT = #{trait,jdbcType=VARCHAR},
       </if>
+        <if test="careerId != null" >
+           CAREER_ID= #{careerId,jdbcType=VARCHAR},
+        </if>
     </set>
     where ID = #{id,jdbcType=BIGINT}
   </update>
@@ -170,7 +180,8 @@
       NUM_PERCNET = #{numPercnet,jdbcType=DOUBLE},
       EDUCATION = #{education,jdbcType=VARCHAR},
       NUM_YEAR_POST_SECONDARY = #{numYearPostSecondary,jdbcType=INTEGER},
-      TRAIT = #{trait,jdbcType=VARCHAR}
+      TRAIT = #{trait,jdbcType=VARCHAR},
+      CAREER_ID= #{careerId,jdbcType=VARCHAR}
     where ID = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

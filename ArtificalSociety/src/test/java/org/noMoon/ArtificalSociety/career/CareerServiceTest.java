@@ -27,6 +27,7 @@ public class CareerServiceTest {
     public void testInsert(){
         CareerDTO careerDTO=new CareerDTO();
         careerDTO.setTitle("testTitle");
+        careerDTO.setCareerId("testCareerId");
         careerService.insertNewCareer(careerDTO);
         System.out.println(careerDTO.getId());
     }
