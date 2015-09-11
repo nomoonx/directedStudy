@@ -22,7 +22,7 @@
                 </dependencies>
                 <configuration>
                     <verbose>true</verbose>
-                    <overwrite>true</overwrite>
+                    <overwrite>false</overwrite>
                 </configuration>
             </plugin>
         </plugins>
