@@ -8,4 +8,6 @@ import org.noMoon.ArtificalSociety.career.DTO.CareerDTO;
 public interface CareerService {
 
     void insertNewCareer(CareerDTO careerDTO);
+
+    void loadCareerAndWorkplace(String careerConfigFilepath, String workplaceConfigFilepath);
 }

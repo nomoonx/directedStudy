@@ -45,11 +45,9 @@ public class ClubServiceImpl implements ClubService {
             int i, d;
 
             Element clubCategoryElement;
-            Element trait;
 
-            String traitType;
-            String traitTypeValue;
-            NodeList traitList;
+
+
 
             for (d = 0; d < clubList.getLength(); d++) {
 
@@ -86,28 +84,30 @@ public class ClubServiceImpl implements ClubService {
                 } // end i (loop through elements)
 
                 // ----- Traits -----
-                traitList = clubElement.getElementsByTagName("trait");            // Extract component as NodeList.
+                NodeList traitList = clubElement.getElementsByTagName("trait");            // Extract component as NodeList.
                 HashMap<String, List<String>> traitMap = new HashMap<String, List<String>>();
 //                traitSet = new ArrayList<String[]>();
 
                 for (i = 0; i < traitList.getLength(); i++) {
-                    trait = (Element) traitList.item(i);
-                    traitType = trait.getAttribute("type");                        // Get attribute "type".
-                    traitTypeValue = trait.getFirstChild().getNodeValue();        // Get value.
+                    Element trait = (Element) traitList.item(i);
+                    String traitType = trait.getAttribute("type");                        // Get attribute "type".
+                    String traitTypeValue = trait.getFirstChild().getNodeValue();        // Get value.
+                    String traitReq="|";
+                    if (trait.hasAttribute("req")) {
+                        traitReq += trait.getAttribute("req");						// Get attribute "req".
+                    }else{
+                        traitReq="";
+                    }
                     if (traitMap.containsKey(traitType)) {
                         List<String> tempList = traitMap.get(traitType);
-                        tempList.add(traitTypeValue);
+                        tempList.add(traitTypeValue+traitReq);
                         traitMap.put(traitType, tempList);
                     } else {
                         List<String> tempList = new ArrayList<String>();
-                        tempList.add(traitTypeValue);
+                        tempList.add(traitTypeValue+traitReq);
                         traitMap.put(traitType, tempList);
                     }
-//                    if (trait.hasAttribute("req")) {
-//                        traitReq = trait.getAttribute("req");						// Get attribute "req".
-//                    } else {
-//                        traitReq = "";
-//                    } // end if (check if club has "req" attribute)
+
 //                    // Add both the type and value to a string array and add that array to the club's arraylist.
 //                    traitPair = new String[] {traitType, traitTypeValue, traitReq};
 //                    traitSet.add(traitPair);									// Add this info to the array for this element.

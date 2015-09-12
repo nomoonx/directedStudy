@@ -32,4 +32,9 @@ public class CareerServiceTest {
         System.out.println(careerDTO.getId());
     }
 
+    @Test
+    public void testLoadFile(){
+        careerService.loadCareerAndWorkplace("CareersNew.xml","");
+    }
+
 }
