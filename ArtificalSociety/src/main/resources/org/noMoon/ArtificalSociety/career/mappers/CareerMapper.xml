@@ -18,6 +18,7 @@
     <result column="NUM_YEAR_POST_SECONDARY" property="numYearPostSecondary" jdbcType="INTEGER" />
     <result column="TRAIT" property="trait" jdbcType="VARCHAR" />
       <result column="CAREER_ID" property="careerId" jdbcType="VARCHAR" />
+      <result column="WORKPLACE_ID" property="workplaceId" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Base_Column_List" >
     <!--
@@ -26,7 +27,7 @@
       This element was generated on Thu Sep 10 03:30:13 EDT 2015.
     -->
     ID, GMT_CREATE, GMT_MODIFIED, SOCIETY_ID, TITLE, SALARY_MEAN, NUM_PERCNET, EDUCATION, 
-    NUM_YEAR_POST_SECONDARY, TRAIT,CAREER_ID
+    NUM_YEAR_POST_SECONDARY, TRAIT, CAREER_ID, WORKPLACE_ID
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     <!--
@@ -39,6 +40,12 @@
     from CAREER
     where ID = #{id,jdbcType=BIGINT}
   </select>
+    <select id="selectByCareerId" resultMap="BaseResultMap" parameterType="org.noMoon.ArtificalSociety.career.DO.Career">
+        SELECT
+        <include refid="Base_Column_List" />
+        from CAREER
+        where SOCIETY_ID = #{societyId,jdbcType=VARCHAR} and CAREER_ID= #{careerId,jdbcType=VARCHAR}
+    </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     <!--
       WARNING - @mbggenerated
@@ -57,11 +64,11 @@
     insert into CAREER (GMT_CREATE, GMT_MODIFIED,
       SOCIETY_ID, TITLE, SALARY_MEAN, 
       NUM_PERCNET, EDUCATION, NUM_YEAR_POST_SECONDARY, 
-      TRAIT,CAREER_ID)
+      TRAIT,CAREER_ID,WORKPLACE_ID)
     values (now(),now(),
       #{societyId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{salaryMean,jdbcType=DOUBLE}, 
       #{numPercnet,jdbcType=DOUBLE}, #{education,jdbcType=VARCHAR}, #{numYearPostSecondary,jdbcType=INTEGER}, 
-      #{trait,jdbcType=VARCHAR}),#{careerId,jdbcType=VARCHAR}
+      #{trait,jdbcType=VARCHAR}),#{careerId,jdbcType=VARCHAR},#{workplaceId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="org.noMoon.ArtificalSociety.career.DO.Career" useGeneratedKeys="true" keyProperty="id" keyColumn="ID">
     <!--
@@ -97,6 +104,9 @@
         <if test="careerId != null" >
             CAREER_ID,
         </if>
+        <if test="workplaceId !=null">
+            WORKPLACE_ID,
+        </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       now(),now(),
@@ -123,6 +133,9 @@
       </if>
         <if test="careerId != null" >
             #{careerId,jdbcType=VARCHAR},
+        </if>
+        <if test="workplaceId!=null">
+            #{workplaceId,jdbcType=BIGINT},
         </if>
     </trim>
   </insert>
@@ -162,6 +175,9 @@
         <if test="careerId != null" >
            CAREER_ID= #{careerId,jdbcType=VARCHAR},
         </if>
+        <if test="workplaceId !=null">
+            WORKPLACE_ID=#{workplaceId,jdbcType=BIGINT},
+        </if>
     </set>
     where ID = #{id,jdbcType=BIGINT}
   </update>
@@ -181,7 +197,8 @@
       EDUCATION = #{education,jdbcType=VARCHAR},
       NUM_YEAR_POST_SECONDARY = #{numYearPostSecondary,jdbcType=INTEGER},
       TRAIT = #{trait,jdbcType=VARCHAR},
-      CAREER_ID= #{careerId,jdbcType=VARCHAR}
+      CAREER_ID= #{careerId,jdbcType=VARCHAR},
+      WORKPLACE_ID=#{workplaceId,jdbcType=BIGINT}
     where ID = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

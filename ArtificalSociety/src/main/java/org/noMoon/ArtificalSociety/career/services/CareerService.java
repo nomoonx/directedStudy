@@ -9,5 +9,5 @@ public interface CareerService {
 
     void insertNewCareer(CareerDTO careerDTO);
 
-    void loadCareerAndWorkplace(String careerConfigFilepath, String workplaceConfigFilepath);
+    void loadCareerAndWorkplace(String careerConfigFilepath, String workplaceConfigFilepath,String societyId);
 }

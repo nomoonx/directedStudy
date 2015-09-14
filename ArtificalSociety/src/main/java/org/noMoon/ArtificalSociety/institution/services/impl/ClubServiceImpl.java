@@ -1,6 +1,6 @@
 package org.noMoon.ArtificalSociety.institution.services.impl;
 
-import org.noMoon.ArtificalSociety.NetworkGenerator.Configuration;
+import org.noMoon.ArtificalSociety.commons.utils.Configuration;
 import org.noMoon.ArtificalSociety.institution.DAO.ClubMapper;
 import org.noMoon.ArtificalSociety.institution.DO.Club;
 import org.noMoon.ArtificalSociety.institution.DTO.ClubDTO;
@@ -29,7 +29,7 @@ public class ClubServiceImpl implements ClubService {
         return new ClubDTO(clubMapper.selectByPrimaryKey(id));
     }
 
-    public void loadClubsFromFile(String filePath) {
+    public void loadClubsFromFile(String filePath,String societyId) {
         try {
             File file = new File(filePath);
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -63,7 +63,7 @@ public class ClubServiceImpl implements ClubService {
                 clubNode = clubList.item(d);                                    // Get element as Node.
                 clubElement = (Element) clubNode;                                // Convert to Element.
                 //set society id
-                clubDTO.setSocietyId(Configuration.Society_Id);
+                clubDTO.setSocietyId(societyId);
 
                 // ----- Title -----
                 SchInfo = clubElement.getElementsByTagName("title");            // Extract  component as NodeList.

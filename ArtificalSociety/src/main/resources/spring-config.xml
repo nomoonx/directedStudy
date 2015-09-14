@@ -96,5 +96,10 @@ http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd"
         <property name="sqlSessionFactory" ref="sqlSessionFactory" />
     </bean>
 
+    <bean id="workplaceMapper" class="org.mybatis.spring.mapper.MapperFactoryBean" >
+        <property name="mapperInterface" value="org.noMoon.ArtificalSociety.career.DAO.WorkplaceMapper" />
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
 
 </beans>

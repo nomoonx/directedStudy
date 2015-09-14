@@ -62,7 +62,7 @@
 
         </table>
         -->
-        <table tableName="CAREER" domainObjectName="Career" enableCountByExample="false"
+        <table tableName="WORKPLACE" domainObjectName="Workplace" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false"  selectByExampleQueryId="false">
 
             <generatedKey column="ID" sqlStatement="MySql" />

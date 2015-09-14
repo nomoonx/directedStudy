@@ -28,13 +28,14 @@ public class CareerServiceTest {
         CareerDTO careerDTO=new CareerDTO();
         careerDTO.setTitle("testTitle");
         careerDTO.setCareerId("testCareerId");
+        careerDTO.setWorkplaceId((long)1111);
         careerService.insertNewCareer(careerDTO);
         System.out.println(careerDTO.getId());
     }
 
     @Test
     public void testLoadFile(){
-        careerService.loadCareerAndWorkplace("CareersNew.xml","");
+        careerService.loadCareerAndWorkplace("CareersNew.xml","","SocietyId");
     }
 
 }

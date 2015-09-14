@@ -1,4 +1,4 @@
-package org.noMoon.ArtificalSociety.NetworkGenerator;
+package org.noMoon.ArtificalSociety.commons.utils;
 
 import org.noMoon.ArtificalSociety.commons.utils.XMLReader;
 import org.noMoon.ArtificalSociety.society.DO.Society;

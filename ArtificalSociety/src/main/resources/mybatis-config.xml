@@ -8,5 +8,6 @@
     <mapper resource="org/noMoon/ArtificalSociety/institution/mappers/InstitutionMapper.xml"/>
     <mapper resource="org/noMoon/ArtificalSociety/institution/mappers/ClubMapper.xml"/>
     <mapper resource="org/noMoon/ArtificalSociety/career/mappers/CareerMapper.xml"/>
+    <mapper resource="org/noMoon/ArtificalSociety/career/mappers/WorkplaceMapper.xml"/>
 </mappers>
 </configuration>

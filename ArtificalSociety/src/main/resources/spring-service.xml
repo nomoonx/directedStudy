@@ -55,7 +55,7 @@ http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd"
         <property name="institutionMapper" ref="institutionMapper" />
     </bean>
 
-    <bean id="network_configuration" class="org.noMoon.ArtificalSociety.NetworkGenerator.Configuration">
+    <bean id="network_configuration" class="org.noMoon.ArtificalSociety.commons.utils.Configuration">
         <property name="societyService" ref="societyService" />
     </bean>
 
@@ -65,10 +65,13 @@ http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd"
 
     <bean id="careerService" class="org.noMoon.ArtificalSociety.career.services.impl.CareerServiceImpl">
         <property name="careerMapper" ref="careerMapper" />
+        <property name="workplaceMapper" ref="workplaceMapper" />
+        <property name="institutionService" ref="institutionService" />
     </bean>
 
     <bean id="dyadicNetworkGenerator" class="org.noMoon.ArtificalSociety.NetworkGenerator.DyadicNetworkGenerator">
         <property name="institutionService" ref="institutionService" />
         <property name="clubService" ref="clubService" />
+        <property name="careerService" ref="careerService" />
     </bean>
 </beans>

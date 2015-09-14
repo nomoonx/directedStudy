@@ -8,4 +8,6 @@ import org.noMoon.ArtificalSociety.society.DO.Society;
 public interface SocietyService {
 
     String insertNewSociety(Society society);
+
+    String getCurrentSocietyId();
 }

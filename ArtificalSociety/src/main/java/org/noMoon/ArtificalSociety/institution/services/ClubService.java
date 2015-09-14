@@ -10,5 +10,5 @@ public interface ClubService {
 
     ClubDTO selectClubDTOByPk(Long id);
 
-    void loadClubsFromFile(String filePath);
+    void loadClubsFromFile(String filePath,String societyId);
 }

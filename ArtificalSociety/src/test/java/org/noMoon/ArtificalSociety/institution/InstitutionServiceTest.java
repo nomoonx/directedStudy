@@ -10,6 +10,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * Created by noMoon on 2015-09-02.
  */
@@ -26,7 +28,15 @@ public class InstitutionServiceTest {
     public void testInsert(){
         Institution inst=new Institution();
         inst.setCity("test");
+        inst.setSocietyId("testSocietyId");
+        inst.setTitle("testTitle");
         institutionService.insertNewInstitution(inst);
         System.out.println(inst.getId());
+    }
+
+    @Test
+    public void testSelectByTitle(){
+        List<Institution> insts=institutionService.selectInstitutionByTitle("testSocietyId","testTitle");
+        System.out.println(insts.size());
     }
 }

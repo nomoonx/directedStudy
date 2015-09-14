@@ -1,6 +1,6 @@
 package org.noMoon.ArtificalSociety.institution.services.impl;
 
-import org.noMoon.ArtificalSociety.NetworkGenerator.Configuration;
+import org.noMoon.ArtificalSociety.commons.utils.Configuration;
 import org.noMoon.ArtificalSociety.institution.DAO.InstitutionMapper;
 import org.noMoon.ArtificalSociety.institution.DO.Institution;
 import org.noMoon.ArtificalSociety.institution.enums.InstitutionEnum;
@@ -14,6 +14,7 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.util.List;
 
 /**
  * Created by noMoon on 2015-09-02.
@@ -22,24 +23,24 @@ public class InstitutionServiceImpl implements InstitutionService {
 
     InstitutionMapper institutionMapper;
 
-    public void loadAllInstitutions(String elemSchoolConfFilepath, String psSchoolConfFilepath, String templeConfFilepath) {
+    public void loadAllInstitutions(String elemSchoolConfFilepath, String psSchoolConfFilepath, String templeConfFilepath, String societyId) {
         try {
             if (!StringUtils.isEmpty(elemSchoolConfFilepath)) {
                 System.out.println("elementary school");
-                loadFromFile(elemSchoolConfFilepath, InstitutionEnum.ELEMENTARY_SCHOOL);
+                loadFromFile(elemSchoolConfFilepath, InstitutionEnum.ELEMENTARY_SCHOOL, societyId);
             }
-            if(!StringUtils.isEmpty(psSchoolConfFilepath)){
-                loadFromFile(psSchoolConfFilepath,InstitutionEnum.POST_SECONDARY_SCHOOL);
+            if (!StringUtils.isEmpty(psSchoolConfFilepath)) {
+                loadFromFile(psSchoolConfFilepath, InstitutionEnum.POST_SECONDARY_SCHOOL, societyId);
             }
-            if(!StringUtils.isEmpty(templeConfFilepath)){
-                loadFromFile(templeConfFilepath,InstitutionEnum.TEMPLE);
+            if (!StringUtils.isEmpty(templeConfFilepath)) {
+                loadFromFile(templeConfFilepath, InstitutionEnum.TEMPLE, societyId);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void loadFromFile (String filepath, InstitutionEnum institutionEnum) throws Exception {
+    private void loadFromFile(String filepath, InstitutionEnum institutionEnum, String societyId) throws Exception {
         // Load the list of schools and related info (title, p_attend, etc.) from the XML file. Note that p_attend is the probability in [0,1]
         // that a student will attend this school. The sum of all schools' p_attend should equal 1.0.
         // param filepath: The string of the file name, assuming the file is in the root directory of this project.
@@ -60,21 +61,21 @@ public class InstitutionServiceImpl implements InstitutionService {
         // For each of the main elements within the XML file.
         for (d = 0; d < demoList.getLength(); d++) {
 
-            Institution inst=new Institution();
-            inst.setSocietyId(Configuration.Society_Id);
+            Institution inst = new Institution();
+            inst.setSocietyId(societyId);
 
             // --------------------------------------------------
             // Get section root.
             // --------------------------------------------------
-            Node demoNode = demoList.item(d);							// Get main element as Node.
-            Element demoElement = (Element)demoNode;					// Convert to Element.
+            Node demoNode = demoList.item(d);                            // Get main element as Node.
+            Element demoElement = (Element) demoNode;                    // Convert to Element.
 
             NodeList InstInfo;
 
             // ----- Title -----
-            InstInfo = demoElement.getElementsByTagName("title");		// Extract component as NodeList.
+            InstInfo = demoElement.getElementsByTagName("title");        // Extract component as NodeList.
             for (i = 0; i < InstInfo.getLength(); i++) {
-                Element demoRaceCatElement = (Element)InstInfo.item(i);	// Convert to element.
+                Element demoRaceCatElement = (Element) InstInfo.item(i);    // Convert to element.
                 NodeList nodeList = demoRaceCatElement.getChildNodes();
                 inst.setTitle(nodeList.item(0).getNodeValue());
 //                InstitutionInfo.add(Institution_Name, nodeList.item(0).getNodeValue());			// Add this institution info to the array for this institution.
@@ -85,45 +86,45 @@ public class InstitutionServiceImpl implements InstitutionService {
 //            InstitutionInfo.add(Institution_Type, treeRootName);
 
             // ----- Subtype -----
-            InstInfo = demoElement.getElementsByTagName("type");			// Extract component as NodeList.
+            InstInfo = demoElement.getElementsByTagName("type");            // Extract component as NodeList.
             for (i = 0; i < InstInfo.getLength(); i++) {
-                Element demoRaceCatElement = (Element)InstInfo.item(i);	// Convert to element.
+                Element demoRaceCatElement = (Element) InstInfo.item(i);    // Convert to element.
                 NodeList nodeList = demoRaceCatElement.getChildNodes();
                 inst.setType(nodeList.item(0).getNodeValue());
 //                InstitutionInfo.add(Institution_Subtype, nodeList.item(0).getNodeValue());			// Add this institution info to the array for this institution.
             } // end i (loop through elements)
 
             // ----- City -----
-            InstInfo = demoElement.getElementsByTagName("city");			// Extract component as NodeList.
+            InstInfo = demoElement.getElementsByTagName("city");            // Extract component as NodeList.
             for (i = 0; i < InstInfo.getLength(); i++) {
-                Element demoRaceCatElement = (Element)InstInfo.item(i);	// Convert to element.
+                Element demoRaceCatElement = (Element) InstInfo.item(i);    // Convert to element.
                 NodeList nodeList = demoRaceCatElement.getChildNodes();
                 inst.setCity(nodeList.item(0).getNodeValue());
 //                InstitutionInfo.add(Institution_City, nodeList.item(0).getNodeValue());			// Add this institution info to the array for this institution.
             } // end i (loop through elements)
 
             // ----- Population -----
-            InstInfo = demoElement.getElementsByTagName("pop");			// Extract component as NodeList.
+            InstInfo = demoElement.getElementsByTagName("pop");            // Extract component as NodeList.
             for (i = 0; i < InstInfo.getLength(); i++) {
-                Element demoRaceCatElement = (Element)InstInfo.item(i);	// Convert to element.
+                Element demoRaceCatElement = (Element) InstInfo.item(i);    // Convert to element.
                 NodeList nodeList = demoRaceCatElement.getChildNodes();
                 inst.setPopulation(Integer.parseInt(nodeList.item(0).getNodeValue()));
 //                InstitutionInfo.add(Institution_Pop, nodeList.item(0).getNodeValue());			// Add this institution info to the array for this institution.
             } // end i (loop through elements)
 
             // ----- Year Started -----
-            InstInfo = demoElement.getElementsByTagName("yearStarted");	// Extract component as NodeList.
+            InstInfo = demoElement.getElementsByTagName("yearStarted");    // Extract component as NodeList.
             for (i = 0; i < InstInfo.getLength(); i++) {
-                Element demoRaceCatElement = (Element)InstInfo.item(i);	// Convert to element.
+                Element demoRaceCatElement = (Element) InstInfo.item(i);    // Convert to element.
                 NodeList nodeList = demoRaceCatElement.getChildNodes();
                 inst.setStartingYear(Integer.parseInt(nodeList.item(0).getNodeValue()));
 //                InstitutionInfo.add(Institution_StYr, nodeList.item(0).getNodeValue());			// Add this institution info to the array for this institution.
             } // end i (loop through elements)
 
             // ----- Year Ended -----
-            InstInfo = demoElement.getElementsByTagName("yearEnded");	// Extract component as NodeList.
+            InstInfo = demoElement.getElementsByTagName("yearEnded");    // Extract component as NodeList.
             for (i = 0; i < InstInfo.getLength(); i++) {
-                Element demoRaceCatElement = (Element)InstInfo.item(i);	// Convert to element.
+                Element demoRaceCatElement = (Element) InstInfo.item(i);    // Convert to element.
                 NodeList nodeList = demoRaceCatElement.getChildNodes();
                 String tmp = nodeList.item(0).getNodeValue();
 
@@ -143,7 +144,6 @@ public class InstitutionServiceImpl implements InstitutionService {
             } // end i (loop through race elements)
 
             institutionMapper.insertSelective(inst);
-            System.out.println(inst.getId());
             // Add this school array to large array.
 //            AllInstInSet.add(InstitutionInfo);
 
@@ -151,9 +151,16 @@ public class InstitutionServiceImpl implements InstitutionService {
     }
 
     public int insertNewInstitution(Institution institution) {
-        int rows=institutionMapper.insertSelective(institution);
-        System.out.println(institution.getId());
+        int rows = institutionMapper.insertSelective(institution);
         return rows;
+    }
+
+    public List<Institution> selectInstitutionByTitle(String societyId, String title) {
+        Institution query = new Institution();
+        query.setSocietyId(societyId);
+        query.setTitle(title);
+        List<Institution> result = institutionMapper.selectByTitle(query);
+        return result;
     }
 
     public void setInstitutionMapper(InstitutionMapper institutionMapper) {
