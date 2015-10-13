@@ -54,4 +54,7 @@ public interface InstitutionMapper {
     int updateByPrimaryKey(Institution record);
 
     List<Institution> selectByTitle(Institution record);
+
+    List<Institution> selectBySocietyId(Institution record);
+
 }

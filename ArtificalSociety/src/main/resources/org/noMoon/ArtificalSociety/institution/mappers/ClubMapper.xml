@@ -39,6 +39,13 @@
     from CLUB
     where ID = #{id,jdbcType=BIGINT}
   </select>
+
+    <select id="selectClubBySocietyId" parameterType="org.noMoon.ArtificalSociety.institution.DO.Club" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from CLUB
+        where SOCIETY_ID = #{societyId,jdbcType=VARCHAR}
+    </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     <!--
       WARNING - @mbggenerated

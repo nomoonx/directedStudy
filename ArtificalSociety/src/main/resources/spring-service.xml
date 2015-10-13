@@ -63,19 +63,23 @@ http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd"
         <property name="clubMapper" ref="clubMapper" />
     </bean>
 
-    <bean id="groupSerivce" class="org.noMoon.ArtificalSociety.group.Services.impl.GroupServiceImpl">
-        <property name="groupMapper" ref="groupMapper" />
-    </bean>
-
     <bean id="careerService" class="org.noMoon.ArtificalSociety.career.services.impl.CareerServiceImpl">
         <property name="careerMapper" ref="careerMapper" />
         <property name="workplaceMapper" ref="workplaceMapper" />
         <property name="institutionService" ref="institutionService" />
     </bean>
 
+    <bean id="groupSerivce" class="org.noMoon.ArtificalSociety.group.Services.impl.GroupServiceImpl">
+        <property name="groupMapper" ref="groupMapper" />
+        <property name="institutionService" ref="institutionService" />
+        <property name="clubService" ref="clubService" />
+        <property name="careerService" ref="careerService" />
+    </bean>
+
     <bean id="dyadicNetworkGenerator" class="org.noMoon.ArtificalSociety.NetworkGenerator.DyadicNetworkGenerator">
         <property name="institutionService" ref="institutionService" />
         <property name="clubService" ref="clubService" />
         <property name="careerService" ref="careerService" />
+        <property name="groupService" ref="groupSerivce"></property>
     </bean>
 </beans>

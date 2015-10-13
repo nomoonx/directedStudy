@@ -35,8 +35,14 @@ public class groupServiceTest {
         ids.add("id2");
         ids.add("id3");
         groupDTO.setMemberList(ids);
-        int id=groupService.insertNewGroup(groupDTO);
+        long id=groupService.insertNewGroup(groupDTO);
+        System.out.println(id);
         System.out.println(groupDTO.getId());
+    }
 
+    @Test
+    public void testGenerate(){
+        String societyId="S201509141000018";
+        groupService.generateGroups(societyId);
     }
 }

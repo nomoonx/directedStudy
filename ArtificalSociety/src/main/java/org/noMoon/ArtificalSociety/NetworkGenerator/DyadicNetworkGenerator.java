@@ -2,6 +2,7 @@ package org.noMoon.ArtificalSociety.NetworkGenerator;
 
 import org.noMoon.ArtificalSociety.career.services.CareerService;
 import org.noMoon.ArtificalSociety.commons.utils.Configuration;
+import org.noMoon.ArtificalSociety.group.Services.GroupService;
 import org.noMoon.ArtificalSociety.institution.services.ClubService;
 import org.noMoon.ArtificalSociety.institution.services.InstitutionService;
 
@@ -14,6 +15,7 @@ public class DyadicNetworkGenerator {
     static InstitutionService institutionService;
     static ClubService clubService;
     static CareerService careerService;
+    static GroupService groupService;
 
     //    @Autowired
 
@@ -27,6 +29,7 @@ public class DyadicNetworkGenerator {
         institutionService.loadAllInstitutions("Schools.xml", "PostSecondarySchools.xml", "Temples.xml", Configuration.Society_Id);
         clubService.loadClubsFromFile("Clubs.xml", Configuration.Society_Id);
         careerService.loadCareerAndWorkplace("CareersNew.xml","Workplaces.xml",Configuration.Society_Id);
+        groupService.generateGroups(Configuration.Society_Id);
         //Configuration.LoadConfigValuesFromFile("SocietyConfig_Genesis.xml");
         //Configuration.LoadConfigValuesFromFile("SocietyConfig_TEST.xml");
         //Configuration.LoadConfigValuesFromFile("SocietyConfigSmall.xml");
@@ -52,7 +55,9 @@ public class DyadicNetworkGenerator {
 
     } // end LoadAllConfigurations()
 
-
+    public void setGroupService(GroupService groupService) {
+        DyadicNetworkGenerator.groupService = groupService;
+    }
 
     public void setInstitutionService(InstitutionService institutionService) {
         this.institutionService = institutionService;

@@ -163,6 +163,13 @@ public class InstitutionServiceImpl implements InstitutionService {
         return result;
     }
 
+    public List<Institution> selectInstitutionBySocietyId(String societyId) {
+        Institution query = new Institution();
+        query.setSocietyId(societyId);
+        List<Institution> result = institutionMapper.selectBySocietyId(query);
+        return result;
+    }
+
     public void setInstitutionMapper(InstitutionMapper institutionMapper) {
         this.institutionMapper = institutionMapper;
     }

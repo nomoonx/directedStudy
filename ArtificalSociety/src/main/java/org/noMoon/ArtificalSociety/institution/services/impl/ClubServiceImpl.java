@@ -175,7 +175,12 @@ public class ClubServiceImpl implements ClubService {
         Club club = clubDTO.convertToClub();
         clubMapper.insertSelective(club);
         clubDTO.setId(club.getId());
+    }
 
+    public List<Club> selectClubBySocietyId(String societyId) {
+        Club club=new Club();
+        club.setSocietyId(societyId);
+        return clubMapper.selectClubBySocietyId(club);
     }
 
     public void setClubMapper(ClubMapper clubMapper) {

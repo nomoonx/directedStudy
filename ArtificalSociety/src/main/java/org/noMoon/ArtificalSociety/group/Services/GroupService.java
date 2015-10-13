@@ -7,4 +7,6 @@ import org.noMoon.ArtificalSociety.group.DTO.GroupDTO;
  */
 public interface GroupService {
     long insertNewGroup(GroupDTO groupDTO);
+
+    void generateGroups(String societyId);
 }
