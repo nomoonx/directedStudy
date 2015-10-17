@@ -76,6 +76,10 @@ http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd"
         <property name="careerService" ref="careerService" />
     </bean>
 
+    <bean id="historyService" class="org.noMoon.ArtificalSociety.history.services.impl.HistoryServiceImpl">
+        <property name="historyMapper" ref="historyMapper" />
+    </bean>
+
     <bean id="dyadicNetworkGenerator" class="org.noMoon.ArtificalSociety.NetworkGenerator.DyadicNetworkGenerator">
         <property name="institutionService" ref="institutionService" />
         <property name="clubService" ref="clubService" />
