@@ -27,4 +27,14 @@ public class SequenceServiceTest {
     public void testSelectId(){
         System.out.println(sequenceService.generateIdByEnum(SequenceEnum.SOCIETY_ID_SEQUENCE));
     }
+
+    @Test
+    public void testPersonId(){
+        System.out.println(sequenceService.generateIdByEnum(SequenceEnum.PERSON_ID_SEQUENCE));
+    }
+
+    @Test
+    public void testFamilyId(){
+        System.out.println(sequenceService.generateIdByEnum(SequenceEnum.FAMILY_ID_SEQUENCE));
+    }
 }

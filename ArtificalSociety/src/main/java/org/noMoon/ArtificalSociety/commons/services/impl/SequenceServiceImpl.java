@@ -42,6 +42,9 @@ public class SequenceServiceImpl implements SequenceService {
         if(sequenceEnum.equals(SequenceEnum.SOCIETY_ID_SEQUENCE)){
             SimpleDateFormat formatter=new SimpleDateFormat("yyyyMMdd");
             index=sequenceEnum.getPrefix()+formatter.format(today)+index;
+        }else if(sequenceEnum.equals(SequenceEnum.PERSON_ID_SEQUENCE)){
+            SimpleDateFormat formatter=new SimpleDateFormat("yyyyMMddHHmmss");
+            index=sequenceEnum.getPrefix()+formatter.format(today)+index;
         }
 
         return index;
