@@ -80,6 +80,20 @@ http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd"
         <property name="historyMapper" ref="historyMapper" />
     </bean>
 
+    <bean id="personService" class="org.noMoon.ArtificalSociety.person.services.impl.PersonServiceImpl">
+        <property name="personMapper" ref="personMapper"/>
+        <property name="careerService" ref="careerService"/>
+        <property name="sequenceService" ref="sequenceService"/>
+    </bean>
+
+    <bean id="attributeAssigner" class="org.noMoon.ArtificalSociety.person.utils.AttributeAssigner">
+        <property name="careerService" ref="careerService" />
+    </bean>
+
+    <bean id="traitMatcher" class="org.noMoon.ArtificalSociety.person.utils.TraitMatcher">
+        <property name="careerService" ref="careerService"/>
+    </bean>
+
     <bean id="dyadicNetworkGenerator" class="org.noMoon.ArtificalSociety.NetworkGenerator.DyadicNetworkGenerator">
         <property name="institutionService" ref="institutionService" />
         <property name="clubService" ref="clubService" />

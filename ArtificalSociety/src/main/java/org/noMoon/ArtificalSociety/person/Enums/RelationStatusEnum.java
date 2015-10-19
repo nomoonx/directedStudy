@@ -1,4 +1,4 @@
-package org.noMoon.ArtificalSociety.commons.Enums;
+package org.noMoon.ArtificalSociety.person.Enums;
 
 /**
  * Created by noMoon on 2015-08-10.
@@ -15,5 +15,14 @@ public enum RelationStatusEnum {
 
     public String getValue() {
         return value;
+    }
+
+    public static RelationStatusEnum getEnumByValue(String val){
+        for(RelationStatusEnum enu:RelationStatusEnum.values()){
+            if(enu.getValue().equals(val)){
+                return enu;
+            }
+        }
+        return null;
     }
 }

@@ -303,6 +303,16 @@ public class CareerServiceImpl implements CareerService {
         return workplaceMapper.listWorkplaceWithSocietyId(query);
     }
 
+    public List<Career> listCareerWithSocietyId(String societyId) {
+        Career query=new Career();
+        query.setSocietyId(societyId);
+        return careerMapper.listBySocietyId(query);
+    }
+
+    public Career selectCareerById(Long id) {
+        return careerMapper.selectByPrimaryKey(id);
+    }
+
     public void setCareerMapper(CareerMapper careerMapper) {
         this.careerMapper = careerMapper;
     }

@@ -11,5 +11,6 @@
     <mapper resource="org/noMoon/ArtificalSociety/career/mappers/WorkplaceMapper.xml"/>
     <mapper resource="org/noMoon/ArtificalSociety/group/mappers/GroupMapper.xml"/>
     <mapper resource="org/noMoon/ArtificalSociety/history/mappers/HistoryMapper.xml"/>
+    <mapper resource="org/noMoon/ArtificalSociety/person/mappers/PersonMapper.xml"/>
 </mappers>
 </configuration>

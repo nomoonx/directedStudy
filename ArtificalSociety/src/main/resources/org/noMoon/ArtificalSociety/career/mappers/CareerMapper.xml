@@ -46,6 +46,12 @@
         from CAREER
         where SOCIETY_ID = #{societyId,jdbcType=VARCHAR} and CAREER_ID= #{careerId,jdbcType=VARCHAR}
     </select>
+    <select id="listBySocietyId" resultMap="BaseResultMap" parameterType="org.noMoon.ArtificalSociety.career.DO.Career">
+        SELECT
+        <include refid="Base_Column_List" />
+        from CAREER
+        where SOCIETY_ID = #{societyId,jdbcType=VARCHAR}
+    </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     <!--
       WARNING - @mbggenerated

@@ -1,4 +1,4 @@
-package org.noMoon.ArtificalSociety.commons.Enums;
+package org.noMoon.ArtificalSociety.person.Enums;
 
 /**
  * Created by noMoon on 2015-08-06.

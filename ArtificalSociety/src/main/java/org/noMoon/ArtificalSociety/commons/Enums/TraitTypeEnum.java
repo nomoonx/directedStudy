@@ -17,4 +17,13 @@ public enum TraitTypeEnum {
 
         this.value = value;
     }
+
+    public TraitTypeEnum getEnumByValue(String val){
+        for(TraitTypeEnum enu:TraitTypeEnum.values()){
+            if(enu.getValue().equals(val)){
+                return enu;
+            }
+        }
+        return null;
+    }
 }

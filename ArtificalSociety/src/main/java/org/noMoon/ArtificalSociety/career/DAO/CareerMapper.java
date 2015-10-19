@@ -54,4 +54,6 @@ public interface CareerMapper {
     int updateByPrimaryKey(Career record);
 
     List<Career> selectByCareerId(Career record);
+
+    List<Career> listBySocietyId(Career record);
 }

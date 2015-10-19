@@ -1,5 +1,6 @@
 package org.noMoon.ArtificalSociety.career.services;
 
+import org.noMoon.ArtificalSociety.career.DO.Career;
 import org.noMoon.ArtificalSociety.career.DO.Workplace;
 import org.noMoon.ArtificalSociety.career.DTO.CareerDTO;
 
@@ -15,4 +16,8 @@ public interface CareerService {
     void loadCareerAndWorkplace(String careerConfigFilepath, String workplaceConfigFilepath,String societyId);
 
     List<Workplace> listWorkplaceWithSocietyId(String societyId);
+
+    List<Career> listCareerWithSocietyId(String societyId);
+
+    Career selectCareerById(Long id);
 }
