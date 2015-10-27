@@ -28,4 +28,12 @@ public class PersonServiceTest {
         Configuration.Society_Id="S201509141000018";
         personService.generatePerson(1,0,0,Configuration.Society_Id);
     }
+
+    @Test
+    public void testInsertMarriedPerson(){
+        Configuration.LoadConfigValuesFromFile("SocietyConfig.xml");
+        Configuration.Society_Id="S201509141000018";
+        personService.generatePerson(0,1,0,Configuration.Society_Id);
+    }
+
 }

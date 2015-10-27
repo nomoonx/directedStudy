@@ -15,4 +15,6 @@ public interface InstitutionService {
     void loadAllInstitutions(String elemSchoolConfFilepath,String psSchoolConfFilepath, String templeConfFilepath,String societyId);
 
     List<Institution> selectInstitutionBySocietyId(String societyId);
+
+    List<String> selectCityByType(Institution record);
 }

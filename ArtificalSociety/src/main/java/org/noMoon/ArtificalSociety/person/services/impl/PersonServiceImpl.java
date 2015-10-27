@@ -3,6 +3,9 @@ package org.noMoon.ArtificalSociety.person.services.impl;
 import org.noMoon.ArtificalSociety.career.services.CareerService;
 import org.noMoon.ArtificalSociety.commons.Enums.SequenceEnum;
 import org.noMoon.ArtificalSociety.commons.services.SequenceService;
+import org.noMoon.ArtificalSociety.commons.utils.Configuration;
+import org.noMoon.ArtificalSociety.commons.utils.Distribution;
+import org.noMoon.ArtificalSociety.history.DTO.HometownHistoryDTO;
 import org.noMoon.ArtificalSociety.person.DAO.PersonMapper;
 import org.noMoon.ArtificalSociety.person.DTO.PersonDTO;
 import org.noMoon.ArtificalSociety.person.Enums.GenderEnum;
@@ -25,6 +28,8 @@ public class PersonServiceImpl implements PersonService {
     public void generatePerson(int singleNumber, int coupleNumber, int datingNumber, String societyId) {
         initializeAttributeAssigner(societyId);
         generateSinglePerson(singleNumber,societyId,2*coupleNumber+2*datingNumber+singleNumber);
+        createCouples(coupleNumber,datingNumber);
+
         releaseAttributeAssigner();
     }
 
@@ -47,12 +52,17 @@ public class PersonServiceImpl implements PersonService {
                 personDTO.setSex(GenderEnum.FEMALE);
             }
             personDTO.setRelationshipStatus(RelationStatusEnum.SINGLE);
+            personDTO.setAge(AttributeAssigner.assignAge());
+            personDTO.setBirthYear(AttributeAssigner.assignBirthYear(personDTO.getAge()));
+            AttributeAssigner.assignExpectedYearOfDeath(personDTO);
+            fillSingleCulture(personDTO);
             fillBasicAttribute(personDTO);
             fillCareerAndEducation(personDTO,popSize);
+            fillHistory(personDTO,null);
             personMapper.insert(personDTO.convertToPerson());
         }
     }
-/*
+
     private void createCouples(int numMarriedCouples, int numDatingCouples) {
         // Create the couples (people in a relationship) in the population.
 
@@ -76,33 +86,69 @@ public class PersonServiceImpl implements PersonService {
 
     private void generateCouple(RelationStatusEnum relationStatusEnum){
         PersonDTO personA, personB;
-        int personAAge, personBAge;
-        int yearStartedRelationship;
-        ActivityArchive[] coupleHometownCheckpoints;
+        int personAAge=0, personBAge=0;
+        int yearStartedRelationship=0;
+        HometownHistoryDTO coupleHometownCheckpoints=new HometownHistoryDTO();
 
         if (relationStatusEnum.equals(RelationStatusEnum.MARRIED)) {
 
             personAAge = Distribution.uniform(Configuration.MinMarriedAge, Configuration.MaxMarriedAge);
             personBAge = personAAge + Distribution.uniform(-5, 5);					// personB's age is within 5 years of personA's age.
-            yearStartedRelationship = AssignCoupleRelationshipStart(personAAge, personBAge, relType);
-            coupleHometownCheckpoints = AssignCoupleHometownHistories(relType, yearStartedRelationship);
+            yearStartedRelationship = AttributeAssigner.AssignCoupleRelationshipStart(personAAge, personBAge, RelationStatusEnum.MARRIED);
+            coupleHometownCheckpoints = AttributeAssigner.AssignCoupleHometownHistories(RelationStatusEnum.MARRIED, yearStartedRelationship);
 
         } else if (relationStatusEnum.equals(RelationStatusEnum.DATING)) {
 
             personAAge = Distribution.uniform(Configuration.MinDatingAge, Configuration.MaxDatingAge);
-            personBAge = personAAge + Distribution.uniform(-5, 5);					// personB's age is within 5 years of personA's age.
-            yearStartedRelationship = AssignCoupleRelationshipStart(personAAge, personBAge, relType);
-            coupleHometownCheckpoints = AssignCoupleHometownHistories(relType, yearStartedRelationship);
+            personBAge = personAAge + Distribution.uniform(-5, 5);                    // personB's age is within 5 years of personA's age.
+            yearStartedRelationship = AttributeAssigner.AssignCoupleRelationshipStart(personAAge, personBAge, RelationStatusEnum.DATING);
+            coupleHometownCheckpoints = AttributeAssigner.AssignCoupleHometownHistories(RelationStatusEnum.DATING, yearStartedRelationship);
+        }
+        // MALE.
+        personA = new PersonDTO();
+        personA.setSex(GenderEnum.MALE);
+        personA.setSocietyId(Configuration.Society_Id);
+        personA.setRelationshipStatus(relationStatusEnum); // The relationship status must be set before some other attributes are assigned (career/education for example!).
+        personA.setAge(personAAge);
+        personA.setBirthYear(AttributeAssigner.assignBirthYear(personAAge));
+        AttributeAssigner.assignExpectedYearOfDeath(personA);
 
+        //System.out.println("A | " + personA.getAge() + " : " + personA.getExpectedDeathYear());
+        personA.setRelationshipStartYear(yearStartedRelationship);
+        fillSingleCulture(personA);
+        fillBasicAttribute(personA);
+        fillCareerAndEducation(personA, Configuration.N_Population_Size);
+        fillHistory(personA,coupleHometownCheckpoints);
+
+
+
+        // FEMALE.
+        personB = new PersonDTO();
+        personB.setSex(GenderEnum.FEMALE);
+        personB.setSocietyId(Configuration.Society_Id);
+        personB.setRelationshipStatus(relationStatusEnum);
+        personB.setAge(personBAge);
+        personB.setBirthYear(AttributeAssigner.assignBirthYear(personBAge));
+        AttributeAssigner.assignExpectedYearOfDeath(personB);
+        //System.out.println("B | " + personB.getAge() + " : " + personB.getExpectedDeathYear());
+        personB.setRelationshipStartYear(yearStartedRelationship);
+        fillBasicAttribute(personB);
+        fillCoupleCulture(personA,personB);
+        fillCareerAndEducation(personB, Configuration.N_Population_Size);
+        fillHistory(personB,coupleHometownCheckpoints);
+
+
+        // Create relationship between the couple.
+//        PersonGroupAdder.createRelationship(personA, personB, relType);
+        personMapper.insert(personA.convertToPerson());
+        personMapper.insert(personB.convertToPerson());
     }
-    */
+
 
     private void fillBasicAttribute(PersonDTO person){
         if(StringUtils.isEmpty(person.getId())){person.setId(sequenceService.generateIdByEnum(SequenceEnum.PERSON_ID_SEQUENCE));}
 
-        person.setAge(AttributeAssigner.assignAge());
-        person.setBirthYear(AttributeAssigner.assignBirthYear(person.getAge()));
-        AttributeAssigner.assignExpectedYearOfDeath(person);
+
         AttributeAssigner.assignPersonality(person);
 
         // Extra Traits/Attributes.
@@ -110,8 +156,6 @@ public class PersonServiceImpl implements PersonService {
         AttributeAssigner.assignAthleticism(person);
 
         // Culture.
-        AttributeAssigner.assignRace(person);
-        AttributeAssigner.assignReligion(person);
         AttributeAssigner.assignNationality(person);
 
         // Interests.
@@ -120,9 +164,23 @@ public class PersonServiceImpl implements PersonService {
 
     }
 
+    private void fillSingleCulture(PersonDTO person){
+        AttributeAssigner.assignRace(person);
+        AttributeAssigner.assignReligion(person);
+    }
+
+    private void fillCoupleCulture(PersonDTO person,PersonDTO newSpouse){
+        AttributeAssigner.assignSpouseRace(person, newSpouse);
+        AttributeAssigner.assignSpouseReligion(person, newSpouse);
+    }
+
     private void fillCareerAndEducation(PersonDTO person, int popSize){
         AttributeAssigner.assignCareer(person,popSize);
         AttributeAssigner.assignEducation(person);
+    }
+
+    private void fillHistory(PersonDTO person, HometownHistoryDTO hometownHistoryDTO){
+        AttributeAssigner.assignHometownHistory_CP(person,hometownHistoryDTO);
     }
 
     public void setPersonMapper(PersonMapper personMapper) {

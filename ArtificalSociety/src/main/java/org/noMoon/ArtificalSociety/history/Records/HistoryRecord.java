@@ -8,6 +8,14 @@ public class HistoryRecord {
     private int startYear;
     private int endYear;
 
+    public HistoryRecord(String loc,int sYear,int eYear){
+        this.location=loc;
+        this.startYear=sYear;
+        this.endYear=eYear;
+    }
+
+    public HistoryRecord(){}
+
     public String getLocation() {
         return location;
     }

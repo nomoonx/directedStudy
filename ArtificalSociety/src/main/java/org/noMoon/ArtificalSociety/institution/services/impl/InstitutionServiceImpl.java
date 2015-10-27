@@ -170,6 +170,10 @@ public class InstitutionServiceImpl implements InstitutionService {
         return result;
     }
 
+    public List<String> selectCityByType(Institution record){
+        return institutionMapper.selectCityByType(record);
+    }
+
     public void setInstitutionMapper(InstitutionMapper institutionMapper) {
         this.institutionMapper = institutionMapper;
     }

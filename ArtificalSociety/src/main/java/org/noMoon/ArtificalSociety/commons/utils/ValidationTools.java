@@ -15,6 +15,17 @@ public class ValidationTools {
         } // end if (determine min or max)
     } // end clipValueToRange()
 
+    public static int clipValueToRange (int val, int min, int max) {
+        // If the given number, val, is out of the range, [min, max], then clip it to the nearest boundary.
+        if (val < min) {
+            return min;
+        } else if (val > max) {
+            return max;
+        } else {
+            return val;
+        } // end if (determine min or max)
+    } // end clipValueToRange()
+
     public static boolean numberIsWithin (int val, int min, int max) {
         // Check if the given number is between the given min and max parameters.
         if (val >= min && val <= max) {

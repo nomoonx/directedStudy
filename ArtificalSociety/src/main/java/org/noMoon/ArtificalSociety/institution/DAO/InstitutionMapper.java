@@ -57,4 +57,6 @@ public interface InstitutionMapper {
 
     List<Institution> selectBySocietyId(Institution record);
 
+    List<String> selectCityByType(Institution record);
+
 }

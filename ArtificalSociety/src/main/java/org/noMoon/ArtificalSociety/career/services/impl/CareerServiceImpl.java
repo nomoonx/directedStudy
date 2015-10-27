@@ -285,7 +285,7 @@ public class CareerServiceImpl implements CareerService {
                     traitMap.put(traitType, traitValueList);
                 } else {
                     List<String> traitValueList = new ArrayList<String>();
-                    traitValueList.add(traitType + traitReq);
+                    traitValueList.add(traitTypeValue + traitReq);
                     traitMap.put(traitType, traitValueList);
                 }
             } // end i (loop through elements)

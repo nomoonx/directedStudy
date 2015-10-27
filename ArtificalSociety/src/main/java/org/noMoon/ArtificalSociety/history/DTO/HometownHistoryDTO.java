@@ -6,6 +6,8 @@ import org.noMoon.ArtificalSociety.history.Enums.HistoryTypeEnum;
 import org.noMoon.ArtificalSociety.history.Records.HistoryRecord;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by noMoon on 2015-10-16.
@@ -32,6 +34,45 @@ public class HometownHistoryDTO extends HistoryDTO {
         return history;
     }
 
+    public HistoryRecord getActivityByYear(int year){
+        for(HistoryRecord record:recordList){
+            if(year>=record.getStartYear()&&year<=record.getEndYear()){
+                return record;
+            }
+        }
+        return null;
+    }
+
+    public void patchSequentialEntries() {
+        Collections.sort(recordList, new Comparator<HistoryRecord>() {
+            public int compare(HistoryRecord o1, HistoryRecord o2) {
+                if(o1.getStartYear()>o2.getStartYear()){
+                    return 1;
+                }else if(o1.getStartYear()<o2.getStartYear()){
+                    return -1;
+                }else{
+                    return 0;
+                }
+            }
+        });
+        ArrayList<HistoryRecord> tempList=new ArrayList<HistoryRecord>();
+        for(HistoryRecord record:recordList){
+            if(tempList.size()==0){
+                tempList.add(record);
+            }else{
+                HistoryRecord tempRecord=tempList.get(tempList.size()-1);
+                if(tempRecord.getLocation().equals(record.getLocation())&&
+                        tempRecord.getEndYear()==record.getStartYear()){
+                    tempRecord.setEndYear(record.getEndYear());
+                }else{
+                    tempList.add(record);
+                }
+            }
+        }
+        recordList.clear();
+        recordList=tempList;
+    }
+
     public ArrayList<HistoryRecord> getRecordList() {
         return recordList;
     }
@@ -39,4 +80,6 @@ public class HometownHistoryDTO extends HistoryDTO {
     public void setRecordList(ArrayList<HistoryRecord> recordList) {
         this.recordList = recordList;
     }
+
+
 }

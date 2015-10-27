@@ -88,6 +88,8 @@ http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd"
 
     <bean id="attributeAssigner" class="org.noMoon.ArtificalSociety.person.utils.AttributeAssigner">
         <property name="careerService" ref="careerService" />
+        <property name="historyService" ref="historyService"/>
+        <property name="institutionService" ref="institutionService"/>
     </bean>
 
     <bean id="traitMatcher" class="org.noMoon.ArtificalSociety.person.utils.TraitMatcher">

@@ -3,6 +3,7 @@ package org.noMoon.ArtificalSociety.institution;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.noMoon.ArtificalSociety.institution.DO.Institution;
+import org.noMoon.ArtificalSociety.institution.enums.InstitutionEnum;
 import org.noMoon.ArtificalSociety.institution.services.InstitutionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -38,5 +39,16 @@ public class InstitutionServiceTest {
     public void testSelectByTitle(){
         List<Institution> insts=institutionService.selectInstitutionByTitle("testSocietyId","testTitle");
         System.out.println(insts.size());
+    }
+
+    @Test
+    public void testSelectCityByType(){
+        Institution query=new Institution();
+        query.setSocietyId("S201509141000018");
+        query.setInstitutionType(InstitutionEnum.POST_SECONDARY_SCHOOL);
+        query.setType("U");
+        List<String> cityList=institutionService.selectCityByType(query);
+        System.out.println(cityList.size());
+
     }
 }

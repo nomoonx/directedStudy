@@ -25,11 +25,15 @@ public class DyadicNetworkGenerator {
 
     public static void LoadAllConfigurations() {
         Configuration.LoadConfigValuesFromFile("SocietyConfig.xml");
-
+        System.out.println("Society Config loaded");
         institutionService.loadAllInstitutions("Schools.xml", "PostSecondarySchools.xml", "Temples.xml", Configuration.Society_Id);
+        System.out.println("institution Config loaded");
         clubService.loadClubsFromFile("Clubs.xml", Configuration.Society_Id);
+        System.out.println("club Config loaded");
         careerService.loadCareerAndWorkplace("CareersNew.xml","Workplaces.xml",Configuration.Society_Id);
+        System.out.println("career Config loaded");
         groupService.generateGroups(Configuration.Society_Id);
+        System.out.println("Group Config loaded");
         //Configuration.LoadConfigValuesFromFile("SocietyConfig_Genesis.xml");
         //Configuration.LoadConfigValuesFromFile("SocietyConfig_TEST.xml");
         //Configuration.LoadConfigValuesFromFile("SocietyConfigSmall.xml");

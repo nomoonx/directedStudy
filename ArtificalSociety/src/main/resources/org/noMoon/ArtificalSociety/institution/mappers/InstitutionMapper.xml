@@ -54,6 +54,13 @@
         where SOCIETY_ID = #{societyId,jdbcType=VARCHAR}
     </select>
 
+    <select id="selectCityByType" parameterType="org.noMoon.ArtificalSociety.institution.DO.Institution" resultType="string">
+        select
+            CITY
+        from INSTITUTION
+        where SOCIETY_ID = #{societyId,jdbcType=VARCHAR} and TYPE = #{type,jdbcType=VARCHAR} and INSTITUTION_TYPE=#{institutionType,jdbcType=VARCHAR}
+    </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     <!--
       WARNING - @mbggenerated
