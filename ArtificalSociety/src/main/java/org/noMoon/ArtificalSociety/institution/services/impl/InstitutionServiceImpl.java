@@ -14,6 +14,8 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -40,7 +42,7 @@ public class InstitutionServiceImpl implements InstitutionService {
         }
     }
 
-    private void loadFromFile(String filepath, InstitutionEnum institutionEnum, String societyId) throws Exception {
+    private List<Institution> loadFromFile(String filepath, InstitutionEnum institutionEnum, String societyId) throws Exception {
         // Load the list of schools and related info (title, p_attend, etc.) from the XML file. Note that p_attend is the probability in [0,1]
         // that a student will attend this school. The sum of all schools' p_attend should equal 1.0.
         // param filepath: The string of the file name, assuming the file is in the root directory of this project.
@@ -55,7 +57,7 @@ public class InstitutionServiceImpl implements InstitutionService {
         // Get all nodes.
         // ----------------------------------------------------------------------------------------------------
         NodeList demoList = doc.getElementsByTagName(institutionEnum.getElementName());
-
+        List<Institution> resultList = new ArrayList<Institution>();
         int i, d;
 
         // For each of the main elements within the XML file.
@@ -144,11 +146,93 @@ public class InstitutionServiceImpl implements InstitutionService {
             } // end i (loop through race elements)
 
             institutionMapper.insertSelective(inst);
+            resultList.add(inst);
             // Add this school array to large array.
 //            AllInstInSet.add(InstitutionInfo);
 
         } // end d (demographics loop)
+        return resultList;
     }
+
+    public HashMap<Integer, HashMap<String, Double>> getSchoolProbTable(String societyId) {
+        Institution query = new Institution();
+        query.setInstitutionType(InstitutionEnum.ELEMENTARY_SCHOOL);
+        query.setSocietyId(societyId);
+        List<Institution> result = institutionMapper.selectByDO(query);
+        return createSchoolProbabilityTable(result);
+    }
+
+    public List<String> selectPSSchoolNamesBySocietyId(String societyId, String type,String city) {
+        Institution query = new Institution();
+        query.setInstitutionType(InstitutionEnum.POST_SECONDARY_SCHOOL);
+        query.setSocietyId(societyId);
+        query.setType(type);
+        query.setCity(city);
+        return institutionMapper.selectPSSchoolNameByType(query);
+    }
+
+    private HashMap<Integer, HashMap<String, Double>> createSchoolProbabilityTable(List<Institution> elementarySchoolList) {
+        // Loop through all schools and store each probability into a double array, and return that array.
+        // returns: a double array containing all of the schools' probabilities
+        int yearSpan = Configuration.MaxYear - Configuration.MinYear + 1;
+
+        int numElementarySchools = elementarySchoolList.size();
+
+        HashMap<Integer, HashMap<String, Double>> schoolProbsByYear = new HashMap<Integer, HashMap<String, Double>>();
+        double[] TotalSchoolPopSumByYear = new double[yearSpan];
+
+        int s, y;
+
+
+        int yi;
+
+        int sYear = 0;
+        int eYear = 0;
+        int schPop;
+
+        // Keep track of all school populations for the years that the school was in service (population is one fixed number for each school).
+        for (s = 0; s < numElementarySchools; s++) {
+
+            Institution school = elementarySchoolList.get(s);
+            sYear = school.getStartingYear();
+            eYear = school.getEndingYear();
+            schPop = school.getPopulation();
+
+            // Loop through from sYear to eYear for this school.
+            for (y = sYear, yi = sYear - Configuration.MinYear; y <= eYear; y++, yi++) {
+                TotalSchoolPopSumByYear[yi] += schPop;
+            } // end y,yi (looping through all years of this school's service)
+
+            //schoolProbsByYear[y][s] = 0.25;
+        } // end for s (looping through schools)
+
+        // Calculate the school probabilities for each year, based on the school's population and the sum of all schools' populations in that year.
+        double schPop_d;
+        for (s = 0; s < numElementarySchools; s++) {
+
+            Institution school = elementarySchoolList.get(s);
+            sYear = school.getStartingYear();
+            eYear = school.getEndingYear();
+            schPop = school.getPopulation();
+            schPop_d = (double) schPop;
+
+            // Loop through from sYear to eYear for this school.
+            for (y = sYear, yi = sYear - Configuration.MinYear; y <= eYear; y++, yi++) {
+                if (schoolProbsByYear.containsKey(y)) {
+                    HashMap<String, Double> probByYear = schoolProbsByYear.get(y);
+                    probByYear.put(school.getTitle(), schPop_d / (double) TotalSchoolPopSumByYear[yi]);
+                } else {
+                    HashMap<String, Double> probByYear = new HashMap<String, Double>();
+                    probByYear.put(school.getTitle(), schPop_d / (double) TotalSchoolPopSumByYear[yi]);
+                    schoolProbsByYear.put(y, probByYear);
+                }
+            } // end y,yi (looping through all years of this school's service)
+
+        } // end for s (looping through schools)
+
+        return schoolProbsByYear;
+
+    } // end getSchoolProbabilityTable()
 
     public int insertNewInstitution(Institution institution) {
         int rows = institutionMapper.insertSelective(institution);
@@ -170,7 +254,7 @@ public class InstitutionServiceImpl implements InstitutionService {
         return result;
     }
 
-    public List<String> selectCityByType(Institution record){
+    public List<String> selectCityByType(Institution record) {
         return institutionMapper.selectCityByType(record);
     }
 

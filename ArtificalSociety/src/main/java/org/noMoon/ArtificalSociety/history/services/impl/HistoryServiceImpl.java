@@ -6,6 +6,8 @@ import org.noMoon.ArtificalSociety.history.DAO.HistoryMapper;
 import org.noMoon.ArtificalSociety.history.DO.History;
 import org.noMoon.ArtificalSociety.history.DTO.HistoryDTO;
 import org.noMoon.ArtificalSociety.history.DTO.HometownHistoryDTO;
+import org.noMoon.ArtificalSociety.history.DTO.SchoolHistoryDTO;
+import org.noMoon.ArtificalSociety.history.DTO.WorkHistoryDTO;
 import org.noMoon.ArtificalSociety.history.Records.HistoryRecord;
 import org.noMoon.ArtificalSociety.history.services.HistoryService;
 
@@ -142,6 +144,21 @@ public class HistoryServiceImpl implements HistoryService {
         //DebugTools.printArray(archive);
 
     } // end addHometownsForPeriod()
+
+    public HometownHistoryDTO getHometownHistoryById(Long id) {
+        History history=historyMapper.selectByPrimaryKey(id);
+        return new HometownHistoryDTO(history);
+    }
+
+    public SchoolHistoryDTO getSchoolHistoryById(Long id) {
+        History history=historyMapper.selectByPrimaryKey(id);
+        return new SchoolHistoryDTO(history);
+    }
+
+    public WorkHistoryDTO getWorkHistoryById(Long id) {
+        History history=historyMapper.selectByPrimaryKey(id);
+        return new WorkHistoryDTO(history);
+    }
 
     public void setHistoryMapper(HistoryMapper historyMapper) {
         this.historyMapper = historyMapper;

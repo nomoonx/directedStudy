@@ -6,6 +6,15 @@ package org.noMoon.ArtificalSociety.history.Records;
 public class SchoolHistoryRecord extends HistoryRecord {
     String schoolType;
 
+    public SchoolHistoryRecord(String location,int sYear,int eYear,String sType){
+        super(location,sYear,eYear);
+        this.schoolType=sType;
+    }
+
+    public SchoolHistoryRecord(){
+        super();
+    }
+
     public String getSchoolType() {
         return schoolType;
     }

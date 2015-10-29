@@ -61,6 +61,45 @@
         where SOCIETY_ID = #{societyId,jdbcType=VARCHAR} and TYPE = #{type,jdbcType=VARCHAR} and INSTITUTION_TYPE=#{institutionType,jdbcType=VARCHAR}
     </select>
 
+    <select id="selectPSSchoolNameByType" parameterType="org.noMoon.ArtificalSociety.institution.DO.Institution" resultType="string">
+        select
+        TITLE
+        from INSTITUTION
+        where SOCIETY_ID = #{societyId,jdbcType=VARCHAR} and TYPE = #{type,jdbcType=VARCHAR} and INSTITUTION_TYPE=#{institutionType,jdbcType=VARCHAR} and CITY = #{city,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByDO" parameterType="org.noMoon.ArtificalSociety.institution.DO.Institution" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />
+        from INSTITUTION
+        where
+        <trim prefix="" suffix="" suffixOverrides="AND">
+            <if test="institutionType != null">
+                INSTITUTION_TYPE = #{institutionType,jdbcType=VARCHAR} AND
+            </if>
+            <if test="societyId != null">
+                SOCIETY_ID = #{societyId,jdbcType=VARCHAR} AND
+            </if>
+            <if test="title != null">
+                TITLE = #{title,jdbcType=VARCHAR} AND
+            </if>
+            <if test="type != null">
+                TYPE = #{type,jdbcType=VARCHAR} AND
+            </if>
+            <if test="city != null">
+                CITY = #{city,jdbcType=VARCHAR} AND
+            </if>
+            <if test="population != null">
+                POPULATION = #{population,jdbcType=INTEGER} AND
+            </if>
+            <if test="startingYear != null">
+                STARTING_YEAR = #{startingYear,jdbcType=INTEGER} AND
+            </if>
+            <if test="endingYear != null">
+                ENDING_YEAR = #{endingYear,jdbcType=INTEGER} AND
+            </if>
+        </trim>
+    </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     <!--
       WARNING - @mbggenerated

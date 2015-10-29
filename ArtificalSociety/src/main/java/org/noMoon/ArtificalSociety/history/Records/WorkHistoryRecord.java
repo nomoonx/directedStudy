@@ -4,13 +4,22 @@ package org.noMoon.ArtificalSociety.history.Records;
  * Created by noMoon on 2015-10-16.
  */
 public class WorkHistoryRecord extends HistoryRecord {
-    private double salary;
+    private Long careerId;
 
-    public double getSalary() {
-        return salary;
+    public WorkHistoryRecord(int sYear,int eYear, Long careerId, String loc){
+        super(loc,sYear,eYear);
+        this.careerId=careerId;
     }
 
-    public void setSalary(double salary) {
-        this.salary = salary;
+    public WorkHistoryRecord(){
+        super();
+    }
+
+    public Long getCareerId() {
+        return careerId;
+    }
+
+    public void setCareerId(Long careerId) {
+        this.careerId = careerId;
     }
 }

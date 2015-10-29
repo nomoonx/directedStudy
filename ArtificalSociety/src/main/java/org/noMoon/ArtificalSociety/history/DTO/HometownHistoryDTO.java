@@ -1,6 +1,7 @@
 package org.noMoon.ArtificalSociety.history.DTO;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import org.noMoon.ArtificalSociety.history.DO.History;
 import org.noMoon.ArtificalSociety.history.Enums.HistoryTypeEnum;
 import org.noMoon.ArtificalSociety.history.Records.HistoryRecord;
@@ -24,7 +25,7 @@ public class HometownHistoryDTO extends HistoryDTO {
     public HometownHistoryDTO(History history){
         super(history);
         this.setType(HistoryTypeEnum.HOMETOWN_HISTORY);
-        recordList=JSON.parseObject(history.getHistoryList(),ArrayList.class);
+        recordList=JSON.parseObject(history.getHistoryList(),new TypeReference<ArrayList<HistoryRecord>>(){});
     }
 
     @Override

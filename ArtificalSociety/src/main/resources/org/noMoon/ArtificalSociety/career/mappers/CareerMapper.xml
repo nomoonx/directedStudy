@@ -18,7 +18,7 @@
     <result column="NUM_YEAR_POST_SECONDARY" property="numYearPostSecondary" jdbcType="INTEGER" />
     <result column="TRAIT" property="trait" jdbcType="VARCHAR" />
       <result column="CAREER_ID" property="careerId" jdbcType="VARCHAR" />
-      <result column="WORKPLACE_ID" property="workplaceId" jdbcType="BIGINT" />
+      <result column="WORKPLACE_ID" property="workplaceId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     <!--
@@ -74,7 +74,7 @@
     values (now(),now(),
       #{societyId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{salaryMean,jdbcType=DOUBLE}, 
       #{numPercnet,jdbcType=DOUBLE}, #{education,jdbcType=VARCHAR}, #{numYearPostSecondary,jdbcType=INTEGER}, 
-      #{trait,jdbcType=VARCHAR}),#{careerId,jdbcType=VARCHAR},#{workplaceId,jdbcType=BIGINT})
+      #{trait,jdbcType=VARCHAR}),#{careerId,jdbcType=VARCHAR},#{workplaceId,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="org.noMoon.ArtificalSociety.career.DO.Career" useGeneratedKeys="true" keyProperty="id" keyColumn="ID">
     <!--
@@ -141,7 +141,7 @@
             #{careerId,jdbcType=VARCHAR},
         </if>
         <if test="workplaceId!=null">
-            #{workplaceId,jdbcType=BIGINT},
+            #{workplaceId,jdbcType=VARCHAR},
         </if>
     </trim>
   </insert>
@@ -182,7 +182,7 @@
            CAREER_ID= #{careerId,jdbcType=VARCHAR},
         </if>
         <if test="workplaceId !=null">
-            WORKPLACE_ID=#{workplaceId,jdbcType=BIGINT},
+            WORKPLACE_ID=#{workplaceId,jdbcType=VARCHAR},
         </if>
     </set>
     where ID = #{id,jdbcType=BIGINT}
@@ -204,7 +204,7 @@
       NUM_YEAR_POST_SECONDARY = #{numYearPostSecondary,jdbcType=INTEGER},
       TRAIT = #{trait,jdbcType=VARCHAR},
       CAREER_ID= #{careerId,jdbcType=VARCHAR},
-      WORKPLACE_ID=#{workplaceId,jdbcType=BIGINT}
+      WORKPLACE_ID=#{workplaceId,jdbcType=VARCHAR}
     where ID = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

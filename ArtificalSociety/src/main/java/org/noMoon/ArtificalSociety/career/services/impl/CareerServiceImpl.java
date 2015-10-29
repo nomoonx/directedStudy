@@ -157,8 +157,9 @@ public class CareerServiceImpl implements CareerService {
             List<Career> result = careerMapper.selectByCareerId(query);
             if (result.size() == 1) {
                 Career updateDO = result.get(0);
-                updateDO.setWorkplaceId(workplace.getId());
-                careerMapper.updateByPrimaryKeySelective(updateDO);
+                CareerDTO updateDTO=new CareerDTO(updateDO);
+                updateDTO.getWorkplaceId().add(workplace.getId());
+                careerMapper.updateByPrimaryKeySelective(updateDTO.convertToCareerDO());
             } else {
                 System.err.println("Society id:" + workplace.getSocietyId() + " and careerId:" + careerId + "return duplicate records");
             }
@@ -311,6 +312,10 @@ public class CareerServiceImpl implements CareerService {
 
     public Career selectCareerById(Long id) {
         return careerMapper.selectByPrimaryKey(id);
+    }
+
+    public Workplace selectWorkplaceById(Long id) {
+        return workplaceMapper.selectByPrimaryKey(id);
     }
 
     public void setCareerMapper(CareerMapper careerMapper) {

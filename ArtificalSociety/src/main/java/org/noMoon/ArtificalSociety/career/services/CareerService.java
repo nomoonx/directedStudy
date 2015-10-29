@@ -20,4 +20,6 @@ public interface CareerService {
     List<Career> listCareerWithSocietyId(String societyId);
 
     Career selectCareerById(Long id);
+
+    Workplace selectWorkplaceById(Long id);
 }

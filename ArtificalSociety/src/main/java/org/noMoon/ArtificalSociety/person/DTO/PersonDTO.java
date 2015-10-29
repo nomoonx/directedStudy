@@ -3,6 +3,7 @@ package org.noMoon.ArtificalSociety.person.DTO;
 import com.alibaba.fastjson.JSON;
 import org.noMoon.ArtificalSociety.person.DO.PersonWithBLOBs;
 import org.noMoon.ArtificalSociety.person.Enums.GenderEnum;
+import org.noMoon.ArtificalSociety.person.Enums.PositionEnum;
 import org.noMoon.ArtificalSociety.person.Enums.RelationStatusEnum;
 
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class PersonDTO {
     //career
     private Long careerId;
 
-    private String currentPosition;
+    private PositionEnum currentPosition;
 
     private Integer income;
 
@@ -130,7 +131,7 @@ public class PersonDTO {
                 this.relationshipStrength=personDO.getRelationshipStrength();
                 this.relationshipStartYear=personDO.getRelationshipStartYear();
                 this.careerId=personDO.getCareerId();
-                this.currentPosition=personDO.getCurrentPosition();
+                this.currentPosition=PositionEnum.getEnumByValue(personDO.getCurrentPosition());
                 this.income=personDO.getIncome();
                 this.education=personDO.getEducation();
                 this.educationPsYear=personDO.getEducationPsYear();
@@ -178,7 +179,7 @@ public class PersonDTO {
         person.setRelationshipStrength(this.getRelationshipStrength());
         person.setRelationshipStartYear(this.getRelationshipStartYear());
         person.setCareerId(this.getCareerId());
-        person.setCurrentPosition(this.getCurrentPosition());
+        person.setCurrentPosition(this.getCurrentPosition().getValue());
         person.setIncome(this.getIncome());
         person.setEducation(this.getEducation());
         person.setEducationPsYear(this.getEducationPsYear());
@@ -386,11 +387,11 @@ public class PersonDTO {
         this.careerId = careerId;
     }
 
-    public String getCurrentPosition() {
+    public PositionEnum getCurrentPosition() {
         return currentPosition;
     }
 
-    public void setCurrentPosition(String currentPosition) {
+    public void setCurrentPosition(PositionEnum currentPosition) {
         this.currentPosition = currentPosition;
     }
 

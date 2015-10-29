@@ -34,7 +34,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     private void initializeAttributeAssigner(String societyId){
-        AttributeAssigner.setCareerList(careerService.listCareerWithSocietyId(societyId));
+        AttributeAssigner.initialize(societyId);
     }
 
     private void releaseAttributeAssigner(){
@@ -181,6 +181,8 @@ public class PersonServiceImpl implements PersonService {
 
     private void fillHistory(PersonDTO person, HometownHistoryDTO hometownHistoryDTO){
         AttributeAssigner.assignHometownHistory_CP(person,hometownHistoryDTO);
+        AttributeAssigner.assignSchoolHistory(person);
+        AttributeAssigner.assignWorkHistory(person);
     }
 
     public void setPersonMapper(PersonMapper personMapper) {

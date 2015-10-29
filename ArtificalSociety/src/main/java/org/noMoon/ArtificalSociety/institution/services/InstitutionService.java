@@ -2,6 +2,7 @@ package org.noMoon.ArtificalSociety.institution.services;
 
 import org.noMoon.ArtificalSociety.institution.DO.Institution;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -17,4 +18,8 @@ public interface InstitutionService {
     List<Institution> selectInstitutionBySocietyId(String societyId);
 
     List<String> selectCityByType(Institution record);
+
+    HashMap<Integer,HashMap<String,Double>> getSchoolProbTable(String societyId);
+
+    List<String> selectPSSchoolNamesBySocietyId(String societyId,String type,String city);
 }

@@ -1,6 +1,7 @@
 package org.noMoon.ArtificalSociety.person.utils;
 
 import org.noMoon.ArtificalSociety.career.DO.Career;
+import org.noMoon.ArtificalSociety.career.DO.Workplace;
 import org.noMoon.ArtificalSociety.career.DTO.CareerDTO;
 import org.noMoon.ArtificalSociety.career.services.CareerService;
 import org.noMoon.ArtificalSociety.commons.utils.Configuration;
@@ -8,12 +9,17 @@ import org.noMoon.ArtificalSociety.commons.utils.Distribution;
 import org.noMoon.ArtificalSociety.commons.utils.DistributionParser;
 import org.noMoon.ArtificalSociety.commons.utils.ValidationTools;
 import org.noMoon.ArtificalSociety.history.DTO.HometownHistoryDTO;
+import org.noMoon.ArtificalSociety.history.DTO.SchoolHistoryDTO;
+import org.noMoon.ArtificalSociety.history.DTO.WorkHistoryDTO;
 import org.noMoon.ArtificalSociety.history.Records.HistoryRecord;
+import org.noMoon.ArtificalSociety.history.Records.SchoolHistoryRecord;
+import org.noMoon.ArtificalSociety.history.Records.WorkHistoryRecord;
 import org.noMoon.ArtificalSociety.history.services.HistoryService;
 import org.noMoon.ArtificalSociety.institution.DO.Institution;
 import org.noMoon.ArtificalSociety.institution.enums.InstitutionEnum;
 import org.noMoon.ArtificalSociety.institution.services.InstitutionService;
 import org.noMoon.ArtificalSociety.person.DTO.PersonDTO;
+import org.noMoon.ArtificalSociety.person.Enums.PositionEnum;
 import org.noMoon.ArtificalSociety.person.Enums.RelationStatusEnum;
 import org.springframework.util.StringUtils;
 
@@ -28,9 +34,16 @@ public class AttributeAssigner {
 
     static List<Career> careerList;
 
+    static HashMap<Integer, HashMap<String, Double>> schoolProbsByYear;
+
     private static CareerService careerService;
     private static HistoryService historyService;
     private static InstitutionService institutionService;
+
+    public static void initialize(String societyId) {
+        AttributeAssigner.setCareerList(careerService.listCareerWithSocietyId(societyId));
+        schoolProbsByYear = institutionService.getSchoolProbTable(societyId);
+    }
 
     public static int assignAge() {
         int v = Distribution.uniform(Configuration.AdultAgeMin, Configuration.AdultAgeMax);
@@ -483,7 +496,7 @@ public class AttributeAssigner {
 
 
         // Append checkpoint hometowns (from marriage) to end of main hometown array.
-        if (null!=tempHometownHistoryDTO) {
+        if (null != tempHometownHistoryDTO) {
             List<HistoryRecord> recordList = tempHometownHistoryDTO.getRecordList();
             for (HistoryRecord record : recordList) {
 
@@ -509,6 +522,221 @@ public class AttributeAssigner {
 
 
     } // end assignHometownHistory_CP()
+
+    public static void assignSchoolHistory(PersonDTO attr) {
+        // Determine when person was living in the society during school years, and add each of those periods to the school archive.
+        // Modifies attributes: schoolHistory, soc_SchoolHistory
+
+        SchoolHistoryDTO schoolHistory = new SchoolHistoryDTO();        // Entire archive.
+        SchoolHistoryDTO socSchoolHistory = new SchoolHistoryDTO();    // Only in society.
+        schoolHistory.setPersonId(attr.getId());
+        socSchoolHistory.setPersonId(attr.getId());
+        schoolHistory.setSocietyId(attr.getSocietyId());
+        socSchoolHistory.setSocietyId(attr.getSocietyId());
+
+        // Ensure that the person's birth year has been set.
+//System.out.println(ValidationTools.empty(attr.yearBorn) + " || " + ValidationTools.empty(attr.age) + " || " + ValidationTools.empty(attr.hometownHistory)  + " || " + ValidationTools.empty(attr.education) + " || " + ValidationTools.empty(attr.educationPSYears));
+        if (attr.getBirthYear() == 0 || 0 == attr.getAge() || 0 == attr.getHometownHistoryId() || StringUtils.isEmpty(attr.getEducation()) || 0 == attr.getEducationPsYear()) {
+            System.err.println("Attempting to assign schoolHistory but birthYear, age, hometownHistory, education, or eduPSYears have not been set.");
+            return;
+        } // end if (ensure person has prerequisite information assigned)
+
+        ArrayList<Integer> schoolYearsAnywhere = new ArrayList<Integer>();
+        ArrayList<Integer> schoolYearsInSociety = new ArrayList<Integer>();
+
+        // Check if person is old enough to have already started school.
+        if (attr.getAge() < Configuration.SchoolStartAge) {
+            //System.err.println("Attempting to assign schoolHistory but person is too young to attend school.");
+            historyService.insertNewHistoryDTO(schoolHistory);
+            historyService.insertNewHistoryDTO(socSchoolHistory);
+            attr.setSchoolHistoryId(schoolHistory.getId()); // This is important so the child at least has an initialized archive.
+            attr.setSocSchoolHistoryId(socSchoolHistory.getId()); // This is important so the child at least has an initialized archive.
+            return;
+        } // end if (check if old enough to at least have started school)
+
+        // Determine age of person in their final year of school - or current age if they are still in school.
+        int finalSchoolYearAge;
+        if (attr.getAge() > Configuration.SchoolFinishAge) {
+            finalSchoolYearAge = Configuration.SchoolFinishAge;
+        } else {
+            finalSchoolYearAge = attr.getAge();
+        } // end if (determining if currently in school or finished school)
+
+        //System.out.println(Configuration.SchoolStartAge + " -- " + finalSchoolYearAge);
+
+        int y;
+        int sch_year;
+
+        HometownHistoryDTO hometownHistoryDTO = historyService.getHometownHistoryById(attr.getHometownHistoryId());
+
+
+        for (y = Configuration.SchoolStartAge; y < finalSchoolYearAge; y++) {
+
+            // Get the actual year number.
+            sch_year = attr.getBirthYear() + y;
+
+            // Get activity from archive for the given year.
+            // *** NOTE ***	This should be checked with someone who moves cities during their school years.
+            // 				Should both locations be added or just one of the two?!
+            HistoryRecord hometown = hometownHistoryDTO.getActivityByYear(sch_year);
+
+            // Determine if person was in the current society during this school year.
+            if (hometown.getLocation().equals(Configuration.SocietyName)) {
+                // If the person lived in this society, then add year to array.
+                schoolYearsInSociety.add(new Integer(sch_year));
+            } // end if (person lived in this society)
+            schoolYearsAnywhere.add(new Integer(sch_year));
+        } // end for y (looping through all school years)
+
+
+        String schoolName = "Elementary";
+        // If array of schoolYearsInSociety is empty now, then exit function, because the person is either too young to attend school or lived in a different city during their school years.
+        if (!schoolYearsInSociety.isEmpty()) {
+            // Now that at this point, the person spent at least one year in this society during school years, determine what school(s) they attended.
+
+            // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            // *** NOTE *** THIS IS ASSUMING THE SCHOOL WAS IN SERVICE THROUGHOUT THEIR ENTIRE CHILDHOOD. THIS WILL NOT ALWAYS BE TRUE!
+            // 				CURRENTLY ALL SCHOOLS ARE SET TO GO FROM 1900 TO PRESENT TO AVOID THIS PROBLEM, BUT THIS SHOULD BE MODIFIED
+            //				SO IF A SCHOOL SHUTS DOWN, A NEW RANDOM SCHOOL IS CHOSEN FOR THE STUDENT.
+            // +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+            Integer firstSchoolYear = (Integer) schoolYearsInSociety.get(0);
+            //System.out.println(firstSchoolYear);
+            HashMap<String, Double> schoolProb = schoolProbsByYear.get(firstSchoolYear);
+            String[] titles = schoolProb.keySet().toArray(new String[schoolProb.size()]);
+            double[] schoolProbs = new double[titles.length];
+            for (int i = 0; i < titles.length; i++) {
+                schoolProbs[i] = schoolProb.get(titles[i]);
+            }
+
+            // Assume each person only went to one school while living in this society. This could be expanded to allow school changes, but this is
+            // not an important feature, as the school history is really only used in putting the person into groups for possible friend networking.
+            int rndSchoolIndex = Distribution.custom(schoolProbs);
+            //addConsecutiveActivitySequences(schoolYearsInSociety, socSchoolHistory, Schools.getSchoolTitleAt(rndSchoolIndex));
+            schoolName = titles[rndSchoolIndex];
+            addConsecutiveActivitySequences(schoolYearsInSociety, socSchoolHistory, schoolName);
+
+        } // end if (check if array is empty)
+
+        if (!schoolYearsAnywhere.isEmpty()) {
+            //addConsecutiveActivitySequences(schoolYearsAnywhere, schoolHistory, "Elementary");
+            addConsecutiveActivitySequences(schoolYearsAnywhere, schoolHistory, schoolName);
+        } // end if (check if socSchoolhistory is empty)
+
+
+        // ------------------------------------------------------------------------------------
+        // Post-Secondary Education
+        // ------------------------------------------------------------------------------------
+
+        if (attr.getAge() >= Configuration.SchoolFinishAge) {
+
+            int PSStartYear, PSEndYear;
+            PSStartYear = attr.getYearStartedPsSchool();
+
+            // Check if person is finished or currently enrolled in post-secondary school.
+            if (attr.getYearFinishedPsSchool() < Configuration.SocietyYear) {
+                PSEndYear = attr.getYearFinishedPsSchool();
+            } else {
+                PSEndYear = Configuration.SocietyYear;
+            } // end if (check if person has started post-secondary school already)
+
+
+            // * NOTE * This assumes that the person stayed at ONE post-secondary and lived in ONE city during that period. If the program is modified to allow
+            //			moves to other cities and transfers to other institutions, then this part will have to be modified to allow those changes.
+            //String PSLocation = (String)attr.hometownHistory.getActivityAtYear(PSStartYear+1); // Add 1 to start year because that year is also in the archive as the final year of elementary school.
+            String PSLocation = hometownHistoryDTO.getActivityByYear(PSStartYear + 1).getLocation(); // Add 1 to start year because that year is also in the archive as the final year of elementary school.
+
+            //System.out.println(PSLocation);
+
+            // * NOTE * This assumes the institutions were/are in service the whole time this simulation takes place. If this needs to be changed, then the school's time
+            //			period would have to be examined to see if it was/is in existence during the person's required time in post-secondary school.
+            //String[] schoolsByType = ArrayTools.arrayListToStringArray(Schools.getSchoolsByFilters(Schools.getFullPostSecondarySchoolsDatabase(), new int[] {Schools.School_Type, Schools.School_City}, new Object[] {attr.education, PSLocation}, new int[] {Schools.School_Name}));
+            List<String> psSchoolsNames = institutionService.selectPSSchoolNamesBySocietyId(Configuration.Society_Id, attr.getEducation(), PSLocation);
+            String[] schoolsByType = psSchoolsNames.toArray(new String[psSchoolsNames.size()]);
+
+            // Check if there were no post-secondary schools found for the person (either because they didn't require any or if they are too young yet).
+            if (schoolsByType.length == 0) {
+                ///////
+                // NOTE: the following inner if-statement block can be removed. It was a simple debugging check, but not necessary.
+                ///////
+                if (attr.getEducationPsYear() > 0) {
+                    //System.err.println("In AttributeAssigner->assignSchoolHistory(), there were no post-secondary institutions for this person!");
+                    // Add post-secondary school to archive. Assume that attr.education is the type of school this school is (i.e. U or C)
+                    schoolHistory.getRecordList().add(new SchoolHistoryRecord("External Institution", PSStartYear, PSEndYear, attr.getEducation()));
+                } else {
+                    // Do nothing. These people did not require post-secondary, so it won't find any for them!
+                } // end if (check if person who did not receive an institution was supposed to attend one or not)
+            } else {
+                String institution = (String) Distribution.uniformRandomObject(schoolsByType);
+                //System.out.println(institution);
+
+                // Add post-secondary school to archive. Assume that attr.education is the type of school this school is (i.e. U or C)
+                schoolHistory.getRecordList().add(new SchoolHistoryRecord(institution, PSStartYear, PSEndYear, attr.getEducation()));
+
+
+                // If the person's post-secondary institution is in the society, then add it to the local archive.
+                if (PSLocation.equals(Configuration.SocietyName)) {
+                    socSchoolHistory.getRecordList().add(new SchoolHistoryRecord(institution, PSStartYear, PSEndYear, attr.getEducation()));
+                    //socSchoolHistory.addEntry(institution, PSStartYear, PSEndYear);
+                } // end if (institution location is in the local society)
+
+            } // end if (no institutions were found for the given criteria)
+
+        } // end if (person is done elementary school, and thus post-secondary school is assigned)
+
+        //DebugTools.printArray(schoolHistory);
+        schoolHistory.patchSequentialEntries();
+        socSchoolHistory.patchSequentialEntries();
+        historyService.insertNewHistoryDTO(schoolHistory);
+        historyService.insertNewHistoryDTO(socSchoolHistory);
+
+        attr.setSchoolHistoryId(schoolHistory.getId());
+        attr.setSocSchoolHistoryId(socSchoolHistory.getId());
+
+    } // end assignSchoolHistory()
+
+    private static void addConsecutiveActivitySequences(ArrayList<Integer> yearsInSociety, SchoolHistoryDTO archive, String schoolName) {
+        // Loop through all years listed in schoolYearsInSociety array, and check for consecutive years so that each sequence of consecutive
+        // years can be added to the schoolHistory archive.
+        // param yearsInSociety: the arraylist of all individual years that person was in society as a student
+
+        int i;
+        int yr, prevYr;
+        int consecutiveSequenceStartYear;
+        int currLastYearInSequence;
+        int numSchoolYearsInSociety = yearsInSociety.size();
+        prevYr = yearsInSociety.get(0);
+        consecutiveSequenceStartYear = prevYr;        // This will hold the start year of a new sequence.
+        currLastYearInSequence = prevYr;            // This will hold the final year in the current sequence, which will be updated on at each iteration through the loop. At the end of a sequence, this will be hold the final year of that sequence.
+        // If person was in society for one than one year.
+        if (numSchoolYearsInSociety > 1) {
+
+
+            // Start at index 1, because the index 0 year is dealt with before this loop as an initialization.
+            for (i = 1; i < numSchoolYearsInSociety; i++) {
+                yr = Integer.parseInt(yearsInSociety.get(i).toString());
+
+                if (yr == prevYr + 1) {
+                    // If this year at index i is the consecutive year after the one at index i-1, then update the "finalYear" in the sequence.
+                    currLastYearInSequence = yr;
+                } else {
+                    // End previous sequence. The last sequence is finished now, so add that entry to the array.
+                    archive.getRecordList().add(new SchoolHistoryRecord(schoolName, consecutiveSequenceStartYear, currLastYearInSequence, "Elementary"));
+
+                    // Create new sequence.
+                    consecutiveSequenceStartYear = yr;
+                    currLastYearInSequence = yr;
+                } // end if (two years are consecutive)
+
+                // Keep track of previous year.
+                prevYr = yr;
+            } // end for i (loop through schoolYearsInSociety array)
+
+            archive.getRecordList().add(new SchoolHistoryRecord(schoolName, consecutiveSequenceStartYear, currLastYearInSequence, "Elementary"));
+
+        } // end if (more than 1 year in array)
+
+    } // end addConsecutiveActivitySequences()
+
 
     private static void assignHometown_ChildhoodYears(PersonDTO attr, HometownHistoryDTO homeHistory, HometownHistoryDTO socHomeHistory) {
 
@@ -667,7 +895,226 @@ public class AttributeAssigner {
         //childhoodYears[0] = 1900;
         //childhoodYears[1] = 1905;
     } // end determineCheckpointPeriodGapYears()
+/*
+    public static void createRelationship (PersonDTO personA, PersonDTO personB, RelationStatusEnum relType) {
+        // Indicate the relationship between the two persons, personA and personB.
+        // param personA: one person in the relationship
+        // param personB: the other person in the relationship
+        // param relType: an integer representing the relationship type {0 = Single, 1 = Married, 2 = Dating}
 
+        personA.setRelationshipStatus(relType);
+        personB.setRelationshipStatus(relType);
+
+        personA.setPartnerId(personB.getId());
+        personB.setPartnerId(personA.getId());
+
+        RelationshipCalculator.calculateAndSetInterestSimilarity(personA, personB);
+
+
+        RelationshipCalculator.CalculateAndSetRelationshipStrength(personA, personB, 0); // Before children are created, so pass = 0.
+
+        // DELETED assignRelationshipStart() on Feb. 16.
+        // Determine the year this relationship began (if married, then it's the year that they became married, not the year they started dating).
+        //AttributeAssigner.assignRelationshipStart(personA, personB, relType);
+
+        // Calculate relationship strength between couple.
+        //double relStrength = RelationshipCalculator.CalculateRelationshipStrength(personA, personB);
+        //personA.relationshipStrength = relStrength;
+        //personB.relationshipStrength = relStrength;
+
+        int familyID = PersonGroupAdder.nextFamilyID;
+        personA.setFamilyID(familyID);
+        personB.setFamilyID(familyID);
+
+        // Increment static variable for nextFamilyID, so each new relationship creates a new family ID.
+        PersonGroupAdder.nextFamilyID++;
+
+    } // end createRelationship()
+*/
+
+    public static void assignWorkHistory(PersonDTO attr) {
+        // Determine all places the person has worked throughout their life, and add each of those work periods to the work archive.
+        // Modifies attributes: workHistory, soc_WorkHistory
+
+        // * NOTE: For now, just put person into current career, such that they began after finishing school and held same job to present.
+        // This will change eventually so that they have a series of different jobs throughout their life.
+
+        WorkHistoryDTO workHistory = new WorkHistoryDTO();
+        WorkHistoryDTO societalWorkHistory = new WorkHistoryDTO();
+        workHistory.setPersonId(attr.getId());
+        workHistory.setSocietyId(attr.getSocietyId());
+        societalWorkHistory.setPersonId(attr.getId());
+        societalWorkHistory.setSocietyId(attr.getSocietyId());
+
+//        if (ValidationTools.empty(attr.getAge()) || ValidationTools.empty(attr.getCareer()) || ValidationTools.empty(attr.getSchoolHistory())) {
+//            // NOTE: Do not bother displaying message, because young children will not have school history yet, so no need to display error messages for them!
+//            //System.err.println("Attempting to assign workHistory but age, careerID, or schoolHistory have not been set.");
+//            return;
+//        } // end if (check if person has the prerequisite information to get a work history)
+
+        // Determine if person is currently in school. Assume they have no work until after done school (part-time work would have to be different. Ignore that for now!)
+        if (attr.getIsInSchool()) {
+            // Rather than having a null archive, we want to set the empty (but initialized!) archives here before returning out.
+            attr.setIncome(0);
+            attr.setCurrentPosition(PositionEnum.STUDENT);
+            historyService.insertNewHistoryDTO(workHistory);
+            historyService.insertNewHistoryDTO(societalWorkHistory);
+            attr.setWorkHistoryId(workHistory.getId());
+            attr.setSocWorkHistoryId(societalWorkHistory.getId());
+            return;
+        } // end if (person is in school currently)
+
+        // Get the year in which the person finished all their school.
+        //int finishedSchoolYear = attr.getSchoolHistory().getLastActivityPeriod()[1];
+
+
+        HometownHistoryDTO hometownHistoryDTO = historyService.getHometownHistoryById(attr.getHometownHistoryId());
+        SchoolHistoryDTO schoolHistoryDTO = historyService.getSchoolHistoryById(attr.getSchoolHistoryId());
+
+        int finishedSchoolYear = schoolHistoryDTO.getRecordList().get(schoolHistoryDTO.getRecordList().size() - 1).getEndYear();
+        //if (attr.getID() == 15) System.out.println("finishedSchoolYear = " + finishedSchoolYear);
+
+        // Loop through all ENTRIES in the hometownHistory (not looping through individual years!).
+        int i;
+        String hometownName;
+        List<HistoryRecord> hometownRecordList = hometownHistoryDTO.getRecordList();
+        CareerDTO careerDTO = new CareerDTO(careerService.selectCareerById(attr.getCareerId()));
+
+        for (i = 0; i < hometownRecordList.size(); i++) {
+            HistoryRecord hometownHistoryRecord = hometownRecordList.get(i);
+            hometownName = hometownHistoryRecord.getLocation(); // 0th element is location name.
+            int startYear = hometownHistoryRecord.getStartYear();
+            int endYear = hometownHistoryRecord.getEndYear();
+            //System.out.println(hometownName + " in [" + hometownYears[0] + "," + hometownYears[1] + "].");
+
+            // =========================================================
+            // CHECK WHICH ENTRIES ARE DURING PERSON's WORKING LIFE.
+            // =========================================================
+
+
+            // -------------------------------------------------------------
+            // Hometown period DURING which the person become working age.
+            // -------------------------------------------------------------
+            if (ValidationTools.numberIsWithin(finishedSchoolYear, startYear, endYear) && (finishedSchoolYear != endYear)) { // The second condition is to prevent the end of an entry being used.
+
+                if (hometownName.equals(Configuration.SocietyName)) {
+                    //if (attr.getID() == 15) System.out.println("Need to find DETAILED work for [" + finishedSchoolYear + "," + hometownYears[1] + "]. (PARTIAL)");
+                    assignLocalWorkplaces(attr, careerDTO, workHistory, societalWorkHistory, finishedSchoolYear, endYear);
+                } else {
+                    //if (attr.getID() == 15) System.out.println("Need to find external work for [" + finishedSchoolYear + "," + hometownYears[1] + "]. (PARTIAL)");
+                    assignExternalWorkplaces(attr, careerDTO,workHistory,finishedSchoolYear, endYear);
+                } // end if (check if hometown for this period is local society)
+
+            } // end if (determine the hometown period DURING which the person becomes working age)
+
+            // -------------------------------------------------------------
+            // Hometown periods AFTER person is working age.
+            // -------------------------------------------------------------
+            if (startYear > finishedSchoolYear) {
+
+                if (hometownName.equals(Configuration.SocietyName)) {
+                    //if (attr.getID() == 15) System.out.println("Need to find DETAILED work for [" + hometownYears[0] + "," + hometownYears[1] + "]. (FULL)");
+                    assignLocalWorkplaces(attr, careerDTO, workHistory, societalWorkHistory, startYear, endYear);
+                } else {
+                    //if (attr.getID() == 15) System.out.println("Need to find external work for [" + hometownYears[0] + "," + hometownYears[1] + "]. (FULL)");
+                    assignExternalWorkplaces(attr,careerDTO,workHistory,startYear, endYear);
+                } // end if (check if hometown for this period is local society)
+
+            } // end if (determining the hometown periods completely AFTER the peson is working age)
+
+        } // end for i (loop through all entries in hometown history)
+
+        workHistory.patchSequentialEntries();
+        societalWorkHistory.patchSequentialEntries();
+        historyService.insertNewHistoryDTO(workHistory);
+        historyService.insertNewHistoryDTO(societalWorkHistory);
+        attr.setWorkHistoryId(workHistory.getId());
+        attr.setSocWorkHistoryId(societalWorkHistory.getId());
+
+    } // end assignWorkHistory()
+
+    private static void assignLocalWorkplaces(PersonDTO attr, CareerDTO career, WorkHistoryDTO workHistory, WorkHistoryDTO socWorkHistory, int startYear, int endYear) {
+        // This method will find a workplace in the local society for the person over the given period.
+        //
+        // param attr: the given Person who is being given a work history
+        // param startYear: the integer of the year that begins this period of work
+        // param endYear: the integer of the year that ends this period of work
+
+        // Get list of possible workplaces person could work with the pre-determined career.
+        List<Long> workplaceIds = career.getWorkplaceId();
+
+
+        // If the peron's career does not match any workplace options, then stop now. (This should only ever be the case for "Unemployed, id="00000").
+        if (workplaceIds.size() == 0) {
+            //System.err.println("Person does not have a career that any workplace is interested in.");
+            // Rather than having a null archive, we want to set the empty (but initialized!) archives here before returning out.
+            //attr.setWorkHistory(workHistory);
+            //attr.setSocietalWorkHistory(localWorkHistory);
+            return;
+        } // end if (check if any possible work locations were found)
+
+        int workplaceIndex = Distribution.uniform(0, workplaceIds.size() - 1);
+        Long workplaceId = workplaceIds.get(workplaceIndex);
+
+
+        // Add career to archive to start from the year they finished school until present.
+        Workplace workplace = careerService.selectWorkplaceById(workplaceId);
+        // Note the array is of the format [workplaceID, careerID].
+        workHistory.getRecordList().add(new WorkHistoryRecord(startYear, endYear, career.getId(), workplace.getTitle()));
+        socWorkHistory.getRecordList().add(new WorkHistoryRecord(startYear, endYear, career.getId(), workplace.getTitle()));
+
+        // Update person's current position to WORKING.
+        attr.setCurrentPosition(PositionEnum.WORKING);
+
+
+        // --------------------------------------------------------------------------------------------------------
+        // FROM assignIncome()
+        //
+        // Get the base income associated with the person's career.
+        int careerIncome = (int) Math.round(career.getSalaryMean());
+
+        // Randomly choose an amount (positive or negative) to offset the person's income from the base.
+        int salarySTD = Distribution.uniform(-Configuration.SalarySTD, Configuration.SalarySTD);
+        attr.setIncome(careerIncome + salarySTD);
+        //
+        // FROM assignIncome()
+        // --------------------------------------------------------------------------------------------------------
+
+    } // end assignLocalWorkplaces()
+
+    private static void assignExternalWorkplaces(PersonDTO attr, CareerDTO career, WorkHistoryDTO workHistory, int startYear, int endYear) {
+        // This method will find a workplace in an external location for the person over the given period.
+        //
+        // param attr: the given Person who is being given a work history
+        // param startYear: the integer of the year that begins this period of work
+        // param endYear: the integer of the year that ends this period of work
+
+
+        String chosenWorkplace = "External Company";
+
+        // Add career to archive over the given period.
+        workHistory.getRecordList().add(new WorkHistoryRecord(startYear,endYear,career.getId(),chosenWorkplace));
+
+
+        // Update person's current position to WORKING.
+        attr.setCurrentPosition(PositionEnum.WORKING);
+
+
+        // --------------------------------------------------------------------------------------------------------
+        // FROM assignIncome()
+        //
+
+        // Get the base income associated with the person's career.
+        int careerIncome = (int)Math.round(career.getSalaryMean());
+        // Randomly choose an amount (positive or negative) to offset the person's income from the base.
+        int salarySTD = Distribution.uniform(-Configuration.SalarySTD, Configuration.SalarySTD);
+        attr.setIncome(careerIncome + salarySTD);
+        //
+        // FROM assignIncome()
+        // --------------------------------------------------------------------------------------------------------
+
+
+    } // end assignExternalWorkplaces()
 
     public static List<Career> getCareerList() {
         return careerList;

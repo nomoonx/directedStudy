@@ -10,6 +10,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by noMoon on 2015-09-11.
  */
@@ -28,14 +31,16 @@ public class CareerServiceTest {
         CareerDTO careerDTO = new CareerDTO();
         careerDTO.setTitle("testTitle");
         careerDTO.setCareerId("testCareerId");
-        careerDTO.setWorkplaceId((long) 1111);
+        List<Long> ids=new ArrayList<Long>();
+        ids.add((long)1111);
+        careerDTO.setWorkplaceId(ids);
         careerService.insertNewCareer(careerDTO);
         System.out.println(careerDTO.getId());
     }
 
     @Test
     public void testLoadFile() {
-        careerService.loadCareerAndWorkplace("CareersNew.xml", "", "SocietyId");
+        careerService.loadCareerAndWorkplace("CareersNew.xml", "Workplaces.xml", "SocietyId");
     }
 
 }
