@@ -79,6 +79,14 @@ public class CareerServiceImpl implements CareerService {
 
             NodeList CarInfo;
 
+            // ----- ID -----
+            CarInfo = demoElement.getElementsByTagName("id");			// Extract career component as NodeList.
+            for (i = 0; i < CarInfo.getLength(); i++) {
+                Element demoRaceCatElement = (Element)CarInfo.item(i);	// Convert to element.
+                NodeList nodeList = demoRaceCatElement.getChildNodes();
+                workplace.setWorkId(nodeList.item(0).getNodeValue());			// Add this career info to the array for this career.
+            } // end i (loop through race elements)
+
             // ----- Title -----
             CarInfo = demoElement.getElementsByTagName("title");        // Extract career component as NodeList.
             for (i = 0; i < CarInfo.getLength(); i++) {

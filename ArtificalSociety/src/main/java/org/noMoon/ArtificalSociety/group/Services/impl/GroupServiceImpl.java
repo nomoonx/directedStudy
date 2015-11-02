@@ -99,6 +99,24 @@ public class GroupServiceImpl implements GroupService {
 
     }
 
+    public GroupDTO getGroupDTOByNameAndYear(String societyId, String name, int year) {
+        Group query=new Group();
+        query.setSocietyId(societyId);
+        query.setGroupLabel(name);
+        query.setGroupYear(year);
+        Group result=groupMapper.selectByNameAndYear(query);
+        if(null==result)
+        {
+            System.out.println("societyId:"+societyId+"   groupname:"+name+"  year:"+String.valueOf(year)+"    couldnt find");
+            return null;
+        }
+        return new GroupDTO(result);
+    }
+
+    public void updateGroupById(GroupDTO groupDTO) {
+        groupMapper.updateByPrimaryKeySelective(groupDTO.convertToGroupDO());
+    }
+
     public void setClubService(ClubService clubService) {
         this.clubService = clubService;
     }

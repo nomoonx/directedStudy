@@ -1,9 +1,13 @@
 package org.noMoon.ArtificalSociety.person.utils;
 
 
+import org.noMoon.ArtificalSociety.career.DO.Workplace;
 import org.noMoon.ArtificalSociety.career.services.CareerService;
 import org.noMoon.ArtificalSociety.commons.utils.Configuration;
 import org.noMoon.ArtificalSociety.commons.utils.ValidationTools;
+import org.noMoon.ArtificalSociety.history.DTO.WorkHistoryDTO;
+import org.noMoon.ArtificalSociety.history.Records.WorkHistoryRecord;
+import org.noMoon.ArtificalSociety.history.services.HistoryService;
 import org.noMoon.ArtificalSociety.person.DTO.PersonDTO;
 import org.noMoon.ArtificalSociety.person.Enums.GenderEnum;
 import org.noMoon.ArtificalSociety.person.Enums.RelationStatusEnum;
@@ -13,6 +17,7 @@ import java.util.List;
 public class TraitMatcher {
 
     private static CareerService careerService;
+    private static HistoryService historyService;
 
 	
 	public static double calculateTotalProbability (List<Double> matchValues, boolean doesNotMeetRequirements) {
@@ -79,8 +84,8 @@ public class TraitMatcher {
 		} else if (traitType.equals("careerID")) {
 			p_match = calculateTraitMatch_Career(person, traitValue);
 
-//		} else if (traitType.equals("workID")) {
-//			p_match = calculateTraitMatch_Work(person, traitValue);
+		} else if (traitType.equals("workID")) {
+			p_match = calculateTraitMatch_Work(person, traitValue);
 
 		} else if (traitType.equals("extra")) {
 			p_match = calculateTraitMatch_Extra(person, traitValue);
@@ -244,21 +249,23 @@ public class TraitMatcher {
 
 		return p;
 	} // end calculateTraitMatch_Career()
-	/*
+
 	private static double calculateTraitMatch_Work (PersonDTO person, String traitValue) {
 		double p = 0.0;
 		
-		if (ValidationTools.empty(person.getWorkHistory()) || person.getWorkHistory().isEmpty()) {
+		if (person.getWorkHistoryId()==0) {
 			// If person has no current work.
 			p = 0.0;
 			return p;
 		}
-		
+
+        WorkHistoryDTO historyDTO=historyService.getWorkHistoryById(person.getWorkHistoryId());
 		//DebugTools.printArray(person.workHistory);
-		String[] currWork = (String[])person.getWorkHistory().getLastActivityName();
+		WorkHistoryRecord currentRecord=historyDTO.getRecordList().get(historyDTO.getRecordList().size()-1);
+        Workplace workplace=careerService.selectWorkplaceById(Long.parseLong(currentRecord.getLocation()));
 
 		// Check if the given workplaceID (given in traitValue argument) matches the person's current workplace ID. (Note that currWork[0] is the workplace ID, while currWork[1] would be their career ID at that workplace).
-		if (traitValue.equals(currWork[0])) {
+		if (traitValue.equals(workplace.getWorkId())) {
 			p = 1.0;
 		} else {
 			p = 0.0;
@@ -266,7 +273,7 @@ public class TraitMatcher {
 
 		return p;
 	} // end calculateTraitMatch_Work()
-	*/
+
 	
 	private static double calculateTraitMatch_RelationshipStatus (PersonDTO person, String traitValue) {
 		double p = 0.0;
@@ -345,5 +352,9 @@ public class TraitMatcher {
 
     public void setCareerService(CareerService careerService) {
         this.careerService = careerService;
+    }
+
+    public void setHistoryService(HistoryService historyService) {
+        TraitMatcher.historyService = historyService;
     }
 } // end TraitMatcher class

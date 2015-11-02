@@ -2,6 +2,7 @@ package org.noMoon.ArtificalSociety.history.DTO;
 
 import org.noMoon.ArtificalSociety.history.DO.History;
 import org.noMoon.ArtificalSociety.history.Enums.HistoryTypeEnum;
+import org.noMoon.ArtificalSociety.history.Records.HistoryRecord;
 
 import java.util.Date;
 
@@ -38,6 +39,8 @@ public class HistoryDTO {
     }
 
     public HistoryDTO(){}
+
+    public HistoryRecord getActivityByYear(int year){return null;}
 
     public Long getId() {
         return id;

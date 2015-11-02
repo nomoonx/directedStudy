@@ -254,6 +254,14 @@ public class InstitutionServiceImpl implements InstitutionService {
         return result;
     }
 
+    public List<Institution> selectInstitutionbyTypeAndSubType(String societyId, InstitutionEnum institutionEnum,String type){
+        Institution query=new Institution();
+        query.setSocietyId(societyId);
+        query.setInstitutionType(institutionEnum);
+        query.setType(type);
+        return institutionMapper.selectByDO(query);
+    }
+
     public List<String> selectCityByType(Institution record) {
         return institutionMapper.selectCityByType(record);
     }

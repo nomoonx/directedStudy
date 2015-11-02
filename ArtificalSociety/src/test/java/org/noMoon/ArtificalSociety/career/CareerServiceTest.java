@@ -2,6 +2,7 @@ package org.noMoon.ArtificalSociety.career;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.noMoon.ArtificalSociety.career.DO.Workplace;
 import org.noMoon.ArtificalSociety.career.DTO.CareerDTO;
 import org.noMoon.ArtificalSociety.career.services.CareerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,13 @@ public class CareerServiceTest {
         careerService.insertNewCareer(careerDTO);
         System.out.println(careerDTO.getId());
     }
+
+    @Test
+    public void testSelectWorkplace(){
+        Workplace workplace=careerService.selectWorkplaceById((long)337);
+        System.out.println(workplace.getWorkId());
+    }
+
 
     @Test
     public void testLoadFile() {

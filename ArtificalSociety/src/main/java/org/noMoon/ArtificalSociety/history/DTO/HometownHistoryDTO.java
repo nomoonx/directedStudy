@@ -35,6 +35,7 @@ public class HometownHistoryDTO extends HistoryDTO {
         return history;
     }
 
+    @Override
     public HistoryRecord getActivityByYear(int year){
         for(HistoryRecord record:recordList){
             if(year>=record.getStartYear()&&year<=record.getEndYear()){

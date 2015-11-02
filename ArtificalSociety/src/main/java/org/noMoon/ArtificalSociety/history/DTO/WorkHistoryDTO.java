@@ -67,6 +67,16 @@ public class WorkHistoryDTO extends HistoryDTO{
         recordList=tempList;
     }
 
+    @Override
+    public HistoryRecord getActivityByYear(int year){
+        for(WorkHistoryRecord record:recordList){
+            if(year>=record.getStartYear()&&year<=record.getEndYear()){
+                return record;
+            }
+        }
+        return null;
+    }
+
     public ArrayList<WorkHistoryRecord> getRecordList() {
         return recordList;
     }

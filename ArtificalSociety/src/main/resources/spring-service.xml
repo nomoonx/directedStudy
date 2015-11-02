@@ -84,6 +84,7 @@ http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd"
         <property name="personMapper" ref="personMapper"/>
         <property name="careerService" ref="careerService"/>
         <property name="sequenceService" ref="sequenceService"/>
+        <property name="groupService" ref="groupSerivce" />
     </bean>
 
     <bean id="attributeAssigner" class="org.noMoon.ArtificalSociety.person.utils.AttributeAssigner">
@@ -92,8 +93,17 @@ http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd"
         <property name="institutionService" ref="institutionService"/>
     </bean>
 
+    <bean id="groupAdder" class="org.noMoon.ArtificalSociety.person.utils.GroupAdder">
+        <property name="historyService" ref="historyService" />
+        <property name="groupService" ref="groupSerivce"/>
+        <property name="careerService" ref="careerService"/>
+        <property name="institutionService" ref="institutionService"/>
+        <property name="clubService" ref="clubService"/>
+    </bean>
+
     <bean id="traitMatcher" class="org.noMoon.ArtificalSociety.person.utils.TraitMatcher">
         <property name="careerService" ref="careerService"/>
+        <property name="historyService" ref="historyService"/>
     </bean>
 
     <bean id="dyadicNetworkGenerator" class="org.noMoon.ArtificalSociety.NetworkGenerator.DyadicNetworkGenerator">

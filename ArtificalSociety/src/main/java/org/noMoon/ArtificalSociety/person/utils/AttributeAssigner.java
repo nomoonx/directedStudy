@@ -1,7 +1,6 @@
 package org.noMoon.ArtificalSociety.person.utils;
 
 import org.noMoon.ArtificalSociety.career.DO.Career;
-import org.noMoon.ArtificalSociety.career.DO.Workplace;
 import org.noMoon.ArtificalSociety.career.DTO.CareerDTO;
 import org.noMoon.ArtificalSociety.career.services.CareerService;
 import org.noMoon.ArtificalSociety.commons.utils.Configuration;
@@ -1054,16 +1053,16 @@ public class AttributeAssigner {
         } // end if (check if any possible work locations were found)
 
         int workplaceIndex = Distribution.uniform(0, workplaceIds.size() - 1);
-        Long workplaceId = workplaceIds.get(workplaceIndex);
+        String workplaceId = String.valueOf(workplaceIds.get(workplaceIndex));
 
 
         // Add career to archive to start from the year they finished school until present.
-        Workplace workplace = careerService.selectWorkplaceById(workplaceId);
+//        Workplace workplace = careerService.selectWorkplaceById(workplaceId);
         // Note the array is of the format [workplaceID, careerID].
-        workHistory.getRecordList().add(new WorkHistoryRecord(startYear, endYear, career.getId(), workplace.getTitle()));
-        socWorkHistory.getRecordList().add(new WorkHistoryRecord(startYear, endYear, career.getId(), workplace.getTitle()));
+        workHistory.getRecordList().add(new WorkHistoryRecord(startYear, endYear, career.getId(), workplaceId));
+        socWorkHistory.getRecordList().add(new WorkHistoryRecord(startYear, endYear, career.getId(), workplaceId));
 
-        // Update person's current position to WORKING.
+        // Update person's current position to WORKIN
         attr.setCurrentPosition(PositionEnum.WORKING);
 
 

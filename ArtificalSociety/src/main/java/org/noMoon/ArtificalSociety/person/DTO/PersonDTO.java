@@ -1,6 +1,7 @@
 package org.noMoon.ArtificalSociety.person.DTO;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import org.noMoon.ArtificalSociety.person.DO.PersonWithBLOBs;
 import org.noMoon.ArtificalSociety.person.Enums.GenderEnum;
 import org.noMoon.ArtificalSociety.person.Enums.PositionEnum;
@@ -8,6 +9,8 @@ import org.noMoon.ArtificalSociety.person.Enums.RelationStatusEnum;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by noMoon on 2015-10-17.
@@ -105,7 +108,18 @@ public class PersonDTO {
     private ArrayList<Long> clubIds;
 
     //group
-    private ArrayList<Long> groupIds;
+    private HashMap<Long,ArrayList<String>> groupIds;
+
+    public boolean isInGroup(Long groupId,String role){
+        List<String> roles=groupIds.get(groupId);
+        if(null==roles) return false;
+        for(String rol:roles){
+            if(rol.equals(role)){
+                return true;
+            }
+        }
+        return false;
+    }
 
     public PersonDTO(PersonWithBLOBs personDO) {
         this.id=personDO.getId();
@@ -149,10 +163,12 @@ public class PersonDTO {
                 this.childrenIds=JSON.parseObject(personDO.getChildrenIds(),ArrayList.class);
                 this.siblingsIds=JSON.parseObject(personDO.getSiblingsIds(),ArrayList.class);
                 this.clubIds=JSON.parseObject(personDO.getClubIds(),ArrayList.class);
-                this.groupIds=JSON.parseObject(personDO.getGroupIds(),ArrayList.class);
+                this.groupIds=JSON.parseObject(personDO.getGroupIds(),new TypeReference<HashMap<Long,ArrayList<String>>>(){});
     }
 
-    public PersonDTO(){}
+    public PersonDTO(){
+        this.groupIds=new HashMap<Long, ArrayList<String>>();
+    }
 
     public PersonWithBLOBs convertToPerson(){
         PersonWithBLOBs person=new PersonWithBLOBs();
@@ -531,11 +547,11 @@ public class PersonDTO {
         this.clubIds = clubIds;
     }
 
-    public ArrayList<Long> getGroupIds() {
+    public HashMap<Long,ArrayList<String>> getGroupIds() {
         return groupIds;
     }
 
-    public void setGroupIds(ArrayList<Long> groupIds) {
+    public void setGroupIds(HashMap<Long,ArrayList<String>> groupIds) {
         this.groupIds = groupIds;
     }
 }

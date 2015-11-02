@@ -9,4 +9,8 @@ public interface GroupService {
     long insertNewGroup(GroupDTO groupDTO);
 
     void generateGroups(String societyId);
+
+    GroupDTO getGroupDTOByNameAndYear(String societyId,String name,int year);
+
+    void updateGroupById(GroupDTO groupDTO);
 }

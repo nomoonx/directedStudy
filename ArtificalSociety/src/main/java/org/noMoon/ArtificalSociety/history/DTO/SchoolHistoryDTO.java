@@ -66,6 +66,16 @@ public class SchoolHistoryDTO extends HistoryDTO {
         recordList=tempList;
     }
 
+    @Override
+    public HistoryRecord getActivityByYear(int year){
+        for(SchoolHistoryRecord record:recordList){
+            if(year>=record.getStartYear()&&year<=record.getEndYear()){
+                return record;
+            }
+        }
+        return null;
+    }
+
     public ArrayList<SchoolHistoryRecord> getRecordList() {
         return recordList;
     }

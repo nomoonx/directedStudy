@@ -58,4 +58,6 @@ public interface GroupMapper {
      * @mbggenerated Sat Oct 10 22:45:10 EDT 2015
      */
     int updateByPrimaryKey(Group record);
+
+    Group selectByNameAndYear(Group record);
 }
