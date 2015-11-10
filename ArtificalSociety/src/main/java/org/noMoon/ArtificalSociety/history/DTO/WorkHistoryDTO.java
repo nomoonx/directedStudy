@@ -77,6 +77,11 @@ public class WorkHistoryDTO extends HistoryDTO{
         return null;
     }
 
+    @Override
+    public HistoryRecord getLastActivity(){
+        return recordList.get(recordList.size()-1);
+    }
+
     public ArrayList<WorkHistoryRecord> getRecordList() {
         return recordList;
     }

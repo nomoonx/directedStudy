@@ -3,6 +3,8 @@ package org.noMoon.ArtificalSociety.person.utils;
 import org.noMoon.ArtificalSociety.career.DO.Workplace;
 import org.noMoon.ArtificalSociety.career.DTO.CareerDTO;
 import org.noMoon.ArtificalSociety.career.services.CareerService;
+import org.noMoon.ArtificalSociety.commons.Enums.SequenceEnum;
+import org.noMoon.ArtificalSociety.commons.services.SequenceService;
 import org.noMoon.ArtificalSociety.commons.utils.Configuration;
 import org.noMoon.ArtificalSociety.commons.utils.Distribution;
 import org.noMoon.ArtificalSociety.commons.utils.ValidationTools;
@@ -22,6 +24,7 @@ import org.noMoon.ArtificalSociety.institution.enums.InstitutionEnum;
 import org.noMoon.ArtificalSociety.institution.services.ClubService;
 import org.noMoon.ArtificalSociety.institution.services.InstitutionService;
 import org.noMoon.ArtificalSociety.person.DTO.PersonDTO;
+import org.noMoon.ArtificalSociety.person.Enums.RelationStatusEnum;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -38,6 +41,39 @@ public class GroupAdder {
     private static CareerService careerService;
     private static InstitutionService institutionService;
     private static ClubService clubService;
+    private static SequenceService sequenceService;
+
+    public static void createRelationship (PersonDTO personA, PersonDTO personB, RelationStatusEnum relType) {
+        // Indicate the relationship between the two persons, personA and personB.
+        // param personA: one person in the relationship
+        // param personB: the other person in the relationship
+        // param relType: an integer representing the relationship type {0 = Single, 1 = Married, 2 = Dating}
+
+        personA.setRelationshipStatus(relType);
+        personB.setRelationshipStatus(relType);
+
+        personA.setPartnerId(personB.getId());
+        personB.setPartnerId(personA.getId());
+
+        RelationshipCalculator.calculateAndSetInterestSimilarity(personA, personB);
+
+
+        RelationshipCalculator.CalculateAndSetRelationshipStrength(personA, personB, 0); // Before children are created, so pass = 0.
+
+        // DELETED assignRelationshipStart() on Feb. 16.
+        // Determine the year this relationship began (if married, then it's the year that they became married, not the year they started dating).
+        //AttributeAssigner.assignRelationshipStart(personA, personB, relType);
+
+        // Calculate relationship strength between couple.
+        //double relStrength = RelationshipCalculator.CalculateRelationshipStrength(personA, personB);
+        //personA.relationshipStrength = relStrength;
+        //personB.relationshipStrength = relStrength;
+
+        long familyID = Long.parseLong(sequenceService.generateIdByEnum(SequenceEnum.FAMILY_ID_SEQUENCE));
+        personA.setFamilyId(familyID);
+        personB.setFamilyId(familyID);
+
+    } // end createRelationship()
 
     public static void addToGroups(PersonDTO person) {
         // Schools.
@@ -69,8 +105,6 @@ public class GroupAdder {
         double p_inClub;
         double rnd_inClub;
 
-        String[] clubTraitInfo;
-        String clubTraitReq;
         boolean hasUnmatchedRequiredTrait = false;
 
         List<Club> clubList=clubService.selectClubBySocietyId(person.getSocietyId());
@@ -323,5 +357,9 @@ public class GroupAdder {
 
     public void setClubService(ClubService clubService) {
         GroupAdder.clubService = clubService;
+    }
+
+    public void setSequenceService(SequenceService sequenceService) {
+        GroupAdder.sequenceService = sequenceService;
     }
 }

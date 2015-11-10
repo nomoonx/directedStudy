@@ -18,6 +18,7 @@ import org.noMoon.ArtificalSociety.institution.DO.Institution;
 import org.noMoon.ArtificalSociety.institution.enums.InstitutionEnum;
 import org.noMoon.ArtificalSociety.institution.services.InstitutionService;
 import org.noMoon.ArtificalSociety.person.DTO.PersonDTO;
+import org.noMoon.ArtificalSociety.person.Enums.GenderEnum;
 import org.noMoon.ArtificalSociety.person.Enums.PositionEnum;
 import org.noMoon.ArtificalSociety.person.Enums.RelationStatusEnum;
 import org.springframework.util.StringUtils;
@@ -43,6 +44,219 @@ public class AttributeAssigner {
         AttributeAssigner.setCareerList(careerService.listCareerWithSocietyId(societyId));
         schoolProbsByYear = institutionService.getSchoolProbTable(societyId);
     }
+
+    public static void assignSex (PersonDTO attr) {
+        // Assign a random sex to the person. Use a uniform distribution in [0, 1].
+        int v = Distribution.uniform(0, 1);
+        if(0==v){
+            attr.setSex(GenderEnum.FEMALE);
+        }else{
+            attr.setSex(GenderEnum.MALE);
+        }
+    } // end assignSex()
+
+    public static void assignChildAge (PersonDTO parentA, PersonDTO parentB, PersonDTO child, boolean isBackFilled) {
+        // Assign the age to the child. If isBackFilled is True, then the child is not a newborn baby, and thus the age
+        // will be determined based on the parents' marriage. Otherwise, the child IS a baby so the age will be 0.
+        //
+        // param child: the Person instance of the child being created
+        // param parentA: one of the parents of the child
+        // param parentB: the other parent of the child
+        // param isBackFilled: the boolean flag indicating whether or not the child is being created after the fact
+
+        if (isBackFilled) {
+            // Create child after the fact (not a newborn baby!)
+            assignChildAge_BackFilled(parentA, parentB, child);
+
+        } else {
+            // Create a newborn baby during a live simulation!
+            assignChildAge_New(child);
+
+        } // end if (check if the child is a newborn baby or a back-filled older person)
+
+
+    } // end AssignChildAge()
+
+
+
+    private static void assignChildAge_New (PersonDTO child) {
+        // This is called when a new baby is born, and the current society year. This is necessary so that the child isn't
+        // given a random age, as is the case when creating back-filled children.
+        //
+        // param child: the new baby who was just born!
+        //
+        // return: the baby with the assigned age and year of birth
+
+
+        // Child was born in projectedChildBirthYear, so now just compute their current age.
+
+
+        // Set the child's age.
+        child.setAge(0);
+        child.setBirthYear(assignBirthYear(0));
+
+    } // end AssignChildAge()
+
+    private static void assignChildAge_BackFilled (PersonDTO A, PersonDTO B, PersonDTO child) {
+        // This is called when a back-filled child is created from a married couple in an initial population.
+        // In this case, the child is given a random age and birth year based upon the parents' marriage.
+        //
+        // param A: one of the parents who had the child
+        // param B: the other parent who had the child
+        // param child: the child of parents A and B
+        //
+        // return: the child with an assigned age and year of birth
+
+
+        //System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+        //System.out.println(A.getAge());
+        //System.out.println(B.getAge());
+        //System.out.println(A.getRelationshipStartYear() + " | " + B.getRelationshipStartYear());
+
+        // For simplicity, children's ages are randomly taken from a distribution over the years following the parents' marriage.
+        int numYearsIntoMarriage = (int)Math.round(DistributionParser.parseStatisticalDistribution(Configuration.ParentHaveChildYearDistr));
+        numYearsIntoMarriage = ValidationTools.clipValueToRange(numYearsIntoMarriage, Configuration.ParentHaveChildYearMin, Configuration.ParentHaveChildYearMax);
+
+        // In case the chosen year for the child's birth is later than the current society year, clip it to the current year.
+        int projectedChildBirthYear = A.getRelationshipStartYear() + numYearsIntoMarriage;
+        if (projectedChildBirthYear > Configuration.SocietyYear) {
+            // Limit the child's birth to be in current year.
+            projectedChildBirthYear = Configuration.SocietyYear;
+        } // end if (check if projected child's birth would be beyond current year)
+
+        // Child was born in projectedChildBirthYear, so now just compute their current age.
+        int childAge = Configuration.SocietyYear - projectedChildBirthYear;
+
+        // Set the child's age.
+        child.setAge(childAge);
+        // Call method to assign birth year.
+        child.setBirthYear(assignBirthYear(childAge));
+    } // end AssignChildAge()
+
+    public static void assignChildRace (PersonDTO A, PersonDTO B, PersonDTO child) {
+        // Assign a race to a new child.
+        // For simplicity, we will use one random parent's race as the child's race, if the parents are interracial.
+        // param A: one of the parents of the child
+        // param B: the other parent of the child
+        // param child: the new child from parents A and B
+
+        int childRace;
+
+        if (A.getRaceIndex() == B.getRaceIndex()) {	// Same race.
+            childRace= A.getRaceIndex();
+        } else {							// Interracial.
+            // Select a random parent, and use their race as the child's race.
+            int rndParentIndex = Distribution.uniform(0, 1);
+            if (rndParentIndex == 0) {		// If 0, use parent A's race.
+                childRace = A.getRaceIndex();
+            } else {						// If 1, use parent B's race.
+                childRace = B.getRaceIndex();
+            } // end if (determine which parent was randomly chosen)
+
+        } // end if (check if parents are of same race)
+
+
+        child.setRaceIndex(childRace);
+
+    } // end AssignChildRace()
+
+    public static void assignChildReligion (PersonDTO A, PersonDTO B, PersonDTO child) {
+        // Assign a religion to a new child.
+        // For simplicity, we will use one random parent's religion as the child's religion, if the parents are of different religions.
+        // param A: one of the parents of the child
+        // param B: the other parent of the child
+        // param child: the new child from parents A and B
+
+        int childReligion;
+
+        if (A.getReligionIndex() == B.getReligionIndex()) {	// Same religion.
+            childReligion= A.getReligionIndex();
+        } else {									// Different religions.
+            // Select a random parent, and use their religion as the child's religion.
+            int rndParentIndex = Distribution.uniform(0, 1);
+            if (rndParentIndex == 0) {		// If 0, use parent A's religion.
+                childReligion = A.getReligionIndex();
+            } else {						// If 1, use parent B's religion.
+                childReligion = B.getReligionIndex();
+            } // end if (determine which parent was randomly chosen)
+
+        } // end if (check if parents are of same religion)
+
+
+        child.setReligionIndex(childReligion);
+    } // end AssignChildReligion()
+
+    public static HometownHistoryDTO assignChildHometowns (PersonDTO attr, PersonDTO parentA, PersonDTO parentB) {
+
+        HometownHistoryDTO hometownHistoryDTO=new HometownHistoryDTO();
+
+        //System.out.println(".................... In AttributeAssigner->assignChildHometowns() ....................");
+
+        //System.out.println("child born in " + attr.getYearBorn());
+
+        int y;
+
+        int finalYear;
+        //System.out.println("How old is the child?? " + attr.getAge() + ", and he/she must finish at " + Configuration.SchoolFinishAge);
+        // If the person is still in school, then add years between their birth and the current year, otherwise, fill from birht until the year they finished school.
+        if (attr.getAge() < Configuration.SchoolFinishAge) {
+            // The current year.
+            finalYear = Configuration.SocietyYear;
+        } else {
+            // The year this person finished elementary (secondary) school.
+            finalYear = attr.getBirthYear()+Configuration.SchoolFinishAge;
+        } // end if (determine the final year for the child living with their parents - either the current year or their last school year)
+
+        ArrayList<Object> actEntry;
+        int[] tmpActYears;
+        int tmpEntryBeginYear;
+        int tmpEntryFinalYear;
+        HometownHistoryDTO parentAHometownHistory=historyService.getHometownHistoryById(parentA.getHometownHistoryId());
+        // Loop through all childhood years from birth until the end of elementary (secondary) school.
+        for (y = attr.getBirthYear(); y < finalYear; y++) {
+            //System.out.println("> " + y + " | " + parentA.getHometownHistory().getActivityAtYear( y ));
+
+            HistoryRecord record = parentAHometownHistory.getActivityByYear(y);
+
+            tmpActYears = new int[]{record.getStartYear(),record.getEndYear()};
+
+            // ADJUST STARTING YEAR OF ENTRY.
+            // If the year, in this loop iteration, is the first one of that entry, then indicate that first year.
+            if (y == tmpActYears[0]+1) {
+                tmpEntryBeginYear = y - 1;
+            } else {
+                tmpEntryBeginYear = y;
+            } // end if (check if the loop year is the first year of the given activity entry)
+
+            // ADJUST ENDING YEAR OF ENTRY.
+            // If the year, in this loop iteration, is the final one of that entry, then indicate that final year.
+            if (y == tmpActYears[1]) {
+                tmpEntryFinalYear = y;
+            } else {
+                tmpEntryFinalYear = y+1;
+            } // end if (check if the loop year is the final year of the given activity entry)
+
+            //tmpChildArchive.addEntry(actEntry.get(0), tmpActYears[0], tmpActYears[1]);
+            //tmpChildArchive.addEntry(actEntry.get(0), y, y+1);
+            hometownHistoryDTO.getRecordList().add(new HistoryRecord(record.getLocation(),tmpEntryBeginYear,tmpEntryFinalYear));
+
+        } // end for y (loop through years that child lives with parents)
+
+        // Ensure the last hometown was added properly. If there was a move in the current societal year, then it won't add
+        // properly initially. This will ensure that it is appended to the child's archives.
+        HistoryRecord lastRecord=parentAHometownHistory.getLastActivity();
+
+        if (lastRecord.getStartYear() == Configuration.SocietyYear) {
+            hometownHistoryDTO.getRecordList().add(new HistoryRecord(lastRecord.getLocation(),lastRecord.getStartYear(),lastRecord.getEndYear()));
+        } // end if (check if last activity begins in current year, and adds it to the child's archive)
+
+        // Add last entry separately.
+
+        hometownHistoryDTO.patchSequentialEntries();
+
+        return hometownHistoryDTO;
+
+    } // end assignChildHometowns()
 
     public static int assignAge() {
         int v = Distribution.uniform(Configuration.AdultAgeMin, Configuration.AdultAgeMax);

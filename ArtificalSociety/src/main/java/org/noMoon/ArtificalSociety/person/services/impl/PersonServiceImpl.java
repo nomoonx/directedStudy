@@ -14,9 +14,11 @@ import org.noMoon.ArtificalSociety.person.Enums.RelationStatusEnum;
 import org.noMoon.ArtificalSociety.person.services.PersonService;
 import org.noMoon.ArtificalSociety.person.utils.AttributeAssigner;
 import org.noMoon.ArtificalSociety.person.utils.GroupAdder;
+import org.noMoon.ArtificalSociety.person.utils.RelationshipCalculator;
 import org.springframework.util.StringUtils;
 
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by noMoon on 2015-10-17.
@@ -45,15 +47,10 @@ public class PersonServiceImpl implements PersonService {
     }
 
     private void generateSinglePerson(int number, String societyId, int popSize) {
-        Random rnd = new Random();
         for (int i = 0; i < number; i++) {
             PersonDTO personDTO = new PersonDTO();
             personDTO.setSocietyId(societyId);
-            if (rnd.nextInt() % 2 == 0) {
-                personDTO.setSex(GenderEnum.MALE);
-            } else {
-                personDTO.setSex(GenderEnum.FEMALE);
-            }
+            AttributeAssigner.assignSex(personDTO);
             personDTO.setRelationshipStatus(RelationStatusEnum.SINGLE);
             personDTO.setAge(AttributeAssigner.assignAge());
             personDTO.setBirthYear(AttributeAssigner.assignBirthYear(personDTO.getAge()));
@@ -144,10 +141,91 @@ public class PersonServiceImpl implements PersonService {
 
 
         // Create relationship between the couple.
-//        PersonGroupAdder.createRelationship(personA, personB, relType);
+        GroupAdder.createRelationship(personA, personB, relationStatusEnum);
+
+
+        if (relationStatusEnum.equals(RelationStatusEnum.MARRIED)) {
+            //TMP_COUPLES++;
+            //System.err.println("MARRIED COUPLES | " + person.getID() + " & " + partner.getID());
+
+            // Create children. In CreateChildren(), it checks for the greater ID to ensure children are only created once.
+
+            int numOfChild = RelationshipCalculator.DetermineNumberOfChildren(personA, personB);
+            List<PersonDTO> children = new ArrayList<PersonDTO>();
+            for (int i = 0; i < numOfChild; i++) {
+                PersonDTO child = createChild(personA, personB, true);
+
+                children.add(child);
+            }
+            createChildrenConnections(personA,personB,children);
+            for(PersonDTO child:children){
+                personMapper.insert(child.convertToPerson());
+            }
+
+            // Re-evaluate relationship strength AFTER the parents have children.
+            RelationshipCalculator.CalculateAndSetRelationshipStrength(personA, personB, 1);
+        }
+
         personMapper.insert(personA.convertToPerson());
         personMapper.insert(personB.convertToPerson());
     }
+
+    private PersonDTO createChild(PersonDTO parentA, PersonDTO parentB, boolean isBackFilling) {
+        PersonDTO child = new PersonDTO();
+        fillBasicAttribute(child);
+        child.setRelationshipStatus(RelationStatusEnum.SINGLE);
+        assignChildAttributes(child, parentA, parentB, isBackFilling);
+
+        return child;
+    }
+
+    private void assignChildAttributes(PersonDTO child, PersonDTO parentA, PersonDTO parentB, boolean isBackFilling) {
+
+        // NOTE: the age is now assigned separately because back-filled children are given ages differently than live newborns!
+        AttributeAssigner.assignChildAge(parentA, parentB, child, isBackFilling);
+        AttributeAssigner.assignChildRace(parentA, parentB, child);
+        AttributeAssigner.assignChildReligion(parentA, parentB, child);
+
+        HometownHistoryDTO hometownHistoryDTO = AttributeAssigner.assignChildHometowns(child, parentA, parentB);
+        AttributeAssigner.assignHometownHistory_CP(child, hometownHistoryDTO);
+        fillCareerAndEducation(child, Configuration.N_Population_Size);
+        AttributeAssigner.assignSchoolHistory(child);
+        AttributeAssigner.assignWorkHistory(child);
+
+
+    } // end AssignChildAttributes()
+
+    public void createChildrenConnections(PersonDTO parentA, PersonDTO parentB, List<PersonDTO> children) {
+        // Add family connections for parents and children, including parent, children, and siblings connections.
+        // param parentA: the first parent in the family
+        // param parentB: the second parent in the family
+        // param children: an array of the children in the family
+
+
+        if (parentA.getFamilyId() == parentB.getFamilyId()) {
+            // Check if parents belong to the same family. This should always be the case, unless the simulation includes family separations and re-marriages.
+
+            // Loop through all children from the given couple.
+            for (PersonDTO child : children) {
+
+                // Add both parents to child's parent_ids list.
+                child.getParentIds().add(parentA.getId());
+                child.getParentIds().add(parentB.getId());
+
+                // Add child to each parent's children_ids list.
+                parentA.getChildrenIds().add(child.getId());
+                parentB.getChildrenIds().add(child.getId());
+
+                for(PersonDTO sibling:children){
+                    if(!sibling.getId().equals(child.getId())){
+                        child.getSiblingsIds().add(sibling.getId());
+                    }
+                }
+
+            }
+        } // end if (two parents are in the same family)
+
+    } // end createRelationship()
 
 
     private void fillBasicAttribute(PersonDTO person) {
@@ -191,6 +269,7 @@ public class PersonServiceImpl implements PersonService {
         AttributeAssigner.assignSchoolHistory(person);
         AttributeAssigner.assignWorkHistory(person);
     }
+
 
     public void setPersonMapper(PersonMapper personMapper) {
         this.personMapper = personMapper;

@@ -12,6 +12,7 @@ import org.noMoon.ArtificalSociety.institution.services.ClubService;
 import org.noMoon.ArtificalSociety.institution.services.InstitutionService;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -35,6 +36,9 @@ public class GroupServiceImpl implements GroupService {
     public void generateGroups(String societyId) {
         HashMap<String, List<GroupDTO>> groupMap=new HashMap<String, List<GroupDTO>>();
 
+        System.out.println("begin generate group");
+        System.out.println(new Date());
+
         //add institution(including schools and religion) groups
         List<Institution> institutionList=institutionService.selectInstitutionBySocietyId(societyId);
         for(Institution inst:institutionList){
@@ -54,6 +58,10 @@ public class GroupServiceImpl implements GroupService {
         }
         institutionList.clear();
 
+        System.out.println("done institution group");
+        System.out.println(new Date());
+
+
         //add club groups
         List<Club> clubList=clubService.selectClubBySocietyId(societyId);
         for(Club club:clubList){
@@ -70,6 +78,9 @@ public class GroupServiceImpl implements GroupService {
             }
         }
         clubList.clear();
+
+        System.out.println("done club group");
+        System.out.println(new Date());
 
         //add workplace groups
         List<Workplace> workplaceList=careerService.listWorkplaceWithSocietyId(societyId);
@@ -90,12 +101,18 @@ public class GroupServiceImpl implements GroupService {
             }
         }
 
+        System.out.println("done workplace group");
+        System.out.println(new Date());
+
         //should do transaction insert
+        List<Group> groupList=new ArrayList<Group>();
         for(List<GroupDTO> list:groupMap.values()){
             for(GroupDTO groupDTO:list){
-                groupMapper.insert(groupDTO.convertToGroupDO());
+                groupList.add(groupDTO.convertToGroupDO());
+//                groupMapper.insert(groupDTO.convertToGroupDO());
             }
         }
+        groupMapper.insertList(groupList);
 
     }
 
@@ -115,6 +132,15 @@ public class GroupServiceImpl implements GroupService {
 
     public void updateGroupById(GroupDTO groupDTO) {
         groupMapper.updateByPrimaryKeySelective(groupDTO.convertToGroupDO());
+    }
+
+    public void insertList(List<GroupDTO> groupDTOList) {
+        List<Group> groupList=new ArrayList<Group>();
+        for(GroupDTO groupDTO:groupDTOList){
+            groupList.add(groupDTO.convertToGroupDO());
+        }
+        groupMapper.insertList(groupList);
+        groupList.clear();
     }
 
     public void setClubService(ClubService clubService) {

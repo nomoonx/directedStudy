@@ -42,6 +42,8 @@ public class HistoryDTO {
 
     public HistoryRecord getActivityByYear(int year){return null;}
 
+    public HistoryRecord getLastActivity(){return null;}
+
     public Long getId() {
         return id;
     }

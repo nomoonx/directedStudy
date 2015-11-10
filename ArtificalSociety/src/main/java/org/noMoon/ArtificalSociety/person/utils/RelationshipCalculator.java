@@ -1,17 +1,22 @@
 package org.noMoon.ArtificalSociety.person.utils;
 
+import org.noMoon.ArtificalSociety.commons.utils.Configuration;
+import org.noMoon.ArtificalSociety.commons.utils.Distribution;
+import org.noMoon.ArtificalSociety.commons.utils.DistributionParser;
+import org.noMoon.ArtificalSociety.commons.utils.ValidationTools;
+import org.noMoon.ArtificalSociety.history.DTO.HometownHistoryDTO;
+import org.noMoon.ArtificalSociety.history.services.HistoryService;
 import org.noMoon.ArtificalSociety.person.DTO.PersonDTO;
+import org.noMoon.ArtificalSociety.person.Enums.RelationStatusEnum;
+
+import java.util.List;
 
 
 public class RelationshipCalculator {
+
+    private static HistoryService historyService;
 	
-	// Relationship Types.
-	public final static int REL_TYPE_SINGLE = 0;
-	public final static int REL_TYPE_MARRIED = 1;
-	public final static int REL_TYPE_DATING = 2;
-	public final static int REL_TYPE_WIDOWED = 3;
-	
-	
+
 	// Factors.
 	public final static int REL_STRENGTH_TYPE = 0;
 	public final static int REL_STRENGTH_CHILDREN = 1;
@@ -89,7 +94,7 @@ public class RelationshipCalculator {
 		
 		return IS;
 	} // end calculateInterestSimilarity()
-    /*
+
 
     public static void CalculateAndSetRelationshipStrength (PersonDTO personA, PersonDTO personB, int pass) {
 
@@ -143,9 +148,9 @@ public class RelationshipCalculator {
     private static double calcRelStrength_Type (PersonDTO personA, PersonDTO personB) {
         // Return the strength factor from the relationship type. For now, these are just two fixed numbers and the
         // value for a dating relationship is a little less than that of a married relationship.
-        if (personA.getRelationshipStatus() == REL_TYPE_MARRIED) {
+        if (personA.getRelationshipStatus().equals(RelationStatusEnum.MARRIED)) {
             return 1.0;
-        } else if (personA.getRelationshipStatus() == REL_TYPE_DATING) {
+        } else if (personA.getRelationshipStatus().equals(RelationStatusEnum.DATING)) {
             return 0.8;
         } else {
         } // end if (determine relationship type)
@@ -157,26 +162,13 @@ public class RelationshipCalculator {
         // Return the strength factor from the couple's children. In the current implementation, there is no possibility
         // of step-children from past relationships, but in a future work, that would be a consideration, so that's
         // why here we get the list of children from both personA and personB.
-        ArrayList personAChildren = personA.getChildrenIDs();
-        ArrayList personBChildren = personB.getChildrenIDs();
+        List<String> personAChildren = personA.getChildrenIds();
+        List<String> personBChildren = personB.getChildrenIds();
 
         if (personAChildren.isEmpty() || personBChildren.isEmpty()) {
             // No children.
             return 1.0;
         } // end if (check if either person has no children) - MAY HAVE TO BE MODIFIED
-
-
-
-        int[] aChildren = ArrayTools.arrayListToIntArray(personAChildren);
-        int[] bChildren = ArrayTools.arrayListToIntArray(personBChildren);
-
-        aChildren = ArrayTools.unique(ArrayTools.sort(aChildren));
-        bChildren = ArrayTools.unique(ArrayTools.sort(bChildren));
-
-        //DebugTools.printArray(aChildren);
-        //DebugTools.printArray(bChildren);
-
-        //System.out.println("~~~~~~~~~~~~~~~~~~~~" + personA.id + " || " + personB.id + "~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
         return 0.0;
     } // end calcRelStrength_Children()
@@ -185,7 +177,7 @@ public class RelationshipCalculator {
         // Determine whether or not the couple are the same race. If they are the same, then return 1.0, otherwise return 0.0. At this point, there is no need for
         // an in-between or fuzzy area.
 
-        if (personA.getRace() == personB.getRace()) {
+        if (personA.getRaceIndex() == personB.getRaceIndex()) {
             return 1.0;
         } else {
             return 0.0;
@@ -196,7 +188,7 @@ public class RelationshipCalculator {
         // Determine whether or not the couple are the same religion. If they are the same, then return 1.0, otherwise return 0.0. At this point, there is no need for
         // an in-between or fuzzy area.
 
-        if (personA.getReligion() == personB.getReligion()) {
+        if (personA.getReligionIndex() == personB.getReligionIndex()) {
             return 1.0;
         } else {
             return 0.0;
@@ -286,9 +278,11 @@ public class RelationshipCalculator {
 
     private static double calcRelStrength_Location (PersonDTO personA, PersonDTO personB) {
         // Determine the strength associated to the geographical location of the two persons.
+        HometownHistoryDTO personAHistory=historyService.getHometownHistoryById(personA.getHometownHistoryId());
+        HometownHistoryDTO personBHistory=historyService.getHometownHistoryById(personB.getHometownHistoryId());
 
-        String personALocation = (String)personA.getHometownHistory().getLastActivityName();
-        String personBLocation = (String)personB.getHometownHistory().getLastActivityName();
+        String personALocation = personAHistory.getRecordList().get(personAHistory.getRecordList().size()-1).getLocation();
+        String personBLocation = personBHistory.getRecordList().get(personBHistory.getRecordList().size()-1).getLocation();
 
         // If two people live in same city, then return 1.0, otherwise return 0.0.
         if (personALocation.equals(personBLocation)) {
@@ -298,7 +292,112 @@ public class RelationshipCalculator {
         } // end if (check if two people live in same society)
 
     } // end calcRelStrength_Location()
-	
-	*/
-	
+
+    public static int DetermineNumberOfChildren (PersonDTO personA, PersonDTO personB) {
+        // Determine how many children the couple has had, that are being created now in back-filling the population.
+        // This will look at relationship strength, status, among other factors to decide the number of children they had.
+        //
+        // param parentA: the first person in the relationship
+        // param parentB: the second person in the relationship
+        //
+        // returns: integer representing the number of children that couple has had.
+
+        //double strength = CalculateRelationshipStrength(personA, personB);
+
+        int numChildren;
+
+        double rndChildren = Distribution.uniform(0.0, 1.0);
+
+        if (rndChildren < Configuration.p_likelihoodMarriedCoupleHasChildren) {
+            // (EDIT for below line: Not true anymore.. At this point there is not necessarily going to be children. Could select zero here.
+            // There will be children. Now determine the number of children.
+
+
+            // TODO Incorporate relationship strength and/or other factors into number of children equation.
+            // Get relationship strength (should be identical for both persons, so just get it from personA for simplicity).
+//            double detNumChildrenFactor_RelStrength = personA.getRelationshipStrength();
+            //System.out.println(personB.getRelationshipStrength());
+
+
+            numChildren = ValidationTools.clipValueToRange((int)Math.round(DistributionParser.parseStatisticalDistribution(Configuration.marriageChildrenDistr)), Configuration.marriageChildrenMin, Configuration.marriageChildrenMax);
+            //numChildren = Distribution.uniform(0, 1);
+
+            // TODO THIS SHOULD BE IN A CHILDREN FACTOR METHOD, ALONG WITH THE OTHER FACTORS!!!
+            if ((Configuration.SocietyYear - personA.getRelationshipStartYear()) < Configuration.MinNumYearsMarriedBeforeChildren) {
+                numChildren = 0;
+            } // end if (check if couple's marriage began too recently for them to want to have a child)
+
+        } else {
+            // There will not be any children.
+            numChildren = 0;
+
+        } // end if (whether or not there will be children, from random number)
+
+        //System.out.println("numChildren = " + numChildren);
+
+        return numChildren;
+
+    } // end DetermineNumberOfChildren()
+
+    public static int DetermineCurrentChildBirth (PersonDTO personA, PersonDTO personB) {
+        // Determine whether or not a couple will opt to have a child right now, during an active simulation.
+        // This will look at relationship strength, number of current children, and time since last child was born, among
+        // other factors to decide whether or not they will have a child at this time.
+        //
+        // param parentA: the first person in the relationship
+        // param parentB: the second person in the relationship
+        //
+        // returns: integer of either 0 (no child right now) or 1 (having a child right now).
+        // 		{If twins, triplets, etc. were an option, then here we could return 2, 3, etc. as well, but for now we
+        //		will leave it at single children}.
+
+        // TODO!!!
+
+        int numChildren;
+
+        double rndChildren = Distribution.uniform(0.0, 1.0);
+
+        if (rndChildren < Configuration.p_likelihoodMarriedCoupleHasChildren) {
+            // There will be children. Now determine the number of children.
+
+            // TODO Incorporate relationship strength and/or other factors into number of children equation.
+            // Get relationship strength (should be identical for both persons, so just get it from personA for simplicity).
+            double detNumChildrenFactor_RelStrength = personA.getRelationshipStrength();
+            //System.out.println(personB.getRelationshipStrength());
+
+
+            // AGE.
+            if (personA.getAge() > Configuration.MaxAgeHaveChildren || personB.getAge() > Configuration.MaxAgeHaveChildren) {
+                // If either, or both, of the parents are too old, then they will not have children.
+                //System.out.println("0 kids | A");
+                numChildren = 0;
+            } else {	// Both parents are young enough to have children.
+                int expNumChildren = ValidationTools.clipValueToRange((int)Math.round(DistributionParser.parseStatisticalDistribution(Configuration.marriageChildrenDistr)), Configuration.marriageChildrenMin, Configuration.marriageChildrenMax);
+                int numChildrenAlready = personA.getChildrenIds().size();
+
+                if (expNumChildren > numChildrenAlready) {
+                    // If the couple hasn't yet had as many kids as they expect to have, then let them have one now.
+                    numChildren = 1;
+                } else {
+                    // If they have already had as many children as they expect, then don't have any more!
+                    //System.out.println("0 kids | B " + expNumChildren + " <> " + numChildrenAlready);
+                    numChildren = 0;
+                } // end if (check if couple has already had as many children as they currently expect to have)
+            } // end if (check if parents are too old for having children)
+
+        } else {
+            // There will not be any children.
+            //System.out.println("0 kids | C");
+            numChildren = 0;
+
+        } // end if (whether or not there will be children, from random number)
+
+
+        return numChildren;
+
+    } // end DetermineCurrentChildBirth()
+
+    public void setHistoryService(HistoryService historyService) {
+        RelationshipCalculator.historyService = historyService;
+    }
 } // end RelationshipCalculator

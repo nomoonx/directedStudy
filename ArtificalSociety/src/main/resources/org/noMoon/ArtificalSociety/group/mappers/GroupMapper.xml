@@ -87,12 +87,23 @@
       SELECT LAST_INSERT_ID() as id
     </selectKey>
     insert into AS_GROUP ( GMT_CREATE, GMT_MODIFIED,
-      SOCIETY_ID, GROUP_LABEL, GROUP_YEAR, 
+      SOCIETY_ID, GROUP_LABEL, GROUP_YEAR,
       MEMBER_LIST)
     values (now(),now(),
-      #{societyId,jdbcType=VARCHAR}, #{groupLabel,jdbcType=VARCHAR}, #{groupYear,jdbcType=INTEGER}, 
+      #{societyId,jdbcType=VARCHAR}, #{groupLabel,jdbcType=VARCHAR}, #{groupYear,jdbcType=INTEGER},
       #{memberList,jdbcType=LONGVARCHAR})
   </insert>
+
+    <insert id="insertList" parameterType="java.util.List" >
+        insert into AS_GROUP( GMT_CREATE, GMT_MODIFIED,
+      SOCIETY_ID, GROUP_LABEL, GROUP_YEAR,
+      MEMBER_LIST)
+        values (
+        <foreach item="element" collection="list" open="" close="" separator="),(">
+            sysdate(),sysdate(),#{element.societyId}, #{element.groupLabel}, #{element.groupYear}, #{element.memberList}
+        </foreach>
+        )
+    </insert>
   <insert id="insertSelective" parameterType="org.noMoon.ArtificalSociety.group.DO.Group" useGeneratedKeys="true" keyColumn="ID" keyProperty="id">
     <!--
       WARNING - @mbggenerated

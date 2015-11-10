@@ -76,6 +76,21 @@
       #{numPercnet,jdbcType=DOUBLE}, #{education,jdbcType=VARCHAR}, #{numYearPostSecondary,jdbcType=INTEGER}, 
       #{trait,jdbcType=VARCHAR}),#{careerId,jdbcType=VARCHAR},#{workplaceId,jdbcType=VARCHAR})
   </insert>
+
+    <insert id="insertList" parameterType="java.util.List" >
+        insert into CAREER (GMT_CREATE, GMT_MODIFIED,
+      SOCIETY_ID, TITLE, SALARY_MEAN,
+      NUM_PERCNET, EDUCATION, NUM_YEAR_POST_SECONDARY,
+      TRAIT,CAREER_ID,WORKPLACE_ID)
+        values (
+        <foreach item="element" collection="list" open="" close="" separator="),(">
+            now(),now(),
+            #{element.societyId}, #{element.title}, #{element.salaryMean},
+            #{element.numPercnet}, #{element.education}, #{element.numYearPostSecondary},
+            #{element.trait}, #{element.careerId}, #{element.workplaceId}
+        </foreach>
+        )
+    </insert>
   <insert id="insertSelective" parameterType="org.noMoon.ArtificalSociety.career.DO.Career" useGeneratedKeys="true" keyProperty="id" keyColumn="ID">
     <!--
       WARNING - @mbggenerated

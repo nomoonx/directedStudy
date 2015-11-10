@@ -42,7 +42,31 @@ public class groupServiceTest {
 
     @Test
     public void testGenerate(){
-        String societyId="S201509141000018";
+        String societyId="S201510281000035";
         groupService.generateGroups(societyId);
+    }
+
+    @Test
+    public void testListInsert(){
+        List<GroupDTO> groupDTOList=new ArrayList<GroupDTO>();
+        GroupDTO groupDTO=new GroupDTO();
+        groupDTO.setSocietyId("testSocietyId");
+        groupDTO.setGroupLabel("hoho");
+        List<String> ids=new ArrayList<String>();
+        ids.add("id1");
+        ids.add("id2");
+        ids.add("id3");
+        groupDTO.setMemberList(ids);
+        groupDTOList.add(groupDTO);
+        groupDTO=new GroupDTO();
+        groupDTO.setSocietyId("testSocietyId");
+        groupDTO.setGroupLabel("hoho1");
+        ids=new ArrayList<String>();
+        ids.add("id1");
+        ids.add("id2");
+        ids.add("id3");
+        groupDTO.setMemberList(ids);
+        groupDTOList.add(groupDTO);
+        groupService.insertList(groupDTOList);
     }
 }

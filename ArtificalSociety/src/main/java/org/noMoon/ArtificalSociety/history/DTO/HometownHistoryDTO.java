@@ -45,6 +45,11 @@ public class HometownHistoryDTO extends HistoryDTO {
         return null;
     }
 
+    @Override
+    public HistoryRecord getLastActivity(){
+        return recordList.get(recordList.size()-1);
+    }
+
     public void patchSequentialEntries() {
         Collections.sort(recordList, new Comparator<HistoryRecord>() {
             public int compare(HistoryRecord o1, HistoryRecord o2) {

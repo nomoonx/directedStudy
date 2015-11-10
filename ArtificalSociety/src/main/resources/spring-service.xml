@@ -99,10 +99,15 @@ http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd"
         <property name="careerService" ref="careerService"/>
         <property name="institutionService" ref="institutionService"/>
         <property name="clubService" ref="clubService"/>
+        <property name="sequenceService" ref="sequenceService" />
     </bean>
 
     <bean id="traitMatcher" class="org.noMoon.ArtificalSociety.person.utils.TraitMatcher">
         <property name="careerService" ref="careerService"/>
+        <property name="historyService" ref="historyService"/>
+    </bean>
+
+    <bean id="relationshipCalculator" class="org.noMoon.ArtificalSociety.person.utils.RelationshipCalculator">
         <property name="historyService" ref="historyService"/>
     </bean>
 

@@ -98,14 +98,14 @@ public class PersonDTO {
     //family
     private Long familyId;
 
-    private ArrayList<String> parentIds;
+    private List<String> parentIds;
 
-    private ArrayList<String> childrenIds;
+    private List<String> childrenIds;
 
-    private ArrayList<String> siblingsIds;
+    private List<String> siblingsIds;
 
     //club
-    private ArrayList<Long> clubIds;
+    private List<Long> clubIds;
 
     //group
     private HashMap<Long,ArrayList<String>> groupIds;
@@ -168,6 +168,10 @@ public class PersonDTO {
 
     public PersonDTO(){
         this.groupIds=new HashMap<Long, ArrayList<String>>();
+        this.clubIds=new ArrayList<Long>();
+        this.parentIds=new ArrayList<String>();
+        this.childrenIds=new ArrayList<String>();
+        this.siblingsIds=new ArrayList<String>();
     }
 
     public PersonWithBLOBs convertToPerson(){
@@ -515,7 +519,7 @@ public class PersonDTO {
         this.familyId = familyId;
     }
 
-    public ArrayList<String> getParentIds() {
+    public List<String> getParentIds() {
         return parentIds;
     }
 
@@ -523,7 +527,7 @@ public class PersonDTO {
         this.parentIds = parentIds;
     }
 
-    public ArrayList<String> getChildrenIds() {
+    public List<String> getChildrenIds() {
         return childrenIds;
     }
 
@@ -531,7 +535,7 @@ public class PersonDTO {
         this.childrenIds = childrenIds;
     }
 
-    public ArrayList<String> getSiblingsIds() {
+    public List<String> getSiblingsIds() {
         return siblingsIds;
     }
 
@@ -539,7 +543,7 @@ public class PersonDTO {
         this.siblingsIds = siblingsIds;
     }
 
-    public ArrayList<Long> getClubIds() {
+    public List<Long> getClubIds() {
         return clubIds;
     }
 

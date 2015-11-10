@@ -86,7 +86,7 @@
       SOC_SCHOOL_HISTORY_ID, SOC_WORK_HISTORY_ID, FAMILY_ID, 
       PARENT_IDS, CHILDREN_IDS, SIBLINGS_IDS, 
       CLUB_IDS, GROUP_IDS)
-    values (#{id,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, 
+    values (#{id,jdbcType=VARCHAR}, now(), now(),
       #{societyId,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, 
       #{birthYear,jdbcType=INTEGER}, #{expDeathYear,jdbcType=INTEGER}, #{raceIndex,jdbcType=INTEGER}, 
       #{intelligence,jdbcType=DOUBLE}, #{athleticism,jdbcType=DOUBLE}, #{religionIndex,jdbcType=INTEGER}, 
@@ -102,6 +102,42 @@
       #{parentIds,jdbcType=VARCHAR}, #{childrenIds,jdbcType=VARCHAR}, #{siblingsIds,jdbcType=VARCHAR}, 
       #{clubIds,jdbcType=LONGVARCHAR}, #{groupIds,jdbcType=LONGVARCHAR})
   </insert>
+    <insert id="insertList" parameterType="java.util.List" >
+        insert into PERSON (ID, GMT_CREATE, GMT_MODIFIED,
+        SOCIETY_ID, SEX, AGE,
+        BIRTH_YEAR, EXP_DEATH_YEAR, RACE_INDEX,
+        INTELLIGENCE, ATHLETICISM, RELIGION_INDEX,
+        NATIONALITY, TEMPLE_ATTENDING, INTEREST,
+        INTEREST_WEIGHT, RELATIONSHIP_STATUS, PARTNER_ID,
+        INTEREST_SIMILARITY, RELATIONSHIP_STRENGTH,
+        RELATIONSHIP_START_YEAR, PERSONALITY, CAREER_ID,
+        CURRENT_POSITION, INCOME, EDUCATION,
+        EDUCATION_PS_YEAR, IS_IN_SCHOOL, YEAR_STARTED_PS_SCHOOL,
+        YEAR_FINISHED_PS_SCHOOL, HOMETOWN_HISTORY_ID,
+        SCHOOL_HISTORY_ID, WORK_HISTORY_ID, SOC_HOMETOWN_HISTORY_ID,
+        SOC_SCHOOL_HISTORY_ID, SOC_WORK_HISTORY_ID, FAMILY_ID,
+        PARENT_IDS, CHILDREN_IDS, SIBLINGS_IDS,
+        CLUB_IDS, GROUP_IDS)
+        values (
+        <foreach item="element" collection="list" open="" close="" separator="),(">
+            #{element.id}, now(), now(),
+            #{element.societyId}, #{element.sex}, #{element.age},
+            #{element.birthYear}, #{element.expDeathYear}, #{element.raceIndex},
+            #{element.intelligence}, #{element.athleticism}, #{element.religionIndex},
+            #{element.nationality}, #{element.templeAttending}, #{element.interest},
+            #{element.interestWeight}, #{element.relationshipStatus}, #{element.partnerId},
+            #{element.interestSimilarity}, #{element.relationshipStrength},
+            #{element.relationshipStartYear}, #{element.personality}, #{element.careerId},
+            #{element.currentPosition}, #{element.income}, #{element.education},
+            #{element.educationPsYear}, #{element.isInSchool}, #{element.yearStartedPsSchool},
+            #{element.yearFinishedPsSchool}, #{element.hometownHistoryId},
+            #{element.schoolHistoryId}, #{element.workHistoryId}, #{element.socHometownHistoryId},
+            #{element.socSchoolHistoryId}, #{element.socWorkHistoryId}, #{element.familyId},
+            #{element.parentIds}, #{element.childrenIds}, #{element.siblingsIds},
+            #{element.clubIds}, #{element.groupIds}
+        </foreach>
+        )
+    </insert>
   <insert id="insertSelective" parameterType="org.noMoon.ArtificalSociety.person.DO.PersonWithBLOBs">
     <!--
       WARNING - @mbggenerated

@@ -76,6 +76,11 @@ public class SchoolHistoryDTO extends HistoryDTO {
         return null;
     }
 
+    @Override
+    public HistoryRecord getLastActivity(){
+        return recordList.get(recordList.size()-1);
+    }
+
     public ArrayList<SchoolHistoryRecord> getRecordList() {
         return recordList;
     }
