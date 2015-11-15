@@ -22,4 +22,8 @@ public interface PersonMapper {
     int insertSelective(PersonWithBLOBs record);
 
     void insertList(List<PersonWithBLOBs> list);
+
+    List<String> selectIdsBySocietyId(String societyId);
+
+    PersonWithBLOBs selectById(PersonWithBLOBs record);
 }

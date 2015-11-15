@@ -65,6 +65,32 @@
     -->
     CLUB_IDS, GROUP_IDS
   </sql>
+
+    <sql id="Basic_Column_List">
+        ID, GMT_CREATE, GMT_MODIFIED,
+      SOCIETY_ID, SEX, AGE,
+      BIRTH_YEAR, EXP_DEATH_YEAR, RACE_INDEX,
+      INTELLIGENCE, ATHLETICISM, RELIGION_INDEX,
+      NATIONALITY, TEMPLE_ATTENDING, INTEREST,
+      INTEREST_WEIGHT, RELATIONSHIP_STATUS, PARTNER_ID,
+      INTEREST_SIMILARITY, RELATIONSHIP_STRENGTH,
+      RELATIONSHIP_START_YEAR, PERSONALITY, CAREER_ID,
+      CURRENT_POSITION, INCOME, EDUCATION,
+      EDUCATION_PS_YEAR, IS_IN_SCHOOL, YEAR_STARTED_PS_SCHOOL,
+      YEAR_FINISHED_PS_SCHOOL, HOMETOWN_HISTORY_ID,
+      SCHOOL_HISTORY_ID, WORK_HISTORY_ID, SOC_HOMETOWN_HISTORY_ID,
+      SOC_SCHOOL_HISTORY_ID, SOC_WORK_HISTORY_ID, FAMILY_ID,
+      PARENT_IDS, CHILDREN_IDS, SIBLINGS_IDS
+
+    </sql>
+    
+    <select id="selectById" parameterType="org.noMoon.ArtificalSociety.person.DO.PersonWithBLOBs" resultMap="ResultMapWithBLOBs">
+        select 
+        <include refid="Basic_Column_List"/>,
+        <include refid="Blob_Column_List"/>
+        from PERSON
+        where SOCIETY_ID=#{societyId,jdbcType=VARCHAR} and ID=#{id,jdbcType=VARCHAR}
+    </select>
   <insert id="insert" parameterType="org.noMoon.ArtificalSociety.person.DO.PersonWithBLOBs">
     <!--
       WARNING - @mbggenerated
@@ -138,6 +164,10 @@
         </foreach>
         )
     </insert>
+    <select id="selectIdsBySocietyId" parameterType="java.lang.String" resultType="java.lang.String">
+        select ID from PERSON where SOCIETY_ID=#{societyId}
+    </select>
+
   <insert id="insertSelective" parameterType="org.noMoon.ArtificalSociety.person.DO.PersonWithBLOBs">
     <!--
       WARNING - @mbggenerated

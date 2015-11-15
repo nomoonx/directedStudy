@@ -17,4 +17,6 @@ public interface GroupService {
     void updateGroupById(GroupDTO groupDTO);
 
     void insertList(List<GroupDTO> groupDTOList);
+
+    GroupDTO getGroupDTOById(Long id);
 }

@@ -116,4 +116,8 @@ http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd"
         <property name="sqlSessionFactory" ref="sqlSessionFactory" />
     </bean>
 
+    <bean id="friendshipMapper" class="org.mybatis.spring.mapper.MapperFactoryBean" >
+        <property name="mapperInterface" value="org.noMoon.ArtificalSociety.friendship.DAO.FriendshipMapper" />
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
 </beans>

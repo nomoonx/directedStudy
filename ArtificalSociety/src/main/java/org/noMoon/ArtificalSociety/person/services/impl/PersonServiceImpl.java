@@ -8,6 +8,7 @@ import org.noMoon.ArtificalSociety.commons.utils.Distribution;
 import org.noMoon.ArtificalSociety.group.Services.GroupService;
 import org.noMoon.ArtificalSociety.history.DTO.HometownHistoryDTO;
 import org.noMoon.ArtificalSociety.person.DAO.PersonMapper;
+import org.noMoon.ArtificalSociety.person.DO.PersonWithBLOBs;
 import org.noMoon.ArtificalSociety.person.DTO.PersonDTO;
 import org.noMoon.ArtificalSociety.person.Enums.GenderEnum;
 import org.noMoon.ArtificalSociety.person.Enums.RelationStatusEnum;
@@ -47,6 +48,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     private void generateSinglePerson(int number, String societyId, int popSize) {
+        List<PersonWithBLOBs> insertList=new ArrayList<PersonWithBLOBs>();
         for (int i = 0; i < number; i++) {
             PersonDTO personDTO = new PersonDTO();
             personDTO.setSocietyId(societyId);
@@ -60,8 +62,10 @@ public class PersonServiceImpl implements PersonService {
             fillCareerAndEducation(personDTO, popSize);
             fillHistory(personDTO, null);
             GroupAdder.addToGroups(personDTO);
-            personMapper.insert(personDTO.convertToPerson());
+            insertList.add(personDTO.convertToPerson());
         }
+        personMapper.insertList(insertList);
+        insertList.clear();
     }
 
     private void createCouples(int numMarriedCouples, int numDatingCouples) {
@@ -158,9 +162,13 @@ public class PersonServiceImpl implements PersonService {
                 children.add(child);
             }
             createChildrenConnections(personA,personB,children);
+            List<PersonWithBLOBs> childrenInsertList=new ArrayList<PersonWithBLOBs>();
             for(PersonDTO child:children){
-                personMapper.insert(child.convertToPerson());
+                childrenInsertList.add(child.convertToPerson());
             }
+            personMapper.insertList(childrenInsertList);
+            children.clear();
+            childrenInsertList.clear();
 
             // Re-evaluate relationship strength AFTER the parents have children.
             RelationshipCalculator.CalculateAndSetRelationshipStrength(personA, personB, 1);
@@ -270,6 +278,17 @@ public class PersonServiceImpl implements PersonService {
         AttributeAssigner.assignWorkHistory(person);
     }
 
+    public List<String> getAllIds(String societyId) {
+        return personMapper.selectIdsBySocietyId(societyId);
+    }
+
+    public PersonDTO selectPerosonDTOById(String id) {
+        PersonWithBLOBs query=new PersonWithBLOBs();
+        query.setSocietyId(Configuration.Society_Id);
+        query.setId(id);
+        PersonWithBLOBs personDO=personMapper.selectById(query);
+        return new PersonDTO(personDO);
+    }
 
     public void setPersonMapper(PersonMapper personMapper) {
         this.personMapper = personMapper;

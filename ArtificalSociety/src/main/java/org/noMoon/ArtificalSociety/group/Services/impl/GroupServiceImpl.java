@@ -143,6 +143,11 @@ public class GroupServiceImpl implements GroupService {
         groupList.clear();
     }
 
+    public GroupDTO getGroupDTOById(Long id) {
+        Group groupDO=groupMapper.selectByPrimaryKey(id);
+        return new GroupDTO(groupDO);
+    }
+
     public void setClubService(ClubService clubService) {
         this.clubService = clubService;
     }

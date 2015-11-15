@@ -46,6 +46,10 @@ public class GroupDTO {
         return group;
     }
 
+    public int getNumMembers(){
+        return memberList.size();
+    }
+
     public Long getId() {
         return id;
     }

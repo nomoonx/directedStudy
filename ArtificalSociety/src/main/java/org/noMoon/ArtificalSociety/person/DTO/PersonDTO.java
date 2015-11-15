@@ -108,7 +108,7 @@ public class PersonDTO {
     private List<Long> clubIds;
 
     //group
-    private HashMap<Long,ArrayList<String>> groupIds;
+    private HashMap<Long,List<String>> groupIds;
 
     public boolean isInGroup(Long groupId,String role){
         List<String> roles=groupIds.get(groupId);
@@ -163,11 +163,11 @@ public class PersonDTO {
                 this.childrenIds=JSON.parseObject(personDO.getChildrenIds(),ArrayList.class);
                 this.siblingsIds=JSON.parseObject(personDO.getSiblingsIds(),ArrayList.class);
                 this.clubIds=JSON.parseObject(personDO.getClubIds(),ArrayList.class);
-                this.groupIds=JSON.parseObject(personDO.getGroupIds(),new TypeReference<HashMap<Long,ArrayList<String>>>(){});
+                this.groupIds=JSON.parseObject(personDO.getGroupIds(),new TypeReference<HashMap<Long,List<String>>>(){});
     }
 
     public PersonDTO(){
-        this.groupIds=new HashMap<Long, ArrayList<String>>();
+        this.groupIds=new HashMap<Long, List<String>>();
         this.clubIds=new ArrayList<Long>();
         this.parentIds=new ArrayList<String>();
         this.childrenIds=new ArrayList<String>();
@@ -551,11 +551,11 @@ public class PersonDTO {
         this.clubIds = clubIds;
     }
 
-    public HashMap<Long,ArrayList<String>> getGroupIds() {
+    public HashMap<Long,List<String>> getGroupIds() {
         return groupIds;
     }
 
-    public void setGroupIds(HashMap<Long,ArrayList<String>> groupIds) {
+    public void setGroupIds(HashMap<Long,List<String>> groupIds) {
         this.groupIds = groupIds;
     }
 }
