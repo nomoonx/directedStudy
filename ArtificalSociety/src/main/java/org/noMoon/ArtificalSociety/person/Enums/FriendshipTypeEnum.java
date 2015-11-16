@@ -1,4 +1,4 @@
-package org.noMoon.ArtificalSociety.friendship.Enums;
+package org.noMoon.ArtificalSociety.person.Enums;
 
 /**
  * Created by noMoon on 2015-11-14.

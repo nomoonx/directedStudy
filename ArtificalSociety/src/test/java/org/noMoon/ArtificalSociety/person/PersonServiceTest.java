@@ -5,6 +5,9 @@ import org.junit.runner.RunWith;
 import org.noMoon.ArtificalSociety.commons.utils.Configuration;
 import org.noMoon.ArtificalSociety.person.DAO.PersonMapper;
 import org.noMoon.ArtificalSociety.person.DTO.PersonDTO;
+import org.noMoon.ArtificalSociety.person.Enums.GenderEnum;
+import org.noMoon.ArtificalSociety.person.Enums.PositionEnum;
+import org.noMoon.ArtificalSociety.person.Enums.RelationStatusEnum;
 import org.noMoon.ArtificalSociety.person.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -54,6 +57,17 @@ public class PersonServiceTest {
         Configuration.Society_Id="S201510281000035";
         PersonDTO person=personService.selectPerosonDTOById("P20151101013232000000028");
         System.out.println(person.getCareerId());
+    }
+
+    @Test
+    public void testIsAlive(){
+        PersonDTO person=new PersonDTO();
+        person.setSex(GenderEnum.FEMALE);
+        person.setId("testPersonId");
+        person.setSocietyId("testSocietyId");
+        person.setRelationshipStatus(RelationStatusEnum.SINGLE);
+        person.setCurrentPosition(PositionEnum.STUDENT);
+        personMapper.insert(person.convertToPerson());
     }
 
 }

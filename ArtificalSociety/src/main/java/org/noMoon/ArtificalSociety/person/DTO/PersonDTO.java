@@ -47,6 +47,8 @@ public class PersonDTO {
 
     private String templeAttending;
 
+    private Boolean isAlive;
+
     //interest
     private double[] interest;
 
@@ -108,13 +110,13 @@ public class PersonDTO {
     private List<Long> clubIds;
 
     //group
-    private HashMap<Long,List<String>> groupIds;
+    private HashMap<Long, List<String>> groupIds;
 
-    public boolean isInGroup(Long groupId,String role){
-        List<String> roles=groupIds.get(groupId);
-        if(null==roles) return false;
-        for(String rol:roles){
-            if(rol.equals(role)){
+    public boolean isInGroup(Long groupId, String role) {
+        List<String> roles = groupIds.get(groupId);
+        if (null == roles) return false;
+        for (String rol : roles) {
+            if (rol.equals(role)) {
                 return true;
             }
         }
@@ -122,60 +124,63 @@ public class PersonDTO {
     }
 
     public PersonDTO(PersonWithBLOBs personDO) {
-        this.id=personDO.getId();
-                this.gmtCreate=personDO.getGmtCreate();
-                this.gmtModified=personDO.getGmtModified();
-                this.societyId=personDO.getSocietyId();
-                this.sex=GenderEnum.getEnumByValue(personDO.getSex());
-                this.age=personDO.getAge();
-                this.birthYear=personDO.getBirthYear();
-                this.expDeathYear=personDO.getExpDeathYear();
-                this.raceIndex=personDO.getRaceIndex();
-                this.intelligence=personDO.getIntelligence();
-                this.personality= JSON.parseObject(personDO.getPersonality(),double[].class);
-                this.athleticism=personDO.getAthleticism();
-                this.religionIndex=personDO.getReligionIndex();
-                this.nationality=personDO.getNationality();
-                this.templeAttending=personDO.getTempleAttending();
-                this.interest=JSON.parseObject(personDO.getInterest(),double[].class);
-                this.interestWeight=JSON.parseObject(personDO.getInterestWeight(),double[].class);
-                this.relationshipStatus=RelationStatusEnum.getEnumByValue(personDO.getRelationshipStatus());
-                this.partnerId=personDO.getPartnerId();
-                this.interestSimilarity=personDO.getInterestSimilarity();
-                this.relationshipStrength=personDO.getRelationshipStrength();
-                this.relationshipStartYear=personDO.getRelationshipStartYear();
-                this.careerId=personDO.getCareerId();
-                this.currentPosition=PositionEnum.getEnumByValue(personDO.getCurrentPosition());
-                this.income=personDO.getIncome();
-                this.education=personDO.getEducation();
-                this.educationPsYear=personDO.getEducationPsYear();
-                this.isInSchool=personDO.getIsInSchool();
-                this.yearStartedPsSchool=personDO.getYearStartedPsSchool();
-                this.yearFinishedPsSchool=personDO.getYearFinishedPsSchool();
-                this.hometownHistoryId=personDO.getHometownHistoryId();
-                this.schoolHistoryId=personDO.getSchoolHistoryId();
-                this.workHistoryId=personDO.getWorkHistoryId();
-                this.socHometownHistoryId=personDO.getSocHometownHistoryId();
-                this.socSchoolHistoryId=personDO.getSocSchoolHistoryId();
-                this.socWorkHistoryId=personDO.getSocWorkHistoryId();
-                this.familyId=personDO.getFamilyId();
-                this.parentIds=JSON.parseObject(personDO.getParentIds(),ArrayList.class);
-                this.childrenIds=JSON.parseObject(personDO.getChildrenIds(),ArrayList.class);
-                this.siblingsIds=JSON.parseObject(personDO.getSiblingsIds(),ArrayList.class);
-                this.clubIds=JSON.parseObject(personDO.getClubIds(),ArrayList.class);
-                this.groupIds=JSON.parseObject(personDO.getGroupIds(),new TypeReference<HashMap<Long,List<String>>>(){});
+        this.id = personDO.getId();
+        this.gmtCreate = personDO.getGmtCreate();
+        this.gmtModified = personDO.getGmtModified();
+        this.societyId = personDO.getSocietyId();
+        this.sex = GenderEnum.getEnumByValue(personDO.getSex());
+        this.age = personDO.getAge();
+        this.birthYear = personDO.getBirthYear();
+        this.expDeathYear = personDO.getExpDeathYear();
+        this.isAlive=personDO.getIsAlive();
+        this.raceIndex = personDO.getRaceIndex();
+        this.intelligence = personDO.getIntelligence();
+        this.personality = JSON.parseObject(personDO.getPersonality(), double[].class);
+        this.athleticism = personDO.getAthleticism();
+        this.religionIndex = personDO.getReligionIndex();
+        this.nationality = personDO.getNationality();
+        this.templeAttending = personDO.getTempleAttending();
+        this.interest = JSON.parseObject(personDO.getInterest(), double[].class);
+        this.interestWeight = JSON.parseObject(personDO.getInterestWeight(), double[].class);
+        this.relationshipStatus = RelationStatusEnum.getEnumByValue(personDO.getRelationshipStatus());
+        this.partnerId = personDO.getPartnerId();
+        this.interestSimilarity = personDO.getInterestSimilarity();
+        this.relationshipStrength = personDO.getRelationshipStrength();
+        this.relationshipStartYear = personDO.getRelationshipStartYear();
+        this.careerId = personDO.getCareerId();
+        this.currentPosition = PositionEnum.getEnumByValue(personDO.getCurrentPosition());
+        this.income = personDO.getIncome();
+        this.education = personDO.getEducation();
+        this.educationPsYear = personDO.getEducationPsYear();
+        this.isInSchool = personDO.getIsInSchool();
+        this.yearStartedPsSchool = personDO.getYearStartedPsSchool();
+        this.yearFinishedPsSchool = personDO.getYearFinishedPsSchool();
+        this.hometownHistoryId = personDO.getHometownHistoryId();
+        this.schoolHistoryId = personDO.getSchoolHistoryId();
+        this.workHistoryId = personDO.getWorkHistoryId();
+        this.socHometownHistoryId = personDO.getSocHometownHistoryId();
+        this.socSchoolHistoryId = personDO.getSocSchoolHistoryId();
+        this.socWorkHistoryId = personDO.getSocWorkHistoryId();
+        this.familyId = personDO.getFamilyId();
+        this.parentIds = JSON.parseObject(personDO.getParentIds(), ArrayList.class);
+        this.childrenIds = JSON.parseObject(personDO.getChildrenIds(), ArrayList.class);
+        this.siblingsIds = JSON.parseObject(personDO.getSiblingsIds(), ArrayList.class);
+        this.clubIds = JSON.parseObject(personDO.getClubIds(), ArrayList.class);
+        this.groupIds = JSON.parseObject(personDO.getGroupIds(), new TypeReference<HashMap<Long, List<String>>>() {
+        });
     }
 
-    public PersonDTO(){
-        this.groupIds=new HashMap<Long, List<String>>();
-        this.clubIds=new ArrayList<Long>();
-        this.parentIds=new ArrayList<String>();
-        this.childrenIds=new ArrayList<String>();
-        this.siblingsIds=new ArrayList<String>();
+    public PersonDTO() {
+        this.groupIds = new HashMap<Long, List<String>>();
+        this.clubIds = new ArrayList<Long>();
+        this.parentIds = new ArrayList<String>();
+        this.childrenIds = new ArrayList<String>();
+        this.siblingsIds = new ArrayList<String>();
+        this.isAlive=true;
     }
 
-    public PersonWithBLOBs convertToPerson(){
-        PersonWithBLOBs person=new PersonWithBLOBs();
+    public PersonWithBLOBs convertToPerson() {
+        PersonWithBLOBs person = new PersonWithBLOBs();
         person.setId(this.getId());
         person.setGmtCreate(this.getGmtCreate());
         person.setGmtModified(this.getGmtModified());
@@ -184,6 +189,7 @@ public class PersonDTO {
         person.setAge(this.getAge());
         person.setBirthYear(this.getBirthYear());
         person.setExpDeathYear(this.getExpDeathYear());
+        person.setIsAlive(this.getIsAlive());
         person.setRaceIndex(this.getRaceIndex());
         person.setIntelligence(this.getIntelligence());
         person.setPersonality(JSON.toJSONString(this.getPersonality()));
@@ -551,11 +557,19 @@ public class PersonDTO {
         this.clubIds = clubIds;
     }
 
-    public HashMap<Long,List<String>> getGroupIds() {
+    public HashMap<Long, List<String>> getGroupIds() {
         return groupIds;
     }
 
-    public void setGroupIds(HashMap<Long,List<String>> groupIds) {
+    public void setGroupIds(HashMap<Long, List<String>> groupIds) {
         this.groupIds = groupIds;
+    }
+
+    public Boolean getIsAlive() {
+        return isAlive;
+    }
+
+    public void setIsAlive(Boolean isAlive) {
+        this.isAlive = isAlive;
     }
 }

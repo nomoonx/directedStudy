@@ -111,7 +111,7 @@ http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd"
         <property name="historyService" ref="historyService"/>
     </bean>
 
-    <bean id="friendshipService" class="org.noMoon.ArtificalSociety.friendship.services.impl.FriendshipServiceImpl">
+    <bean id="friendshipService" class="org.noMoon.ArtificalSociety.person.services.impl.FriendshipServiceImpl">
         <property name="friendshipMapper" ref="friendshipMapper"/>
         <property name="groupService" ref="groupSerivce"/>
         <property name="personService" ref="personService"/>

@@ -1,6 +1,6 @@
-package org.noMoon.ArtificalSociety.friendship.DO;
+package org.noMoon.ArtificalSociety.person.DO;
 
-import org.noMoon.ArtificalSociety.friendship.Enums.FriendshipTypeEnum;
+import org.noMoon.ArtificalSociety.person.Enums.FriendshipTypeEnum;
 
 import java.util.Date;
 
@@ -107,6 +107,16 @@ public class Friendship {
         this.setPersonBId(personBId);
         this.setFriendType(friendType);
         this.setStrength(strength);
+        this.setIsFriend(true);
+    }
+
+    public Friendship(String societyId,String personAId,String personBId, FriendshipTypeEnum friendType, double strength, String desc){
+        this.setSocietyId(societyId);
+        this.setPersonAId(personAId);
+        this.setPersonBId(personBId);
+        this.setFriendType(friendType);
+        this.setStrength(strength);
+        this.setDescription(desc);
         this.setIsFriend(true);
     }
 

@@ -1,4 +1,4 @@
-package org.noMoon.ArtificalSociety.friendship.utils;
+package org.noMoon.ArtificalSociety.person.utils;
 
 import org.noMoon.ArtificalSociety.commons.utils.Configuration;
 import org.noMoon.ArtificalSociety.group.DTO.GroupDTO;

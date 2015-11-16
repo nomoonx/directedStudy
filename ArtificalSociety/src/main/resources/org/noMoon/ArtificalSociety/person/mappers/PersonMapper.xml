@@ -47,6 +47,7 @@
     <result column="PARENT_IDS" jdbcType="VARCHAR" property="parentIds" />
     <result column="CHILDREN_IDS" jdbcType="VARCHAR" property="childrenIds" />
     <result column="SIBLINGS_IDS" jdbcType="VARCHAR" property="siblingsIds" />
+      <result column="IS_ALIVE" jdbcType="BIT" property="isAlive" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="org.noMoon.ArtificalSociety.person.DO.PersonWithBLOBs">
     <!--
@@ -80,7 +81,7 @@
       YEAR_FINISHED_PS_SCHOOL, HOMETOWN_HISTORY_ID,
       SCHOOL_HISTORY_ID, WORK_HISTORY_ID, SOC_HOMETOWN_HISTORY_ID,
       SOC_SCHOOL_HISTORY_ID, SOC_WORK_HISTORY_ID, FAMILY_ID,
-      PARENT_IDS, CHILDREN_IDS, SIBLINGS_IDS
+      PARENT_IDS, CHILDREN_IDS, SIBLINGS_IDS, IS_ALIVE
 
     </sql>
     
@@ -111,7 +112,7 @@
       SCHOOL_HISTORY_ID, WORK_HISTORY_ID, SOC_HOMETOWN_HISTORY_ID, 
       SOC_SCHOOL_HISTORY_ID, SOC_WORK_HISTORY_ID, FAMILY_ID, 
       PARENT_IDS, CHILDREN_IDS, SIBLINGS_IDS, 
-      CLUB_IDS, GROUP_IDS)
+      CLUB_IDS, GROUP_IDS, IS_ALIVE)
     values (#{id,jdbcType=VARCHAR}, now(), now(),
       #{societyId,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, 
       #{birthYear,jdbcType=INTEGER}, #{expDeathYear,jdbcType=INTEGER}, #{raceIndex,jdbcType=INTEGER}, 
@@ -126,7 +127,7 @@
       #{schoolHistoryId,jdbcType=BIGINT}, #{workHistoryId,jdbcType=BIGINT}, #{socHometownHistoryId,jdbcType=BIGINT}, 
       #{socSchoolHistoryId,jdbcType=BIGINT}, #{socWorkHistoryId,jdbcType=BIGINT}, #{familyId,jdbcType=BIGINT}, 
       #{parentIds,jdbcType=VARCHAR}, #{childrenIds,jdbcType=VARCHAR}, #{siblingsIds,jdbcType=VARCHAR}, 
-      #{clubIds,jdbcType=LONGVARCHAR}, #{groupIds,jdbcType=LONGVARCHAR})
+      #{clubIds,jdbcType=LONGVARCHAR}, #{groupIds,jdbcType=LONGVARCHAR}, #{isAlive,jdbcType=BIT})
   </insert>
     <insert id="insertList" parameterType="java.util.List" >
         insert into PERSON (ID, GMT_CREATE, GMT_MODIFIED,
@@ -143,7 +144,7 @@
         SCHOOL_HISTORY_ID, WORK_HISTORY_ID, SOC_HOMETOWN_HISTORY_ID,
         SOC_SCHOOL_HISTORY_ID, SOC_WORK_HISTORY_ID, FAMILY_ID,
         PARENT_IDS, CHILDREN_IDS, SIBLINGS_IDS,
-        CLUB_IDS, GROUP_IDS)
+        CLUB_IDS, GROUP_IDS, IS_ALIVE)
         values (
         <foreach item="element" collection="list" open="" close="" separator="),(">
             #{element.id}, now(), now(),
@@ -160,13 +161,17 @@
             #{element.schoolHistoryId}, #{element.workHistoryId}, #{element.socHometownHistoryId},
             #{element.socSchoolHistoryId}, #{element.socWorkHistoryId}, #{element.familyId},
             #{element.parentIds}, #{element.childrenIds}, #{element.siblingsIds},
-            #{element.clubIds}, #{element.groupIds}
+            #{element.clubIds}, #{element.groupIds}, #{element.isAlive}
         </foreach>
         )
     </insert>
     <select id="selectIdsBySocietyId" parameterType="java.lang.String" resultType="java.lang.String">
         select ID from PERSON where SOCIETY_ID=#{societyId}
     </select>
+    <select id="selectAliveIdsBySocietyId" parameterType="java.lang.String" resultType="java.lang.String">
+        select ID from PERSON where SOCIETY_ID=#{societyId} and IS_LIVE=`1`
+    </select>
+
 
   <insert id="insertSelective" parameterType="org.noMoon.ArtificalSociety.person.DO.PersonWithBLOBs">
     <!--
@@ -260,6 +265,9 @@
       <if test="isInSchool != null">
         IS_IN_SCHOOL,
       </if>
+        <if test="isAlive != null">
+            IS_ALIVE,
+        </if>
       <if test="yearStartedPsSchool != null">
         YEAR_STARTED_PS_SCHOOL,
       </if>
@@ -388,6 +396,9 @@
       <if test="isInSchool != null">
         #{isInSchool,jdbcType=BIT},
       </if>
+        <if test="isAlive != null">
+            #{isAlive,jdbcType=BIT},
+        </if>
       <if test="yearStartedPsSchool != null">
         #{yearStartedPsSchool,jdbcType=INTEGER},
       </if>

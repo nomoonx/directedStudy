@@ -1,6 +1,6 @@
-package org.noMoon.ArtificalSociety.friendship.services;
+package org.noMoon.ArtificalSociety.person.services;
 
-import org.noMoon.ArtificalSociety.friendship.DO.Friendship;
+import org.noMoon.ArtificalSociety.person.DO.Friendship;
 
 import java.util.List;
 

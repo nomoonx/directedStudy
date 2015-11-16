@@ -327,10 +327,10 @@ public class GroupAdder {
     private static void addToGroup(GroupDTO group, PersonDTO person, String role) {
         if (!person.isInGroup(group.getId(), role)) {
             if (person.getGroupIds().containsKey(group.getId())) {
-                ArrayList<String> roles = person.getGroupIds().get(group.getId());
+                List<String> roles = person.getGroupIds().get(group.getId());
                 roles.add(role);
             } else {
-                ArrayList<String> roles = new ArrayList<String>();
+                List<String> roles = new ArrayList<String>();
                 roles.add(role);
                 person.getGroupIds().put(group.getId(), roles);
             }

@@ -13,4 +13,6 @@ public interface PersonService {
     List<String> getAllIds(String societyId);
 
     PersonDTO selectPerosonDTOById(String id);
+
+
 }
