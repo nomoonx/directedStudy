@@ -2,6 +2,7 @@ package org.noMoon.ArtificalSociety.history.DTO;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import org.noMoon.ArtificalSociety.commons.utils.Configuration;
 import org.noMoon.ArtificalSociety.history.DO.History;
 import org.noMoon.ArtificalSociety.history.Enums.HistoryTypeEnum;
 import org.noMoon.ArtificalSociety.history.Records.HistoryRecord;
@@ -79,6 +80,14 @@ public class SchoolHistoryDTO extends HistoryDTO {
     @Override
     public HistoryRecord getLastActivity(){
         return recordList.get(recordList.size()-1);
+    }
+
+    @Override
+    public void updateSameLastEntry(){
+        SchoolHistoryRecord record=(SchoolHistoryRecord)getLastActivity();
+        record.setEndYear(Configuration.SocietyYear);
+        recordList.remove(recordList.size()-1);
+        recordList.add(record);
     }
 
     public ArrayList<SchoolHistoryRecord> getRecordList() {

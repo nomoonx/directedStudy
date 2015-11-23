@@ -58,4 +58,7 @@ public interface FriendshipMapper {
     void insertList(List<Friendship> friendshipList);
 
     List<Friendship> selectByUserOneId(Friendship query);
+    List<Friendship> selectByUserTwoId(Friendship query);
+
+    void deleteList(List<Friendship> list);
 }

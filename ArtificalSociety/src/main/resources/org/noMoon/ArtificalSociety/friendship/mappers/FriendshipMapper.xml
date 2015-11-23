@@ -53,6 +53,14 @@
         from FRIENDSHIP
         where SOCIETY_ID=#{societyId,jdbcType=VARCHAR} and PERSON_A_ID=#{personAId,jdbcType=VARCHAR}
     </select>
+    <select id="selectByUserTwoId" parameterType="org.noMoon.ArtificalSociety.person.DO.Friendship" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from FRIENDSHIP
+        where SOCIETY_ID=#{societyId,jdbcType=VARCHAR} and PERSON_B_ID=#{personBId,jdbcType=VARCHAR}
+    </select>
+
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     <!--
       WARNING - @mbggenerated
@@ -62,6 +70,14 @@
     delete from FRIENDSHIP
     where ID = #{id,jdbcType=BIGINT}
   </delete>
+
+    <delete id="deleteList" parameterType="java.util.List">
+        delete from FRIENDSHIP
+        where ID in
+        <foreach collection="list" item="element" open="(" close=")" separator=",">
+            #{element.id}
+        </foreach>
+    </delete>
     <insert id="insertList" parameterType="java.util.List" >
         insert into FRIENDSHIP (GMT_CREATE, GMT_MODIFIED,
         SOCIETY_ID, PERSON_A_ID, PERSON_B_ID,

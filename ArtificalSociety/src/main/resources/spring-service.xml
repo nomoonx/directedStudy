@@ -85,6 +85,8 @@ http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd"
         <property name="careerService" ref="careerService"/>
         <property name="sequenceService" ref="sequenceService"/>
         <property name="groupService" ref="groupSerivce" />
+        <property name="friendshipMapper" ref="friendshipMapper"/>
+        <property name="historyService" ref="historyService"/>
     </bean>
 
     <bean id="attributeAssigner" class="org.noMoon.ArtificalSociety.person.utils.AttributeAssigner">
@@ -109,6 +111,8 @@ http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd"
 
     <bean id="relationshipCalculator" class="org.noMoon.ArtificalSociety.person.utils.RelationshipCalculator">
         <property name="historyService" ref="historyService"/>
+        <property name="groupService" ref="groupSerivce"/>
+        <property name="personMapper" ref="personMapper"/>
     </bean>
 
     <bean id="friendshipService" class="org.noMoon.ArtificalSociety.person.services.impl.FriendshipServiceImpl">
@@ -122,5 +126,10 @@ http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd"
         <property name="clubService" ref="clubService" />
         <property name="careerService" ref="careerService" />
         <property name="groupService" ref="groupSerivce"></property>
+    </bean>
+
+    <bean id="simulationStepper" class="org.noMoon.ArtificalSociety.NetworkGenerator.SimulationStepper">
+        <property name="personService" ref="personService"/>
+        <property name="friendshipService" ref="friendshipService"/>
     </bean>
 </beans>

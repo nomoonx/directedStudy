@@ -339,6 +339,196 @@ public class GroupAdder {
         groupService.updateGroupById(group);
     }
 
+
+    public static void UpdatePersonInAllGroups (PersonDTO person) {
+        // This function calls the individual smaller group-updater functions to ensure the given Person, person, has updated groups during an active simulation.
+        // The groups include school institutions they attended, workplaces they worked at, and extra-curricular groups like clubs, temples, gyms, etc.
+        // Note that in this simulation, people are not assigned homes, and thus neighbourhood is not part of this group assignment, but in a different simulation,
+        // neighbourhoods and specific buildings could be considered groups so that people who live nearby are put into locality groups together.
+        //
+        // param person: the Person instance who is being added to the groups
+
+        // Schools.
+        UpdateSchoolGroups(person);
+
+        // Work.
+        UpdateWorkGroups(person);
+
+        // Temples.
+        UpdateTempleGroups(person);
+
+        // Clubs.
+        UpdateClubGroups(person);
+
+    } // end UpdatePersonInAllGroups()
+
+    public static void UpdateSchoolGroups (PersonDTO person) {
+        // This function updates the person's school groups for the school they attended, within a small range around the years they attended school.
+
+        if (person.getSocSchoolHistoryId()==null) {
+            // The school history has not been set, or the person did not attend any school in this society, so leave function now.
+            //System.err.println("PersonGroupAdder->UpdateSchoolGroups(); the person's societal school history has not been initialized.");
+            return;
+        } // end if (no local school history set)
+
+        //if (Configuration.SocietyYear > person.getPSFinishYear()+Configuration.DeltaNumYearsPersonSocializeWithInSchool) {
+        // If person is beyond the age of finishing post-secondary education, then there is nothing to update.
+        //return;
+        //} // end if (check if person is beyond school years)
+
+        // ------------------------------------------------------------------------------------------------
+        // Elementary schools.
+        // ------------------------------------------------------------------------------------------------
+        if (person.getAge() == Configuration.SchoolFinishAge) {
+            // When person reaches the end of their elementary school, add them into the proper groups.
+            //System.out.println("Person " + person.getID() + " is now finished elementary school at age = " + person.getAge() + "; born in " + person.getYearBorn() + ". Current year = " + Configuration.SocietyYear);
+
+            //DebugTools.printArray(person.getHometownHistory());
+            //DebugTools.printArray(person.getSchoolHistory());
+
+            //DisplayStudentGroups_TEMP(person);
+            SchoolHistoryDTO socSchoolHistory=historyService.getSchoolHistoryById(person.getSocSchoolHistoryId());
+            if(0==socSchoolHistory.getRecordList().size()){
+                return;
+            }
+
+
+            SchoolHistoryRecord record = (SchoolHistoryRecord)socSchoolHistory.getActivityByYear( Configuration.SocietyYear );
+            if (record != null) {
+
+                // ADD GROUPS!
+                addSchoolInfo(person, record);
+                //System.out.println("After adding school groups...");
+                //DisplayStudentGroups_TEMP(person);
+
+            } // end if (check if local school information was found for the person's graduating year)
+
+
+
+
+        } // end if (check if person is at the end of their elementary school currently)
+
+
+
+        // ------------------------------------------------------------------------------------------------
+        // Post-secondary schools.
+        // ------------------------------------------------------------------------------------------------
+        if (Configuration.SocietyYear == person.getYearFinishedPsSchool() - 1) {
+            SchoolHistoryDTO socSchoolHistory=historyService.getSchoolHistoryById(person.getSocSchoolHistoryId());
+
+            SchoolHistoryRecord record = (SchoolHistoryRecord)socSchoolHistory.getActivityByYear( Configuration.SocietyYear );
+
+            if (record != null) {
+
+                // ADD GROUPS!
+                addSchoolInfo(person, record);
+                //System.out.println("After adding school groups...");
+                //DisplayStudentGroups_TEMP(person);
+
+            } // end if (check if local school information was found for the person's graduating year)
+
+        } // end if (check if person is at the end of their post-secondary school currently)
+
+    } // end UpdateSchoolGroups()
+
+    public static void UpdateWorkGroups (PersonDTO person) {
+        // This function adds the person to workplace groups for each and every year they worked there.
+        //
+
+        if (person.getSocWorkHistoryId()==null) {
+            // The work history has not been set, or the person did not work (yet) in this society, so leave function now.
+            return;
+        } // end if (no local work history set)
+
+        HometownHistoryDTO hometownHistory=historyService.getHometownHistoryById(person.getHometownHistoryId());
+
+        if (!hometownHistory.getLastActivity().getLocation().equals(Configuration.SocietyName)) {
+            // If person does not live in the current society, don't bother proceeding.
+            return;
+        } // end if (check if person lived outside of the local society now)
+
+        WorkHistoryDTO workHistoryDTO=historyService.getWorkHistoryById(person.getWorkHistoryId());
+
+        WorkHistoryRecord lastRecord=(WorkHistoryRecord)workHistoryDTO.getLastActivity();
+        String workName = careerService.selectWorkplaceById(Long.parseLong(lastRecord.getLocation())).getTitle();
+        String careerTitle = careerService.selectCareerById(person.getCareerId()).getTitle();// Get person's career title in workplace.
+
+        GroupDTO grp =groupService.getGroupDTOByNameAndYear(person.getSocietyId(),workName, Configuration.SocietyYear);
+        if (grp != null) {
+            //person.addToGroup(grp.GroupID);
+            //person.addToGroupBeta(grp.GroupID, "Worker_["+careerTitle.replaceAll(" ", "")+"]");
+
+            addToGroup(grp,person,"Worker ("+careerTitle+")");
+        } // end if (ensure that group was found properly)
+
+    } // end UpdateWorkGroups()
+
+    public static void UpdateTempleGroups (PersonDTO person) {
+        // This function updates the person's religious body groups and temple groups.
+
+
+        // If the person has no religion, then exit function.
+        if (Configuration.ReligionLabels[person.getReligionIndex()].equals("None")) {
+            return;
+        } // end if (check if person has no religion)
+
+        //System.err.println("Updating person " + person.getID() + "'s temple/religious groups.");
+
+
+        String religion = Configuration.ReligionLabels[person.getReligionIndex()];
+
+        // -------------------------------------------------------------------------------
+        // Add person to group of the religious body in the society.
+        // -------------------------------------------------------------------------------
+
+        HometownHistoryDTO hometownHistoryDTO=historyService.getHometownHistoryById(person.getHometownHistoryId());
+
+        // If person does not live in local society, then don't update their temple groups.
+        if (!hometownHistoryDTO.getLastActivity().getLocation().equals(Configuration.SocietyName)) {
+            return;
+        } // end if (check if person has moved away)
+
+
+        // -------------------------------------------------------------------------------
+        // Add person to group for a religious temple.
+        // -------------------------------------------------------------------------------
+
+        String templeAttending = person.getTempleAttending();
+
+        if (StringUtils.isEmpty(templeAttending)) {
+            List<Institution> religTemples=institutionService.selectInstitutionbyTypeAndSubType(person.getSocietyId(), InstitutionEnum.TEMPLE, religion);
+
+            if (religTemples.size() == 0) {
+                // If there are no temples in the society that match this person's religion, then exit function now.
+                return;
+            } // end if (check if there are no temples of religion)
+
+            int rndIndex = Distribution.uniform(0, religTemples.size() - 1);
+
+            Institution temple=religTemples.get(rndIndex);
+
+            // Indicate this temple as the person's primary temple they attend.
+            person.setTempleAttending(temple.getTitle()); // temple.data is the name/label of the temple.
+            templeAttending=temple.getTitle();
+        }
+
+
+        GroupDTO grp = groupService.getGroupDTOByNameAndYear(person.getSocietyId(),templeAttending,Configuration.SocietyYear);
+        if (grp != null) {
+            //person.addToGroup(grp.GroupID);
+            addToGroup(grp,person,"Spiritual Student");
+        } // end if (ensure that group was found properly)
+
+
+    } // end UpdateTempleGroups()
+
+
+    public static void UpdateClubGroups (PersonDTO person) {
+        AddToClubGroups(person);
+
+    } // end UpdateClubGroups()
+
+
     public void setGroupService(GroupService groupService) {
         GroupAdder.groupService = groupService;
     }

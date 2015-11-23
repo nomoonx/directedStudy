@@ -44,6 +44,8 @@ public class HistoryDTO {
 
     public HistoryRecord getLastActivity(){return null;}
 
+    public void updateSameLastEntry(){}
+
     public Long getId() {
         return id;
     }

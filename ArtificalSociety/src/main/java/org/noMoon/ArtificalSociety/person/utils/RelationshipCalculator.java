@@ -4,17 +4,24 @@ import org.noMoon.ArtificalSociety.commons.utils.Configuration;
 import org.noMoon.ArtificalSociety.commons.utils.Distribution;
 import org.noMoon.ArtificalSociety.commons.utils.DistributionParser;
 import org.noMoon.ArtificalSociety.commons.utils.ValidationTools;
+import org.noMoon.ArtificalSociety.group.DTO.GroupDTO;
+import org.noMoon.ArtificalSociety.group.Services.GroupService;
 import org.noMoon.ArtificalSociety.history.DTO.HometownHistoryDTO;
 import org.noMoon.ArtificalSociety.history.services.HistoryService;
+import org.noMoon.ArtificalSociety.person.DAO.PersonMapper;
 import org.noMoon.ArtificalSociety.person.DTO.PersonDTO;
 import org.noMoon.ArtificalSociety.person.Enums.RelationStatusEnum;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public class RelationshipCalculator {
 
     private static HistoryService historyService;
+    private static GroupService groupService;
+    private static PersonMapper personMapper;
 	
 
 	// Factors.
@@ -397,7 +404,257 @@ public class RelationshipCalculator {
 
     } // end DetermineCurrentChildBirth()
 
+    public static void SearchForPartner (PersonDTO person) {
+        // This method will search for a compatible match for the given Person.
+        //
+        // param person: the given Person for whom to find a compatible partner
+        //
+        // ????????????????????????
+        Set<String> potentialPartnerIdSet=new HashSet<String>();
+        for(Long groupId:person.getGroupIds().keySet()){
+            GroupDTO group=groupService.getGroupDTOById(groupId);
+            potentialPartnerIdSet.addAll(group.getMemberList());
+        }
+
+        // If there are no potential friends, then person has no potential partner, so leave function immediately.
+        if (potentialPartnerIdSet.size() == 0) {
+            return;
+        } // end if (check if there are no potential friends->partners)
+
+
+        double maxCompatibility=-100000;
+        String maxId="";
+
+        for (String partnerId:potentialPartnerIdSet) {
+
+            PersonDTO possPartner = new PersonDTO(personMapper.selectById(partnerId));
+
+
+            double compatibilityValue = RelationshipCalculator.CalculateCompatibility(person, possPartner);
+            if(compatibilityValue>maxCompatibility){
+                maxCompatibility=compatibilityValue;
+                maxId=partnerId;
+            }
+            //System.out.println(possPartner.getID() + " {" + i + "}  " + compatibilityValues[i]);
+
+        } // end for i (loop through all potential friends to search for a potential partner)
+
+
+        PersonDTO mostCompatiblePerson = null;
+        double THRESHOLD = -10.0;
+        if (maxCompatibility > THRESHOLD) {
+            mostCompatiblePerson = new PersonDTO(personMapper.selectById(maxId));
+        } // end if (ensure that compatibility reaches a valid threshold)
+
+
+
+
+        double p_formRelationshipWithCompatiblePartner = 0.7;
+        double rndFormRelationship = Distribution.uniform(0.0, 1.0);
+
+        // Check opposite (if NOT going to match up).
+        if (rndFormRelationship > p_formRelationshipWithCompatiblePartner) {
+            return;
+        } // end if (check if couple will NOT get together)
+
+
+        // If a match was found, then create the dating relationship between the two.
+        if (mostCompatiblePerson != null) {
+
+            CreateRelationshipInSimulation(person, mostCompatiblePerson, RelationStatusEnum.DATING);
+        } // end if (check if a match was found for the person)
+
+
+    } // end SearchForPartner()
+
+    public static void CreateRelationshipInSimulation (PersonDTO personA, PersonDTO personB, RelationStatusEnum relType) {
+        // Initialize a couple's relationship from a live simulation, by setting their relationship start year as the
+        // current year in the simulation, and by then creating the relationship between them.
+        //
+        // param personA: one of the people in the new relationship
+        // param personB: the other person in the new relationship
+        // param relType: the integer indicating the relationship type (dating or married)
+
+        personA.setRelationshipStartYear( Configuration.SocietyYear );
+        personB.setRelationshipStartYear( Configuration.SocietyYear );
+
+        GroupAdder.createRelationship(personA, personB, relType);
+        //System.out.println("Relationship statuseseses: " + personA.getRelationshipStatus() + " && " + personB.getRelationshipStatus());
+        personMapper.updateById(personA.convertToPerson());
+        personMapper.updateById(personB.convertToPerson());
+    } // end CreateRelationshipInSimulation()
+
+    public static double CalculateCompatibility (PersonDTO personA, PersonDTO personB) {
+        // Calculate the compatibility between the two given Persons to help determine whether or not they will form a relationship.
+        //
+        // param personA: one of the two people for whom to calculate compatibility
+        // param personB: the other of the two people for whom to calculate compatibility
+        //
+        // return: the double value representing the compatibility between the two (0 means horrible match, and 1 means perfect match).
+
+        // TODO - Add factors here (family members? correct gender? age? I.S.?, etc.)
+
+        double p_compatible = 1.0;
+
+        // ----------------------------------------------------------------
+        // SAME PERSON (person cannot be in relationship with themselves)
+        // ----------------------------------------------------------------
+        if (personA.getId().equals(personB.getId())) {
+            //System.err.println("A");
+            p_compatible = -999.99;
+        } // end if (check if two persons are actually the same person)
+
+        // ----------------------------------------------------------------
+        // GENDER (heterosexual relationships only).
+        // ----------------------------------------------------------------
+        if (personA.getSex().equals( personB.getSex())) {
+            //System.err.println("B) between " + personA.getID() + " and " + personB.getID() + ".");
+            p_compatible = -999.99;
+        } // end if (check if two persons are of same sex)
+
+        // ----------------------------------------------------------------
+        // STATUS (person must be single).
+        // ----------------------------------------------------------------
+        if (!personB.getRelationshipStatus().equals(RelationStatusEnum.SINGLE)) {
+            //System.err.println("C) between " + personA.getID() + " and " + personB.getID() + ".");
+            p_compatible = -999.99;
+        } // end if (check if potential partner is single or not)
+
+        // ----------------------------------------------------------------
+        // AGE (within 5 years)
+        // ----------------------------------------------------------------
+        if (Math.abs(personA.getAge() - personB.getAge()) > 5) {
+            //System.err.println("D) between " + personA.getID() + " and " + personB.getID() + ".");
+            p_compatible = -999.99;
+        } // end if (check if two persons are more than 5 years apart in age)
+
+        // ----------------------------------------------------------------
+        // FAMILY
+        // ----------------------------------------------------------------
+        if (!RelationshipAllowance_Family(personA, personB)) {
+            //System.err.println("E) between " + personA.getID() + " and " + personB.getID() + ".");
+            p_compatible = -999.99;
+        } // end if (check if two persons are family members when family relations are prohibited)
+
+
+        // ================================================================================================================
+        // At this point, if p_compatible is 1.0, then the couple is "allowed" to date. Now calculate their I.S.
+        // ================================================================================================================
+        if (p_compatible > 0.9) { // Compare to 0.9 in case the "1.0" is inaccurately store. Values now should either be 0.0 or 1.0.
+
+            // Calculate Interest Similarity.
+            p_compatible = calculateInterestSimilarity(personA, personB);
+
+        } // end if (check if two people are allowed to date)
+
+
+        return p_compatible;
+    } // end CalculateCompatibility()
+
+    private static boolean RelationshipAllowance_Family (PersonDTO personA, PersonDTO personB) {
+        // This method will determine whether or not the two given persons are "allowed" to be romantically involved, solely in
+        // terms of family. If the two persons are closely related, then they should not form a romantic relationship. However,
+        // in some cases (the early generations in the Genesis model especially), where family relationships are still allowed.
+        //
+        // param personA: one of the two people for whom to calculate family-based compatibility
+        // param personB: the other of the two people for whom to calculate family-based compatibility
+        //
+        // return: the boolean flag indicating whether or not the two persons are "allowed" to get together romantically
+
+        // Check if inter-family romantic relationships are prohibited at this point in the simulation.
+        //if (SocietyYear >= YearToDisallowInterbreeding) {
+        if (Configuration.SocietyYear < Configuration.YearToDisallowInterbreeding) {
+            // Compare the current simulation year to the interbreeding-is-no-long-allowed year to determine whether or not it is allowed currently.
+            return true;
+        } // end if (check if family-based relationships are allowed at this time)
+
+
+        // For simplicity, just check if the two are siblings. We won't worry about cousins right now, for computational reasons.
+        // We also don't really need to check if the people have a parent-child kinship, because the parents will be married
+        // so they are unavailable anyway, and because of the age gap, they wouldn't also be considered.
+
+        // Check if siblings. (Since this is a reflexive relationship, only a one-way check is required)
+        if (personA.getSiblingsIds().contains(personB.getId())) {
+            //System.out.println("Person " + personA.getID() + " is a sibling with Person " + personB.getID());
+            //DebugTools.printArray(personA.getSiblingIDs().toArray());
+            //DebugTools.printArray(personB.getSiblingIDs().toArray());
+            //System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
+            return false;
+        } // end if (check if two people are siblings)
+
+        //System.out.println("Person " + personA.getID() + " and Person " + personB.getID() + " are legit.");
+        //DebugTools.printArray(personA.getSiblingIDs().toArray());
+        //DebugTools.printArray(personB.getSiblingIDs().toArray());
+
+        return true;
+
+    } // end RelationshipAllowance_Family()
+
+    public static void DetermineFateOfDatingCouple (PersonDTO personA, PersonDTO personB) {
+        // Determine the fate of the dating couple. The couple could break up, get married, or continue dating.
+
+        // Pre-determine some info that is necessary for the strength factor calculations.
+        double societyPopulation = (double)Configuration.N_Population_Size;
+        double numYearsDating = (double)(Configuration.SocietyYear - personA.getRelationshipStartYear());
+
+        double relFate_Strength = personA.getRelationshipStrength();
+        double relFate_YearsDating = ValidationTools.clipValueToRange((numYearsDating / 5.0), 0.0, 1.0); // The longer a couple is together, the more chance of getting married. It maxes out after 5 years.
+        double relFate_PopulationSize = ValidationTools.clipValueToRange(1.0 + ((1.0 - societyPopulation) / 1000.0), 0.0, 1.0); // Linear downward slope from 1.0 to 0.0 for population on [0,1000].
+        double relFate_Random = Distribution.uniform(0.0, 1.0);
+
+        double[] datingFateFactors = new double[] {relFate_Strength, relFate_YearsDating, relFate_PopulationSize, relFate_Random};
+        double[] datingFateWeights = new double[] {0.15, 0.45, 0.35, 0.05};
+        //double[] datingFateFactors = new double[] {relFate_Strength};
+        //double[] datingFateWeights = new double[] {1.0};
+
+
+        double relStrength = 0.0;
+        int f;
+        for (f = 0; f < datingFateFactors.length; f++) {
+            relStrength += (datingFateWeights[f]*datingFateFactors[f]);
+        } // end for f (loop through factors to calculate the overall strength of dating couple's relationship)
+
+        //System.out.println("REL STRENGTH ======= " + relStrength);
+
+
+        // Determine what will happen to the couple.
+        if (relStrength <= Configuration.CoupleBreakupThresholdStrength) {
+            // Couple breaks up.
+
+            personA.setRelationshipStatus(RelationStatusEnum.SINGLE);
+            personB.setRelationshipStatus(RelationStatusEnum.SINGLE);
+            personA.setRelationshipStartYear( Integer.MIN_VALUE );
+            personB.setRelationshipStartYear( Integer.MIN_VALUE );
+            personA.setRelationshipStrength( Double.MIN_VALUE );
+            personB.setRelationshipStrength( Double.MIN_VALUE );
+
+
+            //System.out.println("Couple broke up: " + personA.getID() + " and " + personB.getID());
+
+        } else if (relStrength >= Configuration.CoupleGetMarriedThresholdStrength) {
+            // Couple gets married.
+
+            personA.setRelationshipStatus(RelationStatusEnum.MARRIED);
+            personB.setRelationshipStatus(RelationStatusEnum.MARRIED);
+            CalculateAndSetRelationshipStrength(personA, personB, 2);
+
+        } else {
+            // Couple continues dating.
+
+            // Do nothing.
+        } // end if (determine what will happen to the dating couple)
+
+    } // end DetermineFateOfDatingCouple()
+
     public void setHistoryService(HistoryService historyService) {
         RelationshipCalculator.historyService = historyService;
+    }
+
+    public void setGroupService(GroupService groupService) {
+        RelationshipCalculator.groupService = groupService;
+    }
+
+    public void setPersonMapper(PersonMapper personMapper) {
+        RelationshipCalculator.personMapper = personMapper;
     }
 } // end RelationshipCalculator

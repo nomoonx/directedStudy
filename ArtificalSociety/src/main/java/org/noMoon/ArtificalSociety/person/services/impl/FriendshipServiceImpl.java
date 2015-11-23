@@ -67,7 +67,7 @@ public class FriendshipServiceImpl implements FriendshipService {
         } // end if (person has children)    }
     }
 
-    private void createFriendshipNetwork(PersonDTO person) {
+    public void createFriendshipNetwork(PersonDTO person) {
 
         HashMap<String, Double> friendshipProbMap = calculateFriendshipProbability(person);
         List<Friendship> newFriendList = new ArrayList<Friendship>();

@@ -45,17 +45,82 @@ public class AttributeAssigner {
         schoolProbsByYear = institutionService.getSchoolProbTable(societyId);
     }
 
-    public static void assignSex (PersonDTO attr) {
+    public static void FindSchoolForNewStudent(PersonDTO person, String personLocation) {
+        // This method will find a school for the new student (who will just be beginning at the chosen school), and it adds
+        // the school to the person's schoolHistory and, if local, to the person's societalSchoolHistory.
+
+        String schoolName = "Elementary"; // Default to "Elementary". This will be changed IF school is local.
+        SchoolHistoryDTO socSchoolHistoryDTO;
+        SchoolHistoryDTO schoolHistoryDTO;
+        if (person.getSchoolHistoryId() == null) {
+            socSchoolHistoryDTO = new SchoolHistoryDTO();
+            schoolHistoryDTO = new SchoolHistoryDTO();
+        } else {
+            socSchoolHistoryDTO = historyService.getSchoolHistoryById(person.getSocSchoolHistoryId());
+            schoolHistoryDTO = historyService.getSchoolHistoryById(person.getSchoolHistoryId());
+        }
+
+        if (personLocation.equals(Configuration.SocietyName)) {
+            // Person is just starting school so select a school for them.
+            HashMap<String, Double> schoolProb = schoolProbsByYear.get(Configuration.SocietyYear);
+            String[] titles = schoolProb.keySet().toArray(new String[schoolProb.size()]);
+            double[] schoolProbs = new double[titles.length];
+            for (int i = 0; i < titles.length; i++) {
+                schoolProbs[i] = schoolProb.get(titles[i]);
+            }
+            int rndSchoolIndex = Distribution.custom(schoolProbs);
+            schoolName = titles[rndSchoolIndex];
+            socSchoolHistoryDTO.getRecordList().add(new SchoolHistoryRecord(schoolName, Configuration.SocietyYear, Configuration.SocietyYear, "Elementary"));
+
+        } // end if (check if person is going to school in local society)
+        //System.out.println("A) PSLocation = " + personLocation);
+        schoolHistoryDTO.getRecordList().add(new SchoolHistoryRecord(schoolName, Configuration.SocietyYear, Configuration.SocietyYear, "Elementary"));
+        if (person.getSchoolHistoryId() == null) {
+            historyService.insertNewHistoryDTO(schoolHistoryDTO);
+            historyService.insertNewHistoryDTO(socSchoolHistoryDTO);
+            person.setSocSchoolHistoryId(socSchoolHistoryDTO.getId());
+            person.setSchoolHistoryId(schoolHistoryDTO.getId());
+        } else {
+            historyService.updateHistoryDTO(socSchoolHistoryDTO);
+            historyService.updateHistoryDTO(schoolHistoryDTO);
+        }
+
+    } // end FindSchoolForNewStudent()
+
+    public static void FindPostSecondarySchoolForNewStudent(PersonDTO person, String personLocation, String instType) {
+        // This method will find a post-secondary school for the new student (who will just be beginning at the chosen school), and it
+        // adds the school to the person's schoolHistory and, if local, to the person's societalSchoolHistory.
+
+        String institution = "External Institution"; // Default to "External Institution". This will be changed IF school is local.
+        SchoolHistoryDTO schoolHistoryDTO=historyService.getSchoolHistoryById(person.getSchoolHistoryId());
+        SchoolHistoryDTO socSchoolHistoryDTO=historyService.getSchoolHistoryById(person.getSocSchoolHistoryId());
+        if (personLocation.equals(Configuration.SocietyName)) {
+
+            List<String> psSchoolsNames = institutionService.selectPSSchoolNamesBySocietyId(Configuration.Society_Id, instType, personLocation);
+            String[] schoolsByType = psSchoolsNames.toArray(new String[psSchoolsNames.size()]);
+            // Person is just starting school so select a school for them.
+
+            institution = (String) Distribution.uniformRandomObject(schoolsByType);
+            socSchoolHistoryDTO.getRecordList().add(new SchoolHistoryRecord(institution,Configuration.SocietyYear,Configuration.SocietyYear,instType));
+
+        } // end if (check if person is going to school in local society)
+        //System.out.println("A) PSLocation = " + personLocation);
+        schoolHistoryDTO.getRecordList().add(new SchoolHistoryRecord(institution, Configuration.SocietyYear, Configuration.SocietyYear, instType));
+        historyService.updateHistoryDTO(socSchoolHistoryDTO);
+        historyService.updateHistoryDTO(schoolHistoryDTO);
+    } // end FindPostSecondarySchoolForNewStudent()
+
+    public static void assignSex(PersonDTO attr) {
         // Assign a random sex to the person. Use a uniform distribution in [0, 1].
         int v = Distribution.uniform(0, 1);
-        if(0==v){
+        if (0 == v) {
             attr.setSex(GenderEnum.FEMALE);
-        }else{
+        } else {
             attr.setSex(GenderEnum.MALE);
         }
     } // end assignSex()
 
-    public static void assignChildAge (PersonDTO parentA, PersonDTO parentB, PersonDTO child, boolean isBackFilled) {
+    public static void assignChildAge(PersonDTO parentA, PersonDTO parentB, PersonDTO child, boolean isBackFilled) {
         // Assign the age to the child. If isBackFilled is True, then the child is not a newborn baby, and thus the age
         // will be determined based on the parents' marriage. Otherwise, the child IS a baby so the age will be 0.
         //
@@ -78,8 +143,7 @@ public class AttributeAssigner {
     } // end AssignChildAge()
 
 
-
-    private static void assignChildAge_New (PersonDTO child) {
+    private static void assignChildAge_New(PersonDTO child) {
         // This is called when a new baby is born, and the current society year. This is necessary so that the child isn't
         // given a random age, as is the case when creating back-filled children.
         //
@@ -97,7 +161,7 @@ public class AttributeAssigner {
 
     } // end AssignChildAge()
 
-    private static void assignChildAge_BackFilled (PersonDTO A, PersonDTO B, PersonDTO child) {
+    private static void assignChildAge_BackFilled(PersonDTO A, PersonDTO B, PersonDTO child) {
         // This is called when a back-filled child is created from a married couple in an initial population.
         // In this case, the child is given a random age and birth year based upon the parents' marriage.
         //
@@ -114,7 +178,7 @@ public class AttributeAssigner {
         //System.out.println(A.getRelationshipStartYear() + " | " + B.getRelationshipStartYear());
 
         // For simplicity, children's ages are randomly taken from a distribution over the years following the parents' marriage.
-        int numYearsIntoMarriage = (int)Math.round(DistributionParser.parseStatisticalDistribution(Configuration.ParentHaveChildYearDistr));
+        int numYearsIntoMarriage = (int) Math.round(DistributionParser.parseStatisticalDistribution(Configuration.ParentHaveChildYearDistr));
         numYearsIntoMarriage = ValidationTools.clipValueToRange(numYearsIntoMarriage, Configuration.ParentHaveChildYearMin, Configuration.ParentHaveChildYearMax);
 
         // In case the chosen year for the child's birth is later than the current society year, clip it to the current year.
@@ -133,7 +197,7 @@ public class AttributeAssigner {
         child.setBirthYear(assignBirthYear(childAge));
     } // end AssignChildAge()
 
-    public static void assignChildRace (PersonDTO A, PersonDTO B, PersonDTO child) {
+    public static void assignChildRace(PersonDTO A, PersonDTO B, PersonDTO child) {
         // Assign a race to a new child.
         // For simplicity, we will use one random parent's race as the child's race, if the parents are interracial.
         // param A: one of the parents of the child
@@ -142,14 +206,14 @@ public class AttributeAssigner {
 
         int childRace;
 
-        if (A.getRaceIndex() == B.getRaceIndex()) {	// Same race.
-            childRace= A.getRaceIndex();
-        } else {							// Interracial.
+        if (A.getRaceIndex() == B.getRaceIndex()) {    // Same race.
+            childRace = A.getRaceIndex();
+        } else {                            // Interracial.
             // Select a random parent, and use their race as the child's race.
             int rndParentIndex = Distribution.uniform(0, 1);
-            if (rndParentIndex == 0) {		// If 0, use parent A's race.
+            if (rndParentIndex == 0) {        // If 0, use parent A's race.
                 childRace = A.getRaceIndex();
-            } else {						// If 1, use parent B's race.
+            } else {                        // If 1, use parent B's race.
                 childRace = B.getRaceIndex();
             } // end if (determine which parent was randomly chosen)
 
@@ -160,7 +224,7 @@ public class AttributeAssigner {
 
     } // end AssignChildRace()
 
-    public static void assignChildReligion (PersonDTO A, PersonDTO B, PersonDTO child) {
+    public static void assignChildReligion(PersonDTO A, PersonDTO B, PersonDTO child) {
         // Assign a religion to a new child.
         // For simplicity, we will use one random parent's religion as the child's religion, if the parents are of different religions.
         // param A: one of the parents of the child
@@ -169,14 +233,14 @@ public class AttributeAssigner {
 
         int childReligion;
 
-        if (A.getReligionIndex() == B.getReligionIndex()) {	// Same religion.
-            childReligion= A.getReligionIndex();
-        } else {									// Different religions.
+        if (A.getReligionIndex() == B.getReligionIndex()) {    // Same religion.
+            childReligion = A.getReligionIndex();
+        } else {                                    // Different religions.
             // Select a random parent, and use their religion as the child's religion.
             int rndParentIndex = Distribution.uniform(0, 1);
-            if (rndParentIndex == 0) {		// If 0, use parent A's religion.
+            if (rndParentIndex == 0) {        // If 0, use parent A's religion.
                 childReligion = A.getReligionIndex();
-            } else {						// If 1, use parent B's religion.
+            } else {                        // If 1, use parent B's religion.
                 childReligion = B.getReligionIndex();
             } // end if (determine which parent was randomly chosen)
 
@@ -186,9 +250,9 @@ public class AttributeAssigner {
         child.setReligionIndex(childReligion);
     } // end AssignChildReligion()
 
-    public static HometownHistoryDTO assignChildHometowns (PersonDTO attr, PersonDTO parentA, PersonDTO parentB) {
+    public static HometownHistoryDTO assignChildHometowns(PersonDTO attr, PersonDTO parentA, PersonDTO parentB) {
 
-        HometownHistoryDTO hometownHistoryDTO=new HometownHistoryDTO();
+        HometownHistoryDTO hometownHistoryDTO = new HometownHistoryDTO();
 
         //System.out.println(".................... In AttributeAssigner->assignChildHometowns() ....................");
 
@@ -204,25 +268,25 @@ public class AttributeAssigner {
             finalYear = Configuration.SocietyYear;
         } else {
             // The year this person finished elementary (secondary) school.
-            finalYear = attr.getBirthYear()+Configuration.SchoolFinishAge;
+            finalYear = attr.getBirthYear() + Configuration.SchoolFinishAge;
         } // end if (determine the final year for the child living with their parents - either the current year or their last school year)
 
         ArrayList<Object> actEntry;
         int[] tmpActYears;
         int tmpEntryBeginYear;
         int tmpEntryFinalYear;
-        HometownHistoryDTO parentAHometownHistory=historyService.getHometownHistoryById(parentA.getHometownHistoryId());
+        HometownHistoryDTO parentAHometownHistory = historyService.getHometownHistoryById(parentA.getHometownHistoryId());
         // Loop through all childhood years from birth until the end of elementary (secondary) school.
         for (y = attr.getBirthYear(); y < finalYear; y++) {
             //System.out.println("> " + y + " | " + parentA.getHometownHistory().getActivityAtYear( y ));
 
             HistoryRecord record = parentAHometownHistory.getActivityByYear(y);
 
-            tmpActYears = new int[]{record.getStartYear(),record.getEndYear()};
+            tmpActYears = new int[]{record.getStartYear(), record.getEndYear()};
 
             // ADJUST STARTING YEAR OF ENTRY.
             // If the year, in this loop iteration, is the first one of that entry, then indicate that first year.
-            if (y == tmpActYears[0]+1) {
+            if (y == tmpActYears[0] + 1) {
                 tmpEntryBeginYear = y - 1;
             } else {
                 tmpEntryBeginYear = y;
@@ -233,21 +297,21 @@ public class AttributeAssigner {
             if (y == tmpActYears[1]) {
                 tmpEntryFinalYear = y;
             } else {
-                tmpEntryFinalYear = y+1;
+                tmpEntryFinalYear = y + 1;
             } // end if (check if the loop year is the final year of the given activity entry)
 
             //tmpChildArchive.addEntry(actEntry.get(0), tmpActYears[0], tmpActYears[1]);
             //tmpChildArchive.addEntry(actEntry.get(0), y, y+1);
-            hometownHistoryDTO.getRecordList().add(new HistoryRecord(record.getLocation(),tmpEntryBeginYear,tmpEntryFinalYear));
+            hometownHistoryDTO.getRecordList().add(new HistoryRecord(record.getLocation(), tmpEntryBeginYear, tmpEntryFinalYear));
 
         } // end for y (loop through years that child lives with parents)
 
         // Ensure the last hometown was added properly. If there was a move in the current societal year, then it won't add
         // properly initially. This will ensure that it is appended to the child's archives.
-        HistoryRecord lastRecord=parentAHometownHistory.getLastActivity();
+        HistoryRecord lastRecord = parentAHometownHistory.getLastActivity();
 
         if (lastRecord.getStartYear() == Configuration.SocietyYear) {
-            hometownHistoryDTO.getRecordList().add(new HistoryRecord(lastRecord.getLocation(),lastRecord.getStartYear(),lastRecord.getEndYear()));
+            hometownHistoryDTO.getRecordList().add(new HistoryRecord(lastRecord.getLocation(), lastRecord.getStartYear(), lastRecord.getEndYear()));
         } // end if (check if last activity begins in current year, and adds it to the child's archive)
 
         // Add last entry separately.
@@ -998,8 +1062,8 @@ public class AttributeAssigner {
                 query.setSocietyId(Configuration.Society_Id);
                 query.setInstitutionType(InstitutionEnum.POST_SECONDARY_SCHOOL);
                 query.setType(psSchoolType);
-                ArrayList<String> citiesWithSchoolsByType = new ArrayList<String>();
-                citiesWithSchoolsByType.addAll(institutionService.selectCityByType(query));
+                List<String> citiesWithSchoolsByType = institutionService.selectCityByType(query);
+
 
                 //BSActivityArchive.addHometownsForPeriod("", homeHistory, socHomeHistory, (String)homeHistory.getLastActivityName(), 0.7, 1, 1, year_startPSSchool, year_finishPSSchool, citiesWithSchoolsByType);
                 historyService.addHometownsForPeriod(homeHistory, socHomeHistory, year_startPSSchool, year_finishPSSchool, citiesWithSchoolsByType);
@@ -1108,42 +1172,6 @@ public class AttributeAssigner {
         //childhoodYears[0] = 1900;
         //childhoodYears[1] = 1905;
     } // end determineCheckpointPeriodGapYears()
-/*
-    public static void createRelationship (PersonDTO personA, PersonDTO personB, RelationStatusEnum relType) {
-        // Indicate the relationship between the two persons, personA and personB.
-        // param personA: one person in the relationship
-        // param personB: the other person in the relationship
-        // param relType: an integer representing the relationship type {0 = Single, 1 = Married, 2 = Dating}
-
-        personA.setRelationshipStatus(relType);
-        personB.setRelationshipStatus(relType);
-
-        personA.setPartnerId(personB.getId());
-        personB.setPartnerId(personA.getId());
-
-        RelationshipCalculator.calculateAndSetInterestSimilarity(personA, personB);
-
-
-        RelationshipCalculator.CalculateAndSetRelationshipStrength(personA, personB, 0); // Before children are created, so pass = 0.
-
-        // DELETED assignRelationshipStart() on Feb. 16.
-        // Determine the year this relationship began (if married, then it's the year that they became married, not the year they started dating).
-        //AttributeAssigner.assignRelationshipStart(personA, personB, relType);
-
-        // Calculate relationship strength between couple.
-        //double relStrength = RelationshipCalculator.CalculateRelationshipStrength(personA, personB);
-        //personA.relationshipStrength = relStrength;
-        //personB.relationshipStrength = relStrength;
-
-        int familyID = PersonGroupAdder.nextFamilyID;
-        personA.setFamilyID(familyID);
-        personB.setFamilyID(familyID);
-
-        // Increment static variable for nextFamilyID, so each new relationship creates a new family ID.
-        PersonGroupAdder.nextFamilyID++;
-
-    } // end createRelationship()
-*/
 
     public static void assignWorkHistory(PersonDTO attr) {
         // Determine all places the person has worked throughout their life, and add each of those work periods to the work archive.
@@ -1215,7 +1243,7 @@ public class AttributeAssigner {
                     assignLocalWorkplaces(attr, careerDTO, workHistory, societalWorkHistory, finishedSchoolYear, endYear);
                 } else {
                     //if (attr.getID() == 15) System.out.println("Need to find external work for [" + finishedSchoolYear + "," + hometownYears[1] + "]. (PARTIAL)");
-                    assignExternalWorkplaces(attr, careerDTO,workHistory,finishedSchoolYear, endYear);
+                    assignExternalWorkplaces(attr, careerDTO, workHistory, finishedSchoolYear, endYear);
                 } // end if (check if hometown for this period is local society)
 
             } // end if (determine the hometown period DURING which the person becomes working age)
@@ -1230,7 +1258,7 @@ public class AttributeAssigner {
                     assignLocalWorkplaces(attr, careerDTO, workHistory, societalWorkHistory, startYear, endYear);
                 } else {
                     //if (attr.getID() == 15) System.out.println("Need to find external work for [" + hometownYears[0] + "," + hometownYears[1] + "]. (FULL)");
-                    assignExternalWorkplaces(attr,careerDTO,workHistory,startYear, endYear);
+                    assignExternalWorkplaces(attr, careerDTO, workHistory, startYear, endYear);
                 } // end if (check if hometown for this period is local society)
 
             } // end if (determining the hometown periods completely AFTER the peson is working age)
@@ -1306,7 +1334,7 @@ public class AttributeAssigner {
         String chosenWorkplace = "External Company";
 
         // Add career to archive over the given period.
-        workHistory.getRecordList().add(new WorkHistoryRecord(startYear,endYear,career.getId(),chosenWorkplace));
+        workHistory.getRecordList().add(new WorkHistoryRecord(startYear, endYear, career.getId(), chosenWorkplace));
 
 
         // Update person's current position to WORKING.
@@ -1318,7 +1346,7 @@ public class AttributeAssigner {
         //
 
         // Get the base income associated with the person's career.
-        int careerIncome = (int)Math.round(career.getSalaryMean());
+        int careerIncome = (int) Math.round(career.getSalaryMean());
         // Randomly choose an amount (positive or negative) to offset the person's income from the base.
         int salarySTD = Distribution.uniform(-Configuration.SalarySTD, Configuration.SalarySTD);
         attr.setIncome(careerIncome + salarySTD);
@@ -1329,9 +1357,155 @@ public class AttributeAssigner {
 
     } // end assignExternalWorkplaces()
 
+
+    public static boolean SearchForJob (PersonDTO person) {
+        // This method will search for a potential workplace for the person to find employment at. The person may or may not
+        // actually get a job at this time with the workplace found.
+        //
+        // param person: the Person who is searching for a job
+        //
+        // return: a boolean flag indicating whether or not the person received a job at this time
+
+        //if (person.getID() == 42) { System.err.println("Debugging 42 in " + Configuration.SocietyYear + " | " + person.getCurrentPosition() + " ^ SearchForJob()"); }
+        CareerDTO career=new CareerDTO(careerService.selectCareerById(person.getCareerId()));
+
+        List<Long> workplaceIds=career.getWorkplaceId();
+
+        // If the peron's career does not match any workplace options, then stop now. (This should only ever be the case for "Unemployed, id="00000").
+        if (workplaceIds.size() == 0) {
+            // Stay unemployed. No jobs were found.
+            return false;
+        } // end if (check if any possible work locations were found)
+
+        int chosenWorkplaceIndex=Distribution.uniform(0,workplaceIds.size()-1);
+
+        String workplaceId=String.valueOf(workplaceIds.get(chosenWorkplaceIndex));
+
+        if (person.getIsInSchool()) {
+            // This shouldn't be executed ever, but just in case the person is still in school, then exit this.
+            System.err.println("In SimulationStepper->evaluatePerson_Unemployed(); the person is considered unemployed but is still in school. Fix this.");
+            return false;
+        } // end if (ensure that person has graduated from the program)
+
+
+        // -------------------------------------------------------------------------------
+        // At this point, the person has a potential job, but a randomizer will determine
+        // whether or not the person gets the job.
+        // -------------------------------------------------------------------------------
+
+        double rnd_GetJob = Distribution.uniform(0.0, 1.0);
+
+        if (rnd_GetJob <= Configuration.p_getJobFromUnemployment) {
+
+            WorkHistoryDTO workHistoryDTO;
+            WorkHistoryDTO socWorkHistoryDTO;
+
+            if(person.getWorkHistoryId()==null){
+                workHistoryDTO=new WorkHistoryDTO();
+                socWorkHistoryDTO=new WorkHistoryDTO();
+            }else{
+                workHistoryDTO=historyService.getWorkHistoryById(person.getWorkHistoryId());
+                socWorkHistoryDTO=historyService.getWorkHistoryById(person.getSocWorkHistoryId());
+            }
+
+            // Add the new job to the person's work history and societal work history.
+            workHistoryDTO.getRecordList().add(new WorkHistoryRecord(Configuration.SocietyYear,Configuration.SocietyYear,person.getCareerId(),workplaceId));
+            socWorkHistoryDTO.getRecordList().add(new WorkHistoryRecord(Configuration.SocietyYear,Configuration.SocietyYear,person.getCareerId(),workplaceId));
+            if(person.getWorkHistoryId()==null){
+                historyService.insertNewHistoryDTO(workHistoryDTO);
+                historyService.insertNewHistoryDTO(socWorkHistoryDTO);
+                person.setWorkHistoryId(workHistoryDTO.getId());
+                person.setSocWorkHistoryId(socWorkHistoryDTO.getId());
+            }else{
+                historyService.updateHistoryDTO(workHistoryDTO);
+                historyService.updateHistoryDTO(socWorkHistoryDTO);
+            }
+            // Get the base income associated with the person's career.
+            int careerIncome =(int)Math.round(career.getSalaryMean());
+            // Randomly choose an amount (positive or negative) to offset the person's income from the base.
+            int salarySTD = Distribution.uniform(-Configuration.SalarySTD, Configuration.SalarySTD);
+            person.setIncome(careerIncome + salarySTD);
+
+            // UPDATE person's position to WORKING!
+            person.setCurrentPosition( PositionEnum.WORKING );
+
+            //System.err.println("><><><><><><><><><><>< PERSON " + person.getID() + " GOT A JOB! ><>< " + person.getCareer() + " ><><><><><><><><><><><><><><");
+
+            // Return true to indicate that the person successfully landed a job.
+            return true;
+
+        } // end if (check if person will actually get the employment, based on random number)
+
+        // Return false to indicate that the person did not get a job.
+        return false;
+
+    } // end SearchForJob()
+
+    public static boolean SearchForExternalJob (PersonDTO person) {
+        // This method will decide whether or not the person finds a job in another location. The person may live in the
+        // simulation society OR externally, but either way they will search for a job externally. This is simplified greatly!
+        //
+        // param person: the Person who is searching for a job
+        //
+        // return: a boolean flag indicating whether or not the person received a job at this time
+
+        //if (person.getID() == 42) { System.err.println("Debugging 42 in " + Configuration.SocietyYear + " | " + person.getCurrentPosition() + " ^ SearchForExternalJob()"); }
+
+        double rnd_GetJob = Distribution.uniform(0.0, 1.0);
+
+
+        // THIS IS VERY SIMPLIFIED. Simply use a random number to decide whether or not the person found a job.
+        if (rnd_GetJob <= Configuration.p_getJobFromUnemployment) {
+            // Person received a job, so return true to indicate this job success.
+
+            String chosenWorkplace = "External Company";
+
+            WorkHistoryDTO workHistoryDTO;
+            WorkHistoryDTO socWorkHistoryDTO=new WorkHistoryDTO();
+
+            if(person.getWorkHistoryId()==null){
+                workHistoryDTO=new WorkHistoryDTO();
+            }else{
+                workHistoryDTO=historyService.getWorkHistoryById(person.getWorkHistoryId());
+            }
+
+            // Add the new job to the person's work history and societal work history.
+            workHistoryDTO.getRecordList().add(new WorkHistoryRecord(Configuration.SocietyYear,Configuration.SocietyYear,person.getCareerId(),chosenWorkplace));
+
+            if(person.getWorkHistoryId()==null){
+                historyService.insertNewHistoryDTO(workHistoryDTO);
+                historyService.insertNewHistoryDTO(socWorkHistoryDTO);
+                person.setWorkHistoryId(workHistoryDTO.getId());
+                person.setSocWorkHistoryId(socWorkHistoryDTO.getId());
+            }else{
+                historyService.updateHistoryDTO(workHistoryDTO);
+            }
+
+
+            CareerDTO career=new CareerDTO(careerService.selectCareerById(person.getCareerId()));
+            // Get the base income associated with the person's career.
+            int careerIncome =(int)Math.round(career.getSalaryMean());
+            // Randomly choose an amount (positive or negative) to offset the person's income from the base.
+            int salarySTD = Distribution.uniform(-Configuration.SalarySTD, Configuration.SalarySTD);
+            person.setIncome(careerIncome + salarySTD);
+
+            // UPDATE person's position to WORKING!
+            person.setCurrentPosition( PositionEnum.WORKING );
+
+
+
+            return true;
+        } // end if (determine whether or not the person receives employment at this time)
+
+        // If the randomizer didn't yield the person finding work, then return false to show that the person is still unemployed.
+        return false;
+    } // end SearchForExternalJob()
+
     public static List<Career> getCareerList() {
         return careerList;
     }
+
+
 
     public static void setCareerList(List<Career> careerList) {
         AttributeAssigner.careerList = careerList;

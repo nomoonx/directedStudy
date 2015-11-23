@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.noMoon.ArtificalSociety.commons.utils.Configuration;
 import org.noMoon.ArtificalSociety.person.DAO.PersonMapper;
+import org.noMoon.ArtificalSociety.person.DO.PersonWithBLOBs;
 import org.noMoon.ArtificalSociety.person.DTO.PersonDTO;
 import org.noMoon.ArtificalSociety.person.Enums.GenderEnum;
 import org.noMoon.ArtificalSociety.person.Enums.PositionEnum;
@@ -15,6 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -68,6 +70,25 @@ public class PersonServiceTest {
         person.setRelationshipStatus(RelationStatusEnum.SINGLE);
         person.setCurrentPosition(PositionEnum.STUDENT);
         personMapper.insert(person.convertToPerson());
+    }
+
+    @Test
+    public void testBatchUpdate(){
+        PersonWithBLOBs query=new PersonWithBLOBs();
+        query.setSocietyId("S201510281000035");
+        query.setId("P20151028220559000000023");
+        PersonWithBLOBs personDO=personMapper.selectById(query);
+        PersonDTO personOne=new PersonDTO(personDO);
+        System.out.println(personOne.getReligionIndex());
+        query.setId("P20151101013232000000028");
+        personDO=personMapper.selectById(query);
+        PersonDTO personTwo=new PersonDTO(personDO);
+        List<PersonWithBLOBs> updateList=new ArrayList<PersonWithBLOBs>();
+        personOne.setIsAlive(true);
+        personTwo.setIsAlive(true);
+        updateList.add(personOne.convertToPerson());
+        updateList.add(personTwo.convertToPerson());
+        personMapper.updateById(personOne.convertToPerson());
     }
 
 }

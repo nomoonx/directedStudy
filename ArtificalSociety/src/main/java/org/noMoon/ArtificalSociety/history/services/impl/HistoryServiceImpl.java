@@ -12,6 +12,7 @@ import org.noMoon.ArtificalSociety.history.Records.HistoryRecord;
 import org.noMoon.ArtificalSociety.history.services.HistoryService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by noMoon on 2015-10-16.
@@ -27,7 +28,7 @@ public class HistoryServiceImpl implements HistoryService {
         return insertDO.getId();
     }
 
-    public void addHometownsForPeriod(HometownHistoryDTO archive, HometownHistoryDTO localArchive, int startYear, int endYear, ArrayList<String> possibleCitiesForMoves) {
+    public void addHometownsForPeriod(HometownHistoryDTO archive, HometownHistoryDTO localArchive, int startYear, int endYear, List<String> possibleCitiesForMoves) {
         //public static void addHometownsForPeriod (ActivityArchive archive, ActivityArchive localArchive, int minNumMoves, int maxNumMoves, int startYear, int endYear, String[] possibleCitiesForMoves) {
         // This function is important for generating a random sequence of hometowns for a person, based on a variety of probabilities and other parameters.
         // To begin, if the prevHometown value is part of the possibleCitiesForMoves array of locations, then that prevHometown has a probability of continuing
@@ -158,6 +159,10 @@ public class HistoryServiceImpl implements HistoryService {
     public WorkHistoryDTO getWorkHistoryById(Long id) {
         History history=historyMapper.selectByPrimaryKey(id);
         return new WorkHistoryDTO(history);
+    }
+
+    public void updateHistoryDTO(HistoryDTO historyDTO) {
+        historyMapper.updateByPrimaryKeyWithBLOBs(historyDTO.convertToHistory());
     }
 
     public void setHistoryMapper(HistoryMapper historyMapper) {

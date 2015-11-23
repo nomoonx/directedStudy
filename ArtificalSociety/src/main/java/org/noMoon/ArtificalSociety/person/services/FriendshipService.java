@@ -1,6 +1,7 @@
 package org.noMoon.ArtificalSociety.person.services;
 
 import org.noMoon.ArtificalSociety.person.DO.Friendship;
+import org.noMoon.ArtificalSociety.person.DTO.PersonDTO;
 
 import java.util.List;
 
@@ -13,4 +14,6 @@ public interface FriendshipService {
     void listInsertNewFriendship(List<Friendship> friendshipList);
 
     void CreateEntireFriendshipNetwork();
+
+    void createFriendshipNetwork(PersonDTO person);
 }

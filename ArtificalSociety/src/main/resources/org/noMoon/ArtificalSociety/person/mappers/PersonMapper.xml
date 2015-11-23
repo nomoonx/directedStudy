@@ -85,12 +85,12 @@
 
     </sql>
     
-    <select id="selectById" parameterType="org.noMoon.ArtificalSociety.person.DO.PersonWithBLOBs" resultMap="ResultMapWithBLOBs">
+    <select id="selectById" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
         select 
         <include refid="Basic_Column_List"/>,
         <include refid="Blob_Column_List"/>
         from PERSON
-        where SOCIETY_ID=#{societyId,jdbcType=VARCHAR} and ID=#{id,jdbcType=VARCHAR}
+        where ID=#{id}
     </select>
   <insert id="insert" parameterType="org.noMoon.ArtificalSociety.person.DO.PersonWithBLOBs">
     <!--
@@ -169,7 +169,7 @@
         select ID from PERSON where SOCIETY_ID=#{societyId}
     </select>
     <select id="selectAliveIdsBySocietyId" parameterType="java.lang.String" resultType="java.lang.String">
-        select ID from PERSON where SOCIETY_ID=#{societyId} and IS_LIVE=`1`
+        select ID from PERSON where SOCIETY_ID=#{societyId} and IS_LIVE='1'
     </select>
 
 
@@ -443,4 +443,46 @@
       </if>
     </trim>
   </insert>
+
+    <update id="updateById" parameterType="org.noMoon.ArtificalSociety.person.DO.PersonWithBLOBs">
+       update PERSON set GMT_MODIFIED=now(),
+          SOCIETY_ID=#{societyId,jdbcType=VARCHAR}, SEX=#{sex,jdbcType=VARCHAR}, AGE=#{age,jdbcType=INTEGER},
+          BIRTH_YEAR=#{birthYear,jdbcType=INTEGER}, EXP_DEATH_YEAR=#{expDeathYear,jdbcType=INTEGER}, RACE_INDEX=#{raceIndex,jdbcType=INTEGER},
+          INTELLIGENCE=#{intelligence,jdbcType=DOUBLE}, ATHLETICISM=#{athleticism,jdbcType=DOUBLE}, RELIGION_INDEX=#{religionIndex,jdbcType=INTEGER},
+          NATIONALITY=#{nationality,jdbcType=VARCHAR}, TEMPLE_ATTENDING=#{templeAttending,jdbcType=VARCHAR}, INTEREST=#{interest,jdbcType=VARCHAR},
+          INTEREST_WEIGHT=#{interestWeight,jdbcType=VARCHAR}, RELATIONSHIP_STATUS=#{relationshipStatus,jdbcType=VARCHAR}, PARTNER_ID=#{partnerId,jdbcType=VARCHAR},
+          INTEREST_SIMILARITY=#{interestSimilarity,jdbcType=DOUBLE}, RELATIONSHIP_STRENGTH=#{relationshipStrength,jdbcType=DOUBLE},
+          RELATIONSHIP_START_YEAR=#{relationshipStartYear,jdbcType=INTEGER}, PERSONALITY=#{personality,jdbcType=VARCHAR},
+          CAREER_ID=#{careerId,jdbcType=BIGINT}, CURRENT_POSITION=#{currentPosition,jdbcType=VARCHAR}, INCOME=#{income,jdbcType=INTEGER},
+          EDUCATION=#{education,jdbcType=VARCHAR}, EDUCATION_PS_YEAR=#{educationPsYear,jdbcType=INTEGER}, IS_IN_SCHOOL=#{isInSchool,jdbcType=BIT},
+          YEAR_STARTED_PS_SCHOOL=#{yearStartedPsSchool,jdbcType=INTEGER}, YEAR_FINISHED_PS_SCHOOL=#{yearFinishedPsSchool,jdbcType=INTEGER},
+          HOMETOWN_HISTORY_ID=#{hometownHistoryId,jdbcType=BIGINT}, SCHOOL_HISTORY_ID=#{schoolHistoryId,jdbcType=BIGINT}, WORK_HISTORY_ID=#{workHistoryId,jdbcType=BIGINT},
+          SOC_HOMETOWN_HISTORY_ID=#{socHometownHistoryId,jdbcType=BIGINT}, SOC_SCHOOL_HISTORY_ID=#{socSchoolHistoryId,jdbcType=BIGINT},
+          SOC_WORK_HISTORY_ID=#{socWorkHistoryId,jdbcType=BIGINT}, FAMILY_ID=#{familyId,jdbcType=BIGINT}, PARENT_IDS=#{parentIds,jdbcType=VARCHAR},
+          CHILDREN_IDS=#{childrenIds,jdbcType=VARCHAR}, SIBLINGS_IDS=#{siblingsIds,jdbcType=VARCHAR}, CLUB_IDS=#{clubIds,jdbcType=LONGVARCHAR},
+          GROUP_IDS=#{groupIds,jdbcType=LONGVARCHAR}, IS_ALIVE=#{isAlive,jdbcType=BIT}
+        where ID= #{id,jdbcType=VARCHAR}
+    </update>
+
+    <update id="batchUpdate" parameterType="java.util.List">
+        <foreach collection="list" item="element" index="index" separator=";">
+            update PERSON set GMT_MODIFIED=now(),
+            SOCIETY_ID=#{element.societyId}, SEX=#{element.sex}, AGE=#{element.age},
+            BIRTH_YEAR=#{element.birthYear}, EXP_DEATH_YEAR=#{element.expDeathYear}, RACE_INDEX=#{element.raceIndex},
+            INTELLIGENCE=#{element.intelligence}, ATHLETICISM=#{element.athleticism}, RELIGION_INDEX=#{element.religionIndex},
+            NATIONALITY=#{element.nationality}, TEMPLE_ATTENDING=#{element.templeAttending}, INTEREST=#{element.interest},
+            INTEREST_WEIGHT=#{element.interestWeight}, RELATIONSHIP_STATUS=#{element.relationshipStatus}, PARTNER_ID=#{element.partnerId},
+            INTEREST_SIMILARITY=#{element.interestSimilarity}, RELATIONSHIP_STRENGTH=#{element.relationshipStrength},
+            RELATIONSHIP_START_YEAR=#{element.relationshipStartYear}, PERSONALITY=#{element.personality}, CAREER_ID=#{element.careerId},
+            CURRENT_POSITION=#{element.currentPosition}, INCOME=#{element.income}, EDUCATION=#{element.education},
+            EDUCATION_PS_YEAR=#{element.educationPsYear}, IS_IN_SCHOOL=#{element.isInSchool}, YEAR_STARTED_PS_SCHOOL=#{element.yearStartedPsSchool},
+            YEAR_FINISHED_PS_SCHOOL=#{element.yearFinishedPsSchool}, HOMETOWN_HISTORY_ID=#{element.hometownHistoryId},
+            SCHOOL_HISTORY_ID=#{element.schoolHistoryId}, WORK_HISTORY_ID=#{element.workHistoryId}, SOC_HOMETOWN_HISTORY_ID=#{element.socHometownHistoryId},
+            SOC_SCHOOL_HISTORY_ID=#{element.socSchoolHistoryId}, SOC_WORK_HISTORY_ID=#{element.socWorkHistoryId}, FAMILY_ID=#{element.familyId},
+            PARENT_IDS=#{element.parentIds}, CHILDREN_IDS=#{element.childrenIds}, SIBLINGS_IDS=#{element.siblingsIds},
+            CLUB_IDS=#{element.clubIds}, GROUP_IDS=#{element.groupIds}, IS_ALIVE=#{element.isAlive}
+            where ID=#{element.id}
+        </foreach>
+    </update>
+
 </mapper>

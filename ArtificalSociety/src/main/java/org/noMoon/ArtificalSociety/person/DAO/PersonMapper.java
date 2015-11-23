@@ -27,5 +27,8 @@ public interface PersonMapper {
 
     List<String> selectAliveIdsBySocietyId(String societyId);
 
-    PersonWithBLOBs selectById(PersonWithBLOBs record);
+    PersonWithBLOBs selectById(String id);
+
+    void updateById(PersonWithBLOBs record);
+
 }

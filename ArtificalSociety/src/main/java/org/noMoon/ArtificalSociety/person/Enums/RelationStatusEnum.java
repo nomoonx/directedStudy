@@ -5,7 +5,7 @@ package org.noMoon.ArtificalSociety.person.Enums;
  */
 public enum RelationStatusEnum {
 
-    SINGLE("SINGLE"),MARRIED("MARRIED"),DATING("DATING"),DIVORCED("DIVORCED");
+    SINGLE("SINGLE"),MARRIED("MARRIED"),DATING("DATING"),DIVORCED("DIVORCED"),WIDOWED("WIDOWED");
 
     private String value;
 
