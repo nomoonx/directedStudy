@@ -7,9 +7,9 @@
   <param struct="element" type="integer" id="YearToDisallowInterbreeding">2015</param>         <!-- DIFFERENT -->
   
   <!-- POPULATION SIZE -->
-  <param struct="element" type="integer" id="N_CouplesMarried">200</param>                      <!-- DIFFERENT -->
-  <param struct="element" type="integer" id="N_CouplesDating">0</param>                        <!-- DIFFERENT -->
-  <param struct="element" type="integer" id="N_Singles">0</param>                              <!-- DIFFERENT -->
+  <param struct="element" type="integer" id="N_CouplesMarried">10</param>                      <!-- DIFFERENT -->
+  <param struct="element" type="integer" id="N_CouplesDating">10</param>                        <!-- DIFFERENT -->
+  <param struct="element" type="integer" id="N_Singles">10</param>                              <!-- DIFFERENT -->
   
   <!-- CONNECTIVITY -->
   <param struct="element" type="double" id="FriendFactor">0.4</param>

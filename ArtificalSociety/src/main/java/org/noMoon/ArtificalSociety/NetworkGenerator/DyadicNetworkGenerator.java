@@ -5,6 +5,8 @@ import org.noMoon.ArtificalSociety.commons.utils.Configuration;
 import org.noMoon.ArtificalSociety.group.Services.GroupService;
 import org.noMoon.ArtificalSociety.institution.services.ClubService;
 import org.noMoon.ArtificalSociety.institution.services.InstitutionService;
+import org.noMoon.ArtificalSociety.person.services.FriendshipService;
+import org.noMoon.ArtificalSociety.person.services.PersonService;
 
 /**
  * Created by noMoon on 2015-08-21.
@@ -16,6 +18,8 @@ public class DyadicNetworkGenerator {
     static ClubService clubService;
     static CareerService careerService;
     static GroupService groupService;
+    static PersonService personService;
+    static FriendshipService friendshipService;
 
     //    @Autowired
 
@@ -34,30 +38,28 @@ public class DyadicNetworkGenerator {
         System.out.println("career Config loaded");
         groupService.generateGroups(Configuration.Society_Id);
         System.out.println("Group Config loaded");
-        //Configuration.LoadConfigValuesFromFile("SocietyConfig_Genesis.xml");
-        //Configuration.LoadConfigValuesFromFile("SocietyConfig_TEST.xml");
-        //Configuration.LoadConfigValuesFromFile("SocietyConfigSmall.xml");
+        personService.generatePerson(Configuration.N_Singles,Configuration.N_Couples,Configuration.N_CouplesDating,Configuration.Society_Id);
+        System.out.println("seed persons generated");
+        friendshipService.CreateEntireFriendshipNetwork();
+        System.out.println("friendship created");
+        System.out.println("Memory: "+String.valueOf(GetMemoryUsage())+"MB");
+        personService.checkDeath();
 
-        // Load Configuration parameters.
-        //Configuration.SetHardcodedValues();
-
-
-        // Load all institutions (schools, temples, etc.) - * NOTE * this must be loaded BEFORE the careers/workplaces are loaded!
-//        InstitutionSet.loadAllInstitutions();
-//        SchoolSet.initSchools();                // Initialize Schools.
-//        TempleSet.initTemples();                // Initialize Temples.
-//
-//        Club.loadFiles();
-//
-//        // Load Careers.
-//        Careers.loadFiles();                            // Load the career files.
-//        AttributeAssigner.initializeCareersTables();    // Create the table of career openings.
-//
-//
-//        GroupGenerator.generateGroups();
+        SimulationStepper.begin(Configuration.N_YearsToRun);
 
 
     } // end LoadAllConfigurations()
+
+    public static long GetMemoryUsage () {
+
+        System.gc();
+
+        int mb = 1024*1024;
+
+        Runtime runtime = Runtime.getRuntime();
+
+        return (runtime.totalMemory() - runtime.freeMemory()) / mb;
+    } // end GetMemoryUsage()
 
     public void setGroupService(GroupService groupService) {
         DyadicNetworkGenerator.groupService = groupService;
@@ -73,5 +75,13 @@ public class DyadicNetworkGenerator {
 
     public void setCareerService(CareerService careerService) {
         DyadicNetworkGenerator.careerService = careerService;
+    }
+
+    public void setPersonService(PersonService personService) {
+        DyadicNetworkGenerator.personService = personService;
+    }
+
+    public void setFriendshipService(FriendshipService friendshipService) {
+        DyadicNetworkGenerator.friendshipService = friendshipService;
     }
 }

@@ -15,19 +15,11 @@ import java.util.List;
  */
 public class SimulationStepper {
 
-    PersonService personService;
-    FriendshipService friendshipService;
-
-    int trialNumber;
-
-    public SimulationStepper (int trial) {
-        trialNumber = trial;
-    } // end SimulationStepper() constructor
-
-    public SimulationStepper(){}
+    private static PersonService personService;
+    private static FriendshipService friendshipService;
 
 
-    public void begin (int n) {
+    public static void begin (int n) {
 
         int i;
         for (i = 0; i < n; i++) {
@@ -40,7 +32,7 @@ public class SimulationStepper {
     } // end begin()
 
 
-    public void runToPopulationThreshold (int popThreshold) {
+    public static void runToPopulationThreshold (int popThreshold) {
 
 
         List<String> allPersonId=personService.getAllIds(Configuration.Society_Id);
@@ -59,7 +51,7 @@ public class SimulationStepper {
     } // end begin()
 
 
-    public void evaluateSociety () {
+    public static void evaluateSociety () {
 
         List<String> allAlivePersonId=personService.getAllIds(Configuration.Society_Id);
         List<PersonDTO> deadPersonIdList=new ArrayList<PersonDTO>();
@@ -118,14 +110,14 @@ public class SimulationStepper {
     } // end evaluateSociety()
 
 
-    private void evaluatePerson_Basic (PersonDTO person) {
+    private static void evaluatePerson_Basic (PersonDTO person) {
 
         person.setAge(Configuration.SocietyYear-person.getBirthYear());
 
     } // end evaluatePerson_Basic()
 
 
-    private boolean evaluatePerson_Death (PersonDTO person) {
+    private static boolean evaluatePerson_Death (PersonDTO person) {
 
         // Determine if person has reached their life expectancy.
         if (Configuration.SocietyYear >= person.getExpDeathYear()) {
@@ -142,7 +134,7 @@ public class SimulationStepper {
 
     } // end evaluatePerson_Death()
 
-    private void evaluatePerson_Relationship (PersonDTO person) {
+    private static void evaluatePerson_Relationship (PersonDTO person) {
         PersonDTO partner;
         if(person.getRelationshipStatus().equals(RelationStatusEnum.SINGLE)){
             personService.evaluateRelationship_Single(person);
@@ -155,7 +147,7 @@ public class SimulationStepper {
         } // end switch (checking the person's relationship status)
     } // end evaluatePerson_Relationship()
 
-    private void evaluatePerson_CurrentPosition (PersonDTO person) {
+    private static void evaluatePerson_CurrentPosition (PersonDTO person) {
 
         PositionEnum pos = person.getCurrentPosition();
 
@@ -185,7 +177,7 @@ public class SimulationStepper {
 
     } // end evaluatePerson_CurrentPosition()
 
-    private void evaluatePerson_PositionInvolvement (PersonDTO person) {
+    private static void evaluatePerson_PositionInvolvement (PersonDTO person) {
 
         //System.out.println("person.getCurrentPosition() = " + person.getCurrentPosition());
 
@@ -211,12 +203,12 @@ public class SimulationStepper {
 
     } // end evaluatePerson_PositionInvolvement()
 
-    private void evaluatePerson_Hometown (PersonDTO person) {
+    private static void evaluatePerson_Hometown (PersonDTO person) {
         personService.evaluatePerson_Hometown(person);
 
     } // end evaluatePerson_Hometown()
 
-    private void evaluatePerson_Groups (PersonDTO person) {
+    private static void evaluatePerson_Groups (PersonDTO person) {
 
         personService.evaluatePerson_Groups(person);
 
@@ -225,7 +217,7 @@ public class SimulationStepper {
     } // end evaluatePerson_Groups()
 
 
-    private void evaluatePerson_Friends (PersonDTO person) {
+    private static void evaluatePerson_Friends (PersonDTO person) {
 
         friendshipService.createFriendshipNetwork(person);
 
@@ -235,7 +227,7 @@ public class SimulationStepper {
     // SUB-FUNCTIONS FOR CURRENT POSITION EVALUATION
     // -----------------------------------------------------------------------------------------------------------------------------
 
-    private void evaluatePosition_Child (PersonDTO person) {
+    private static void evaluatePosition_Child (PersonDTO person) {
         // Examine child from time t-1, and determine their position at time t.
         // param person: the Person whom we are examining
         //
@@ -251,7 +243,7 @@ public class SimulationStepper {
 
     } // end evaluatePosition_Child()
 
-    private void evaluatePosition_Student (PersonDTO person) {
+    private static void evaluatePosition_Student (PersonDTO person) {
         // Examine child from time t-1, and determine their position at time t.
         // param person: the Person whom we are examining
         //
@@ -270,7 +262,7 @@ public class SimulationStepper {
 
     } // end evaluatePosition_Student()
 
-    private void evaluatePosition_Working (PersonDTO person) {
+    private static void evaluatePosition_Working (PersonDTO person) {
         // Examine working person from time t-1, and determine their position at time t.
         // param person: the Person whom we are examining
         //
@@ -284,7 +276,7 @@ public class SimulationStepper {
 
     } // end evaluatePosition_Working()
 
-    private void evaluatePosition_Unemployed (PersonDTO person) {
+    private static void evaluatePosition_Unemployed (PersonDTO person) {
         // Examine unemployed person from time t-1, and determine their position at time t.
         // param person: the Person whom we are examining
         //
@@ -298,7 +290,7 @@ public class SimulationStepper {
 
     } // end evaluatePosition_Unemployed()
 
-    private void evaluatePosition_Retired (PersonDTO person) {
+    private static void evaluatePosition_Retired (PersonDTO person) {
         // Examine retiree from time t-1, and determine their position at time t.
         // param person: the Person whom we are examining
         //

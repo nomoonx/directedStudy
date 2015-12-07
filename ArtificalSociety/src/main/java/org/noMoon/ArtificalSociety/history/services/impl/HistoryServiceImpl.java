@@ -67,7 +67,7 @@ public class HistoryServiceImpl implements HistoryService {
         if (numMoves == 0) {
             // IF ONE HOMETOWN OVER ENTIRE PERIOD.
 
-            ArrayList<String> hometownLocations = Distribution.permutation(Configuration.OtherCities, 1);
+            ArrayList<String> hometownLocations = Distribution.permutation((ArrayList)possibleCitiesForMoves, 1);
             moveCity = (String) hometownLocations.get(0);
             archive.getRecordList().add(new HistoryRecord(moveCity, startYear, endYear));
             if (moveCity.equals(Configuration.SocietyName)) {
@@ -77,7 +77,7 @@ public class HistoryServiceImpl implements HistoryService {
             // IF MULTIPLE HOMETOWNS OVER PERIOD.
 
             // Create array of hometown locations. This will include the local society and numMoves-1 randomly chosen locations.
-            ArrayList<String> hometownLocations = Distribution.permutation(Configuration.OtherCities, numMoves - 1);    // First get numMoves-1 random locations from outside of the society.
+            ArrayList<String> hometownLocations = Distribution.permutation((ArrayList)possibleCitiesForMoves, numMoves - 1);    // First get numMoves-1 random locations from outside of the society.
             hometownLocations.add(Configuration.SocietyName);                                    // Then add society to ensure it is included somewhere (currently at end). If we didn't add it separately, there would be a chance that the society would get omitted from the final list.
             //DebugTools.printArray(hometownLocations.toArray());
             hometownLocations = (ArrayList<String>) Distribution.permutation(hometownLocations);                    // Shuffle up list again, this time with society in the list.

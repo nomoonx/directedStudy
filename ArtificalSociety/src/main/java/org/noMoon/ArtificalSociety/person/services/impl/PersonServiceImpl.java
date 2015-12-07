@@ -49,16 +49,13 @@ public class PersonServiceImpl implements PersonService {
         generateSinglePerson(singleNumber, societyId, 2 * coupleNumber + 2 * datingNumber + singleNumber);
         createCouples(coupleNumber, datingNumber);
 
-        releaseAttributeAssigner();
     }
 
     private void initializeAttributeAssigner(String societyId) {
         AttributeAssigner.initialize(societyId);
     }
 
-    private void releaseAttributeAssigner() {
-        AttributeAssigner.getCareerList().clear();
-    }
+
 
     private void generateSinglePerson(int number, String societyId, int popSize) {
         List<PersonWithBLOBs> insertList = new ArrayList<PersonWithBLOBs>();
@@ -77,8 +74,10 @@ public class PersonServiceImpl implements PersonService {
             GroupAdder.addToGroups(personDTO);
             insertList.add(personDTO.convertToPerson());
         }
-        personMapper.insertList(insertList);
-        insertList.clear();
+        if (insertList.size() > 0) {
+            personMapper.insertList(insertList);
+            insertList.clear();
+        }
     }
 
     private void createCouples(int numMarriedCouples, int numDatingCouples) {
@@ -103,6 +102,7 @@ public class PersonServiceImpl implements PersonService {
     } // end createCouples()
 
     private void generateCouple(RelationStatusEnum relationStatusEnum) {
+        System.out.println("gengerate couple");
         PersonDTO personA, personB;
         int personAAge = 0, personBAge = 0;
         int yearStartedRelationship = 0;
@@ -150,8 +150,8 @@ public class PersonServiceImpl implements PersonService {
         AttributeAssigner.assignExpectedYearOfDeath(personB);
         //System.out.println("B | " + personB.getAge() + " : " + personB.getExpectedDeathYear());
         personB.setRelationshipStartYear(yearStartedRelationship);
-        fillBasicAttribute(personB);
         fillCoupleCulture(personA, personB);
+        fillBasicAttribute(personB);
         fillCareerAndEducation(personB, Configuration.N_Population_Size);
         fillHistory(personB, coupleHometownCheckpoints);
         GroupAdder.addToGroups(personB);
@@ -173,18 +173,22 @@ public class PersonServiceImpl implements PersonService {
                 PersonDTO child = createChild(personA, personB, true);
 
                 children.add(child);
+                GroupAdder.addToGroups(child);
             }
-            createChildrenConnections(personA, personB, children);
-            List<PersonWithBLOBs> childrenInsertList = new ArrayList<PersonWithBLOBs>();
-            for (PersonDTO child : children) {
-                childrenInsertList.add(child.convertToPerson());
+            if(children.size()>0) {
+                createChildrenConnections(personA, personB, children);
+                List<PersonWithBLOBs> childrenInsertList = new ArrayList<PersonWithBLOBs>();
+                for (PersonDTO child : children) {
+                    childrenInsertList.add(child.convertToPerson());
+                }
+                personMapper.insertList(childrenInsertList);
+                children.clear();
+                childrenInsertList.clear();
+                // Re-evaluate relationship strength AFTER the parents have children.
+                RelationshipCalculator.CalculateAndSetRelationshipStrength(personA, personB, 1);
             }
-            personMapper.insertList(childrenInsertList);
-            children.clear();
-            childrenInsertList.clear();
 
-            // Re-evaluate relationship strength AFTER the parents have children.
-            RelationshipCalculator.CalculateAndSetRelationshipStrength(personA, personB, 1);
+
         }
 
         personMapper.insert(personA.convertToPerson());
@@ -193,10 +197,14 @@ public class PersonServiceImpl implements PersonService {
 
     private PersonDTO createChild(PersonDTO parentA, PersonDTO parentB, boolean isBackFilling) {
         PersonDTO child = new PersonDTO();
+        child.setSocietyId(parentA.getSocietyId());
+        child.setFamilyId(parentA.getFamilyId());
+        AttributeAssigner.assignChildRace(parentA, parentB, child);
+        AttributeAssigner.assignChildReligion(parentA, parentB, child);
+        AttributeAssigner.assignSex(child);
         fillBasicAttribute(child);
         child.setRelationshipStatus(RelationStatusEnum.SINGLE);
         assignChildAttributes(child, parentA, parentB, isBackFilling);
-
         return child;
     }
 
@@ -204,12 +212,11 @@ public class PersonServiceImpl implements PersonService {
 
         // NOTE: the age is now assigned separately because back-filled children are given ages differently than live newborns!
         AttributeAssigner.assignChildAge(parentA, parentB, child, isBackFilling);
-        AttributeAssigner.assignChildRace(parentA, parentB, child);
-        AttributeAssigner.assignChildReligion(parentA, parentB, child);
-
+        AttributeAssigner.assignExpectedYearOfDeath(child);
+        fillCareerAndEducation(child, Configuration.N_Population_Size);
         HometownHistoryDTO hometownHistoryDTO = AttributeAssigner.assignChildHometowns(child, parentA, parentB);
         AttributeAssigner.assignHometownHistory_CP(child, hometownHistoryDTO);
-        fillCareerAndEducation(child, Configuration.N_Population_Size);
+
         AttributeAssigner.assignSchoolHistory(child);
         AttributeAssigner.assignWorkHistory(child);
 
@@ -786,11 +793,11 @@ public class PersonServiceImpl implements PersonService {
 
     } // end moveToCity()
 
-    public void evaluatePerson_Groups (PersonDTO person){
+    public void evaluatePerson_Groups(PersonDTO person) {
         GroupAdder.UpdatePersonInAllGroups(person);
     }
 
-    public void updatePersonDTOById(PersonDTO person){
+    public void updatePersonDTOById(PersonDTO person) {
         personMapper.updateById(person.convertToPerson());
     }
 

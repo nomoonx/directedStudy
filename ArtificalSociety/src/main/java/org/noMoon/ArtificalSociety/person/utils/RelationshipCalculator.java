@@ -205,7 +205,8 @@ public class RelationshipCalculator {
     private static double calcRelStrength_YearsMarried (PersonDTO personA, PersonDTO personB) {
         // Determine how long the couple has been together.
 
-        if (personA.getRelationshipStartYear() != personB.getRelationshipStartYear()) {
+        if (!personA.getRelationshipStartYear().equals( personB.getRelationshipStartYear())) {
+//            System.out.println("personA: "+String.valueOf(personA.getRelationshipStartYear())+" PersonB: "+String.valueOf(personB.getRelationshipStartYear()));
             System.err.println("In RelationshipCalculator->calcRelStrength_YearsMarried(); the two people have different relationship start years even though they are in a relationship together. Fix this error!");
             //System.err.println("In RelationshipCalculator->calcRelStrength_YearsMarried(); the two people have different relationship start years (" + personA.getRelationshipStartYear() + "," +
             //personB.getRelationshipStartYear() + ") even though they are in a relationship together. Fix this error!");
@@ -636,7 +637,7 @@ public class RelationshipCalculator {
 
             personA.setRelationshipStatus(RelationStatusEnum.MARRIED);
             personB.setRelationshipStatus(RelationStatusEnum.MARRIED);
-            CalculateAndSetRelationshipStrength(personA, personB, 2);
+            CalculateAndSetRelationshipStrength(personA, personB, 0);
 
         } else {
             // Couple continues dating.

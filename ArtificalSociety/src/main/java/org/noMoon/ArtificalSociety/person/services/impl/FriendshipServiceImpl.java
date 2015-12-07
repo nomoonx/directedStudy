@@ -2,15 +2,15 @@ package org.noMoon.ArtificalSociety.person.services.impl;
 
 import org.noMoon.ArtificalSociety.commons.utils.Configuration;
 import org.noMoon.ArtificalSociety.commons.utils.Distribution;
+import org.noMoon.ArtificalSociety.group.DTO.GroupDTO;
+import org.noMoon.ArtificalSociety.group.Services.GroupService;
 import org.noMoon.ArtificalSociety.person.DAO.FriendshipMapper;
+import org.noMoon.ArtificalSociety.person.DAO.PersonMapper;
 import org.noMoon.ArtificalSociety.person.DO.Friendship;
+import org.noMoon.ArtificalSociety.person.DTO.PersonDTO;
 import org.noMoon.ArtificalSociety.person.Enums.FriendshipTypeEnum;
 import org.noMoon.ArtificalSociety.person.services.FriendshipService;
 import org.noMoon.ArtificalSociety.person.utils.FriendshipCalculator;
-import org.noMoon.ArtificalSociety.group.DTO.GroupDTO;
-import org.noMoon.ArtificalSociety.group.Services.GroupService;
-import org.noMoon.ArtificalSociety.person.DTO.PersonDTO;
-import org.noMoon.ArtificalSociety.person.services.PersonService;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -23,13 +23,13 @@ import java.util.List;
 public class FriendshipServiceImpl implements FriendshipService {
 
     private FriendshipMapper friendshipMapper;
-    private PersonService personService;
+    private PersonMapper personMapper;
     private GroupService groupService;
 
     public void CreateEntireFriendshipNetwork() {
-        List<String> allPersonIds = personService.getAllIds(Configuration.Society_Id);
+        List<String> allPersonIds = personMapper.selectAliveIdsBySocietyId(Configuration.Society_Id);
         for (String id : allPersonIds) {
-            PersonDTO person = personService.selectPerosonDTOById(id);
+            PersonDTO person = new PersonDTO(personMapper.selectById(id));
             createFriendshipNetwork(person);
         }
     }
@@ -95,7 +95,10 @@ public class FriendshipServiceImpl implements FriendshipService {
                 }
             } // end if (random number is within threshold)
         }
-        friendshipMapper.insertList(newFriendList);
+        if(newFriendList.size()>0){
+            friendshipMapper.insertList(newFriendList);
+            newFriendList.clear();
+        }
 
     } // end createFriendshipNetwork()
 
@@ -136,8 +139,8 @@ public class FriendshipServiceImpl implements FriendshipService {
         this.friendshipMapper = friendshipMapper;
     }
 
-    public void setPersonService(PersonService personService) {
-        this.personService = personService;
+    public void setPersonMapper(PersonMapper personMapper) {
+        this.personMapper = personMapper;
     }
 
     public void setGroupService(GroupService groupService) {

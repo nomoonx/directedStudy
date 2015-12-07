@@ -132,7 +132,7 @@ public class PersonDTO {
         this.age = personDO.getAge();
         this.birthYear = personDO.getBirthYear();
         this.expDeathYear = personDO.getExpDeathYear();
-        this.isAlive=personDO.getIsAlive();
+        this.isAlive = personDO.getIsAlive();
         this.raceIndex = personDO.getRaceIndex();
         this.intelligence = personDO.getIntelligence();
         this.personality = JSON.parseObject(personDO.getPersonality(), double[].class);
@@ -176,7 +176,7 @@ public class PersonDTO {
         this.parentIds = new ArrayList<String>();
         this.childrenIds = new ArrayList<String>();
         this.siblingsIds = new ArrayList<String>();
-        this.isAlive=true;
+        this.isAlive = true;
     }
 
     public PersonWithBLOBs convertToPerson() {

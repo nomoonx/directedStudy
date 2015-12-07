@@ -482,7 +482,7 @@ public class AttributeAssigner {
 
 
         // If the person's age and/or personality have not yet been set, then exit, since both are required before assigning a career.
-        if (attr.getAge() == 0 || attr.getPersonality().length <= 0) {
+        if (attr.getPersonality().length <= 0) {
             System.err.println("Attempting to assign career but personality has not been set.");
             return;
         } // end if (check if age or personality is not set)
@@ -579,7 +579,7 @@ public class AttributeAssigner {
         // Modifies attributes: isInSchool, education, educationPSYears
 
         // Ensure that the person's birth year has been set.
-        if (attr.getAge() == 0 || attr.getCareerId() == 0) {
+        if ( attr.getCareerId() == 0) {
             System.err.println("Attempting to assign education but age or careerID have not been set.");
             return;
         }
@@ -700,7 +700,7 @@ public class AttributeAssigner {
         socHomeHistory.setSocietyId(attr.getSocietyId());
 
         // Ensure that the person's birth year has been set.
-        if (0 == attr.getBirthYear() || 0 == attr.getAge() || StringUtils.isEmpty(attr.getNationality()) || StringUtils.isEmpty(attr.getEducation()) || 0 == attr.getEducationPsYear()) {
+        if (0 == attr.getBirthYear() || StringUtils.isEmpty(attr.getNationality()) ) {
             System.err.println("Attempting to assign hometownHistory but birthYear, age, nationality, education, or educationPSYears have not been set.");
             return;
         } // end if (check if prerequiste information has been set)
@@ -763,7 +763,9 @@ public class AttributeAssigner {
         if (gapsNeedFilling[2]) {
             assignHometown_AfterAllSchoolYears(attr, homeHistory, socHomeHistory, Configuration.SocietyYear);
         } else {
-            assignHometown_AfterAllSchoolYears(attr, homeHistory, socHomeHistory, attr.getRelationshipStartYear());
+            if(attr.getRelationshipStartYear()!=null){
+                assignHometown_AfterAllSchoolYears(attr, homeHistory, socHomeHistory, attr.getRelationshipStartYear());
+            }
         } // end if (check whether or not person is married, to indicate whether or not the entirety of this period needs to be filled)
 
 
@@ -813,8 +815,10 @@ public class AttributeAssigner {
 
         // Ensure that the person's birth year has been set.
 //System.out.println(ValidationTools.empty(attr.yearBorn) + " || " + ValidationTools.empty(attr.age) + " || " + ValidationTools.empty(attr.hometownHistory)  + " || " + ValidationTools.empty(attr.education) + " || " + ValidationTools.empty(attr.educationPSYears));
-        if (attr.getBirthYear() == 0 || 0 == attr.getAge() || 0 == attr.getHometownHistoryId() || StringUtils.isEmpty(attr.getEducation()) || 0 == attr.getEducationPsYear()) {
-            System.err.println("Attempting to assign schoolHistory but birthYear, age, hometownHistory, education, or eduPSYears have not been set.");
+        if (attr.getBirthYear() == 0 || 0 == attr.getHometownHistoryId() || StringUtils.isEmpty(attr.getEducation())) {
+            System.out.println(attr.getId());
+            System.out.println(StringUtils.isEmpty(attr.getId()));
+            System.err.println("Attempting to assign schoolHistory but birthYear, age, hometownHistory, education, or eduPSYears have not been set."+attr.getId());
             return;
         } // end if (ensure person has prerequisite information assigned)
 
@@ -920,7 +924,7 @@ public class AttributeAssigner {
             // * NOTE * This assumes that the person stayed at ONE post-secondary and lived in ONE city during that period. If the program is modified to allow
             //			moves to other cities and transfers to other institutions, then this part will have to be modified to allow those changes.
             //String PSLocation = (String)attr.hometownHistory.getActivityAtYear(PSStartYear+1); // Add 1 to start year because that year is also in the archive as the final year of elementary school.
-            String PSLocation = hometownHistoryDTO.getActivityByYear(PSStartYear + 1).getLocation(); // Add 1 to start year because that year is also in the archive as the final year of elementary school.
+            String PSLocation = hometownHistoryDTO.getActivityByYear(PSStartYear).getLocation(); // Add 1 to start year because that year is also in the archive as the final year of elementary school.
 
             //System.out.println(PSLocation);
 
@@ -1194,6 +1198,7 @@ public class AttributeAssigner {
 //        } // end if (check if person has the prerequisite information to get a work history)
 
         // Determine if person is currently in school. Assume they have no work until after done school (part-time work would have to be different. Ignore that for now!)
+        System.out.println(attr.getId()+" "+String.valueOf(attr.getIsInSchool()));
         if (attr.getIsInSchool()) {
             // Rather than having a null archive, we want to set the empty (but initialized!) archives here before returning out.
             attr.setIncome(0);
@@ -1204,10 +1209,14 @@ public class AttributeAssigner {
             attr.setSocWorkHistoryId(societalWorkHistory.getId());
             return;
         } // end if (person is in school currently)
-
+        attr.setIncome(0);
         // Get the year in which the person finished all their school.
         //int finishedSchoolYear = attr.getSchoolHistory().getLastActivityPeriod()[1];
-
+        if(attr.getAge()<Configuration.SchoolStartAge){
+            attr.setCurrentPosition(PositionEnum.CHILD);
+        }else{
+            attr.setCurrentPosition(PositionEnum.UNEMPLOYED);
+        }
 
         HometownHistoryDTO hometownHistoryDTO = historyService.getHometownHistoryById(attr.getHometownHistoryId());
         SchoolHistoryDTO schoolHistoryDTO = historyService.getSchoolHistoryById(attr.getSchoolHistoryId());

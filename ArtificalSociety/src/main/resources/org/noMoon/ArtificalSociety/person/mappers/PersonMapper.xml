@@ -169,7 +169,7 @@
         select ID from PERSON where SOCIETY_ID=#{societyId}
     </select>
     <select id="selectAliveIdsBySocietyId" parameterType="java.lang.String" resultType="java.lang.String">
-        select ID from PERSON where SOCIETY_ID=#{societyId} and IS_LIVE='1'
+        select ID from PERSON where SOCIETY_ID=#{societyId} and IS_ALIVE='1'
     </select>
 
 

@@ -258,10 +258,11 @@ public class TraitMatcher {
 			p = 0.0;
 			return p;
 		}
-
+        try{
         WorkHistoryDTO historyDTO=historyService.getWorkHistoryById(person.getWorkHistoryId());
 		//DebugTools.printArray(person.workHistory);
 		WorkHistoryRecord currentRecord=historyDTO.getRecordList().get(historyDTO.getRecordList().size()-1);
+
         Workplace workplace=careerService.selectWorkplaceById(Long.parseLong(currentRecord.getLocation()));
 
 		// Check if the given workplaceID (given in traitValue argument) matches the person's current workplace ID. (Note that currWork[0] is the workplace ID, while currWork[1] would be their career ID at that workplace).
@@ -272,6 +273,9 @@ public class TraitMatcher {
 		} // end if (check if person's workplace matches the one being used in club criteria)
 
 		return p;
+        }catch(Exception e){
+            return 0.0;
+        }
 	} // end calculateTraitMatch_Work()
 
 	

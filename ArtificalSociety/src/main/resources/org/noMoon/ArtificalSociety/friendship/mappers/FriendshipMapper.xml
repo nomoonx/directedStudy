@@ -86,9 +86,10 @@
         )
         values(
         <foreach item="element" collection="list" open="" close="" separator="),(">
-            sysdate(),sysdate(),#{element.societyId}, #{element.personAId}, #{element.personBId},
+            sysdate(),sysdate(),
+            #{element.societyId}, #{element.personAId}, #{element.personBId},
             #{element.friendType},#{element.isFriend},#{element.strength},
-            #{element.probability},#{element.role},#{element.description},
+            #{element.probability},#{element.role},#{element.description}
         </foreach>
         )
     </insert>

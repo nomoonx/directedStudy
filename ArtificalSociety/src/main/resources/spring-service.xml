@@ -118,7 +118,7 @@ http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd"
     <bean id="friendshipService" class="org.noMoon.ArtificalSociety.person.services.impl.FriendshipServiceImpl">
         <property name="friendshipMapper" ref="friendshipMapper"/>
         <property name="groupService" ref="groupSerivce"/>
-        <property name="personService" ref="personService"/>
+        <property name="personMapper" ref="personMapper"/>
     </bean>
 
     <bean id="dyadicNetworkGenerator" class="org.noMoon.ArtificalSociety.NetworkGenerator.DyadicNetworkGenerator">
@@ -126,6 +126,8 @@ http://www.springframework.org/schema/jdbc/spring-jdbc-3.1.xsd"
         <property name="clubService" ref="clubService" />
         <property name="careerService" ref="careerService" />
         <property name="groupService" ref="groupSerivce"></property>
+        <property name="personService" ref="personService"/>
+        <property name="friendshipService" ref="friendshipService"/>
     </bean>
 
     <bean id="simulationStepper" class="org.noMoon.ArtificalSociety.NetworkGenerator.SimulationStepper">
